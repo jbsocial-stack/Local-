@@ -1,0 +1,91 @@
+import { test, expect } from '@playwright/test';
+
+// Marketing homepage DoD: "Playwright: both forms submit; live/coming-soon/
+// planned success states; /chichester pre-fills." Same approach as the
+// product's happy-path suite — API calls are mocked at the network
+// boundary since this sandbox has no live Supabase project to seed.
+
+test('/chichester pre-fills the hero pill and the shopper form town field', async ({ page }) => {
+  await page.goto('/chichester');
+  await expect(page.getByText('Launching in Chichester · Autumn 2026')).toBeVisible();
+  await expect(page.locator('#shopper-form select[name="townSlug"]')).toHaveValue('chichester');
+});
+
+test('shopper form: live town shows wallet buttons on success', async ({ page }) => {
+  await page.route('**/api/signup', async (route) => {
+    const body = route.request().postDataJSON();
+    expect(body.email).toBe('laura@example.com');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ status: 'live', townName: 'Chichester' }),
+    });
+  });
+
+  await page.goto('/chichester');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form button[type="submit"]').click();
+
+  await expect(page.getByText("You're in! Add your pass now:")).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Add to Apple Wallet' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Add to Google Wallet' })).toBeVisible();
+});
+
+test('shopper form: coming-soon town shows the waiting-list message', async ({ page }) => {
+  await page.route('**/api/signup', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ status: 'coming-soon', townName: 'Chichester' }),
+    });
+  });
+
+  await page.goto('/chichester');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form button[type="submit"]').click();
+
+  await expect(page.getByText("You're in. We'll tell you the day Chichester goes live.")).toBeVisible();
+});
+
+test('shopper form: planned/other town shows the vote count', async ({ page }) => {
+  await page.route('**/api/signup', async (route) => {
+    const body = route.request().postDataJSON();
+    expect(body.townFreeText).toBe('Bognor Regis');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ status: 'planned', townName: 'Bognor Regis', count: 7 }),
+    });
+  });
+
+  await page.goto('/');
+  await page.locator('#shopper-form select[name="townSlug"]').selectOption('__other__');
+  await page.locator('#shopper-form input[name="townFreeText"]').fill('Bognor Regis');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form button[type="submit"]').click();
+
+  await expect(page.getByText('Thanks — you just voted for Bognor Regis.')).toBeVisible();
+  await expect(page.getByText('7 people in Bognor Regis want Local.')).toBeVisible();
+});
+
+test('merchant form submits and shows the trial-booking message', async ({ page }) => {
+  await page.route('**/api/lead', async (route) => {
+    const body = route.request().postDataJSON();
+    expect(body).toMatchObject({
+      businessName: 'The Roastery',
+      contactName: 'Sam Roaster',
+      venues: '5+',
+    });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+  });
+
+  await page.goto('/');
+  await page.locator('#merchant-form input[name="businessName"]').fill('The Roastery');
+  await page.locator('#merchant-form input[name="contactName"]').fill('Sam Roaster');
+  await page.locator('#merchant-form input[name="email"]').fill('sam@theroastery.example');
+  await page.locator('#merchant-form select[name="townSlug"]').selectOption('chichester');
+  await page.locator('#merchant-form select[name="venues"]').selectOption('5+');
+  await page.locator('#merchant-form button[type="submit"]').click();
+
+  await expect(page.getByText("Thanks — we'll be in touch within 2 working days to book your trial.")).toBeVisible();
+});

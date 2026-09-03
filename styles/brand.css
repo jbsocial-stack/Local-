@@ -1,0 +1,27 @@
+/* Marketing homepage PRD §4: brand tokens shared across app/(marketing). */
+:root {
+  --coral: #f76c5e;
+  --cream: #fff9e6;
+  --yellow: #ffd400;
+  --ink: #2b2b2b;
+}
+
+/* S1 AC: "respect prefers-reduced-motion" — animation is opt-in only when
+   motion is NOT reduced, so the safe default (no @media match) is static. */
+@media (prefers-reduced-motion: no-preference) {
+  .float-in {
+    animation: float-in 0.6s ease-out both;
+    animation-delay: var(--float-delay, 0s);
+  }
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) rotate(var(--float-rotate, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--float-rotate, 0deg));
+  }
+}
