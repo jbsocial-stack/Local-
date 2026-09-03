@@ -9,34 +9,48 @@ import { track } from '@/lib/marketing/analytics';
 // on `/[town]` to pre-fill the pill (H4/H8).
 export function Hero({ town }: { town?: TownConfig }) {
   return (
-    <section className="bg-coral px-6 py-16 text-cream">
-      <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
-        <div>
-          <h1 className="font-display text-[14vw] leading-[0.85] md:text-8xl">Local</h1>
-          <p className="mt-4 text-lg font-medium text-cream">Unlocking collective loyalty marketing.</p>
+    <section className="px-4 py-4 sm:px-6">
+      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-coral px-6 py-16 text-cream sm:px-10">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-orange-400/40 blur-2xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-cream/10 blur-xl"
+        />
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="#shopper-form"
-              onClick={() => track('cta_click', { type: 'shopper', town: town?.slug ?? '' })}
-              className="rounded-full bg-cream px-6 py-3 text-center font-medium text-coral"
-            >
-              I&apos;m a shopper →
-            </a>
-            <a
-              href="#merchant-form"
-              onClick={() => track('cta_click', { type: 'merchant', town: town?.slug ?? '' })}
-              className="rounded-full border-2 border-cream px-6 py-3 text-center font-medium text-cream"
-            >
-              I run a business →
-            </a>
+        <div className="relative grid items-center gap-10 md:grid-cols-2">
+          <div>
+            <span className="inline-block rounded-full bg-ink px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-cream">
+              High-street loyalty, together
+            </span>
+            <h1 className="mt-4 font-display text-[14vw] leading-[0.85] md:text-8xl">Local</h1>
+            <p className="mt-4 text-lg font-medium text-cream">Unlocking collective loyalty marketing.</p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#shopper-form"
+                onClick={() => track('cta_click', { type: 'shopper', town: town?.slug ?? '' })}
+                className="rounded-full bg-ink px-6 py-3 text-center font-medium text-cream"
+              >
+                I&apos;m a shopper →
+              </a>
+              <a
+                href="#merchant-form"
+                onClick={() => track('cta_click', { type: 'merchant', town: town?.slug ?? '' })}
+                className="rounded-full bg-cream px-6 py-3 text-center font-medium text-ink"
+              >
+                I run a business →
+              </a>
+            </div>
+
+            <TownPill town={town} />
           </div>
 
-          <TownPill town={town} />
-        </div>
-
-        <div className="flex justify-center">
-          <ABoardPoster headlineLines={['Eat.', 'Shop.', 'Earn.', 'Local.']} />
+          <div className="flex justify-center">
+            <ABoardPoster headlineLines={['Eat.', 'Shop.', 'Earn.', 'Local.']} />
+          </div>
         </div>
       </div>
     </section>

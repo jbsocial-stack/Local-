@@ -3,6 +3,7 @@ import { requireShopper } from '@/lib/auth/require-shopper';
 import { createServiceClient } from '@/lib/supabase/server';
 import { NoPassMessage } from '@/components/shopper/NoPassMessage';
 import { formatPence } from '@/lib/ledger/points';
+import { findTown } from '../../../../../config/towns';
 
 const TYPE_LABEL: Record<string, string> = {
   earn: 'Earned',
@@ -23,6 +24,7 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
     if (auth.reason === 'not_signed_in') redirect(`/${town}/app/sign-in`);
     return <NoPassMessage town={town} />;
   }
+  const townName = findTown(town)?.name ?? town;
 
   const supabase = createServiceClient();
   const { data: rows } = await supabase
@@ -35,10 +37,13 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
   return (
     <main className="px-4 pt-10">
       <div className="mx-auto max-w-md">
-        <WalletCard balancePoints={auth.pass.balancePoints} platform={auth.pass.platform} />
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-ink/45">
+          Your wallet pass, always in your pocket
+        </p>
+        <WalletCard balancePoints={auth.pass.balancePoints} townName={townName} />
 
         <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-ink/50">Activity</h2>
-        <ul className="mt-3 divide-y divide-ink/10 rounded-xl bg-white shadow-sm">
+        <ul className="mt-3 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white/60">
           {(rows ?? []).map((row) => {
             const merchantName = (row.merchants as unknown as { name: string } | null)?.name ?? 'Local';
             const positive = row.points > 0;
@@ -66,16 +71,25 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
   );
 }
 
-function WalletCard({ balancePoints, platform }: { balancePoints: number; platform: string }) {
+function WalletCard({ balancePoints, townName }: { balancePoints: number; townName: string }) {
   return (
-    <div className="rounded-3xl bg-coral p-6 text-cream shadow-lg">
+    <div className="mt-3 rounded-3xl bg-gradient-to-br from-coral to-orange-400 p-6 text-cream shadow-lg">
       <div className="flex items-center justify-between">
-        <span className="font-display text-2xl">Local</span>
-        <span className="rounded-full bg-cream/20 px-3 py-1 text-xs uppercase">{platform} wallet</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/80">Local pass</span>
+        <span className="rounded-full bg-accent-yellow px-3 py-1 text-xs font-semibold text-ink">{townName}</span>
       </div>
-      <p className="mt-8 text-sm text-cream/80">Balance</p>
-      <p className="font-display text-5xl">{formatPence(balancePoints)}</p>
-      <p className="mt-1 text-sm text-cream/80">{balancePoints} points</p>
+      <p className="mt-8 font-display text-5xl">
+        {formatPence(balancePoints)}
+        <span className="ml-2 font-body text-base font-normal text-cream/80">balance</span>
+      </p>
+      <p className="mt-1 text-sm text-cream/80">{balancePoints} points · ready to spend</p>
+
+      <div className="mt-6 flex items-center gap-3 border-t border-cream/20 pt-4">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/20 text-sm font-semibold">
+          L
+        </span>
+        <span className="text-sm text-cream/80">Tap to open in Apple or Google Wallet</span>
+      </div>
     </div>
   );
 }

@@ -8,13 +8,13 @@ export function Header() {
   return (
     <header className="bg-cream px-6 py-4">
       <div className="mx-auto flex max-w-5xl items-center justify-between">
-        <Link href="/" className="font-display text-2xl text-coral">
-          Local
+        <Link href="/" className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink font-display text-sm text-cream">
+            L
+          </span>
+          <span className="font-display text-2xl text-ink">Local</span>
         </Link>
-        <Link
-          href="/sign-in"
-          className="rounded-full border-2 border-coral px-5 py-2 text-sm font-medium text-coral"
-        >
+        <Link href="/sign-in" className="rounded-full bg-ink px-5 py-2 text-sm font-medium text-cream">
           Sign in
         </Link>
       </div>

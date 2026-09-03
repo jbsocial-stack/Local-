@@ -60,7 +60,7 @@ export default async function OffersPage({ params }: { params: Promise<{ town: s
             <li key={i}>
               <Link
                 href={`/${town}/app/discover/${offer.merchantSlug}`}
-                className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm"
+                className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white/70 p-4"
               >
                 <div>
                   <p className="font-medium">{offer.merchantName}</p>
@@ -73,7 +73,7 @@ export default async function OffersPage({ params }: { params: Promise<{ town: s
             </li>
           ))}
           {offers.length === 0 && (
-            <li className="rounded-xl bg-white p-6 text-center text-sm text-ink/50 shadow-sm">
+            <li className="rounded-2xl border border-ink/10 bg-white/70 p-6 text-center text-sm text-ink/50">
               No offers right now — check back soon.
             </li>
           )}

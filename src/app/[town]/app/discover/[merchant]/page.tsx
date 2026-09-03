@@ -85,7 +85,7 @@ export default async function VenuePage({
             <h2 className="text-sm font-semibold uppercase tracking-wide text-ink/50">Current offers</h2>
             <ul className="mt-2 space-y-2">
               {activeBoosts.map((b, i) => (
-                <li key={i} className="rounded-xl bg-white p-3 shadow-sm">
+                <li key={i} className="rounded-2xl border border-ink/10 bg-white/70 p-3">
                   <p className="font-medium">{b.label || `${b.multiplier}x points`}</p>
                   <p className="text-xs text-ink/50">
                     Until {new Date(b.ends_at).toLocaleString()}

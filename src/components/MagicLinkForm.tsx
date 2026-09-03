@@ -37,20 +37,20 @@ export function MagicLinkForm({
 
   return (
     <form onSubmit={submit} className="w-full max-w-sm text-center">
-      <h1 className="text-xl font-bold text-coral">{title}</h1>
-      {subtitle && <p className="mt-1 text-sm text-neutral-600">{subtitle}</p>}
+      <h1 className="font-display text-xl text-ink">{title}</h1>
+      {subtitle && <p className="mt-1 text-sm text-ink/60">{subtitle}</p>}
       <input
         type="email"
         required
         placeholder="you@example.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="mt-4 w-full rounded border border-coral px-3 py-2"
+        className="mt-4 w-full rounded-full border border-ink/15 bg-white px-4 py-3 placeholder:text-ink/40"
       />
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="mt-3 w-full rounded-full bg-coral text-white py-2 disabled:opacity-50"
+        className="mt-3 w-full rounded-full bg-ink py-3 font-medium text-cream disabled:opacity-50"
       >
         {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
       </button>

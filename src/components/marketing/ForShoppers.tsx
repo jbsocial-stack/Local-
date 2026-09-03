@@ -1,4 +1,5 @@
 import type { TownConfig } from '../../../config/towns';
+import { Eyebrow } from './Eyebrow';
 
 const BULLETS = [
   'Lives in Apple or Google Wallet. No app.',
@@ -13,7 +14,8 @@ export function ForShoppers({ town }: { town?: TownConfig }) {
     <div className="grid items-center gap-10 md:grid-cols-2">
       <PhoneMock />
       <div>
-        <h2 className="font-display text-3xl">For shoppers</h2>
+        <Eyebrow>Your wallet pass, always in your pocket</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl">For shoppers</h2>
         <ul className="mt-4 space-y-2">
           {BULLETS.map((b) => (
             <li key={b} className="flex gap-2 text-ink/80">
@@ -24,10 +26,7 @@ export function ForShoppers({ town }: { town?: TownConfig }) {
             </li>
           ))}
         </ul>
-        <a
-          href="#shopper-form"
-          className="mt-6 inline-block rounded-full bg-coral px-6 py-3 font-medium text-cream"
-        >
+        <a href="#shopper-form" className="mt-6 inline-block rounded-full bg-ink px-6 py-3 font-medium text-cream">
           {live ? 'Get your pass' : 'Sign me up'}
         </a>
       </div>
