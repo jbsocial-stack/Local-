@@ -13,10 +13,11 @@ test('wallet redirects to sign-in when not signed in', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Sign in to Local' })).toBeVisible();
 });
 
-test('sign-in page offers a password option alongside the email link', async ({ page }) => {
+test('sign-in page is password-only', async ({ page }) => {
   await page.goto('/chichester/app/sign-in');
   await expect(page.getByRole('button', { name: 'Sign in with password' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'No password yet?' })).toBeVisible();
+  await expect(page.getByLabel('Email')).toBeVisible();
+  await expect(page.getByLabel('Password')).toBeVisible();
 });
 
 test('the glass bottom nav is absent when signed out', async ({ page }) => {

@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser';
 
-// Alternative to the magic-link form: for shoppers who've set a password
-// (via the claim flow or their profile settings) and don't want to wait on
-// an email each time. redirectTo is the final destination, not an
-// /auth/callback URL — signInWithPassword establishes the session directly.
+// Password-only shopper sign-in — a password is set when the pass is
+// claimed (see /[town]/claim) or later in profile settings. redirectTo is
+// the final destination — signInWithPassword establishes the session
+// directly, no /auth/callback round-trip needed.
 export function PasswordSignInForm({
   redirectTo,
   title,
@@ -67,8 +67,8 @@ export function PasswordSignInForm({
       </button>
       {status === 'error' && (
         <p className="mt-2 text-sm text-red-600">
-          Incorrect password — or you haven&apos;t set one yet. Use the email link below, then set a
-          password from your profile.
+          Incorrect email or password. If you haven&apos;t claimed your pass yet, tap the back of your
+          pass to set one up.
         </p>
       )}
     </form>

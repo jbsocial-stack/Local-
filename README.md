@@ -174,11 +174,13 @@ PRD's open questions — it just needs a Google Wallet issuer account set up.
   category filter, live multiplier + boosted badges, Leaflet/OSM map.
 - **R9 account claim + re-issue** (`src/app/[town]/claim/`,
   `src/app/[town]/reissue/`, `src/lib/account/claim.ts`,
-  `src/app/api/pass/reissue/`) — email → magic link → the anonymous pass is
-  re-pointed at the authenticated user; re-issuing to a new device revokes
-  the old pass (including its Apple web-service auth) and transfers the
-  balance via a pair of ledger `adjust` entries. Both wallet passes' back
-  fields link to the claim page.
+  `src/app/api/pass/reissue/`) — claim sets a password
+  (`ClaimPasswordForm`/`supabase.auth.signUp` + `POST /api/claim`) and
+  re-points the anonymous pass at the authenticated user; reissue (a
+  separate, lost-device recovery flow) still goes through the magic link.
+  Re-issuing to a new device revokes the old pass (including its Apple
+  web-service auth) and transfers the balance via a pair of ledger `adjust`
+  entries. Both wallet passes' back fields link to the claim page.
 - **R10 merchant dashboard** (`src/app/m/[town]/[merchant]/dashboard/`) —
   visits (7/30d), unique/repeat customers (30d), points issued/redeemed,
   net position, recent transactions with owner-only void (writes a
@@ -297,29 +299,28 @@ to what's testable without a live session (the sign-in redirect, the nav's
 absence when signed out). Point a real deployment with a seeded, signed-in
 session at these routes to exercise the rest.
 
-### Password sign-in (alongside the magic link)
+### Password sign-in (shopper auth is password-only)
 
-Magic-link email is still the default entry point (every pass starts
-anonymous — R1 — and only gets an identity at claim time), but waiting on
-an email every time is friction, so there's now a password option
-alongside it everywhere a shopper authenticates:
+Every pass starts anonymous (R1) and only gets an identity at claim time.
+Claiming and signing in are both password-based — no magic-link email in
+this path at all (merchant owner/ops sign-in, and the separate lost-device
+pass-reissue flow, still use magic link; see below):
 
-- **`/sign-in`** (town-agnostic, linked from the marketing header) and
-  **`/[town]/app/sign-in`** — `PasswordSignInForm` tries
-  `supabase.auth.signInWithPassword` first; the `MagicLinkForm` below it
-  ("No password yet?") is the fallback for anyone who hasn't set one.
 - **`/[town]/claim`** (reached by tapping the back of a pass) —
   `ClaimPasswordForm` lets a shopper set a password *and* claim their pass
-  in one step (`supabase.auth.signUp` + `POST /api/claim`, which is the
-  client-driven counterpart to `/auth/callback`'s `passId` handling), with
-  the email-link form still underneath as a fallback.
-- **Profile → Password** — `supabase.auth.updateUser({ password })` lets
-  anyone who claimed via magic link retroactively set a password so they
-  don't need email next time.
+  in one step (`supabase.auth.signUp` + `POST /api/claim`, the
+  client-driven counterpart to `/auth/callback`'s `passId` handling).
+- **`/sign-in`** (town-agnostic, linked from the marketing header) and
+  **`/[town]/app/sign-in`** — `PasswordSignInForm` calls
+  `supabase.auth.signInWithPassword`.
+- **Profile → Password** — `supabase.auth.updateUser({ password })` lets a
+  shopper change their password once signed in.
+
+There's no password-reset flow yet — losing a password currently means
+re-claiming the pass. `/[town]/reissue` (lost-device pass transfer) is a
+separate, intentionally-still-magic-link flow, not a shopper sign-in path.
 
 One thing to check in the Supabase dashboard: if **Authentication →
 Providers → Email → Confirm email** is turned on, `signUp` won't return a
-session immediately — the shopper gets a confirmation email once (a
-different email than the magic link, but still one email) before their
-password works. Turn that off for a fully email-free password sign-up;
-existing magic-link accounts are unaffected either way.
+session immediately — the shopper gets a one-off confirmation email before
+their password works. Turn that off for a fully email-free claim flow.
