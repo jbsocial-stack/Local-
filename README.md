@@ -3,20 +3,45 @@
 Eat. Shop. Earn. Local. — all the independent shops in your town rolled into
 one loyalty programme.
 
-This repo implements **Phase A and Phase B** of the PRD — schema/ledger,
-scan-to-earn/redeem, the merchant PWA, the nightly expiry job, merchant
-onboarding/settings, the shopper directory + map, account claim, the
-merchant dashboard, the ops console, and printables — for the Chichester
-pilot. Phase C (letterbox campaign) and Phase D (P1 features: push offers,
-missions, lapsed-customer lists) are not built. See the PRD for full
-product context.
+This repo implements **Phase A and Phase B of the product PRD** (schema/
+ledger, scan-to-earn/redeem, the merchant PWA, the nightly expiry job,
+merchant onboarding/settings, the shopper directory + map, account claim,
+the merchant dashboard, the ops console, printables) plus the full
+**Marketing Homepage PRD** (the public `/` and `/[town]` site — hero,
+pitch, pricing, both sign-up forms, the UK demand map) for the Chichester
+pilot. Product Phase C (letterbox campaign) and Phase D (P1 features: push
+offers, missions, lapsed-customer lists) are not built. See the two PRDs
+for full context.
+
+## Two apps, one repo
+
+`src/app/(marketing)/` is the public marketing site (`/`, `/[town]`,
+`/business`, `/pricing`, `/privacy`, `/terms`) — its own layout, fonts
+(self-hosted Outfit/Inter via `next/font`), and `styles/brand.css`. Every
+other route (`/m/...`, `/ops/...`, the bare `/[town]/shops` /
+`/[town]/claim` / `/[town]/reissue`, all of `/api/...`) is the product app
+and is untouched by the marketing layout. The two `[town]` dynamic segments
+— `app/(marketing)/[town]/page.tsx` and `app/[town]/shops/page.tsx` —
+coexist fine since route groups don't add a URL segment and the two never
+claim the exact same path; this is confirmed by `next build`, which errors
+loudly on any real route conflict.
+
+**The marketing homepage absorbed the product's old `/[town]` landing
+page.** R1 originally called for `/[town]` to be a simple "Add to Wallet"
+page; the Marketing Homepage PRD independently claims `/` and `/[town]` for
+the full pitch-and-signup page. Per the resolution in that PRD, `/[town]`
+is now the marketing page, and a live town's shopper-form success state
+calls `/api/pass` inline and shows the wallet buttons directly — the old
+standalone landing page and its `IssuePassButtons` component were removed,
+their logic folded into `ShopperForm.tsx`'s `WalletButtons`.
 
 ## Stack
 
 Next.js 15 (App Router, TypeScript) · Supabase (Postgres, RLS, Auth magic
 link, Edge Functions) · Tailwind · `passkit-generator` (Apple Wallet) ·
 `@zxing/browser` (QR scanning) · `react-leaflet` + OpenStreetMap (directory
-map) · `pdf-lib` + `qrcode` (printables) · Vitest · Playwright.
+map) · `pdf-lib` + `qrcode` (printables) · `next/font` (Outfit/Inter) ·
+`next/og` (dynamic OG images) · Plausible (analytics) · Vitest · Playwright.
 
 ## Getting started
 
@@ -27,11 +52,13 @@ npm run dev
 ```
 
 Apply the schema against a Supabase project (SQL editor or `supabase db
-push` with the CLI), in order — `supabase/migrations/0001` through `0007`.
+push` with the CLI), in order — `supabase/migrations/0001` through `0008`.
 `0005` adds the trigger that mirrors new `auth.users` rows (merchant owners
 and ops staff, who sign in via magic link) into `public.users`; `0007`
 creates the `merchant-photos` (public) and `printables` (private) storage
-buckets.
+buckets; `0008` adds the marketing site's `signups` and `merchant_leads`
+tables (anon insert-only RLS — no select policy at all, verified by
+`tests/integration/rls.test.ts`).
 
 In the Supabase dashboard, set **Auth → URL Configuration → Site URL** to
 your app's origin and add it (plus `/auth/callback`) to the redirect
@@ -48,20 +75,27 @@ npm run seed
 
 ```bash
 npm run typecheck   # tsc --noEmit
-npm test            # Vitest — token rotation, points/redeem/expiry calc, dashboard & town stats, CSV, geocode parsing
-npm run test:e2e    # Playwright — staff login -> scan -> earn/redeem happy path
+npm test            # Vitest — token rotation, points/redeem/expiry calc, dashboard & town stats, CSV, geocode parsing, marketing signup/lead/demand-map logic
+npm run test:e2e    # Playwright — product happy path + marketing forms
 npm run lint
 ```
 
 The unit suite covers every server-only calculation exactly against the
 PRD's acceptance criteria (e.g. "£12.40 at 3x → 37 points", "balance 1500 +
 request £20 → rejected, £15.00 available", "QR older than 5 minutes is
-rejected", "net position equals the ledger sum"). The Playwright suite
-drives the real merchant UI against a mocked API layer, since this
-environment has no live Supabase project to seed — point
-`NEXT_PUBLIC_E2E_TEST_MODE` at a real deployment with seeded data and swap
-the `page.route` mocks for the real network calls to turn it into a true
-end-to-end test.
+rejected", "net position equals the ledger sum", "5+ venues tags the
+notification email `[multi-site]`"). The Playwright suite drives the real
+UI — product (staff login → scan → earn/redeem) and marketing (`/chichester`
+pre-fill, both forms' live/coming-soon/planned success states) — against a
+mocked API layer, since this environment has no live Supabase project to
+seed; point a real deployment's Playwright run at it directly (drop the
+`page.route` mocks) to turn either suite into a true end-to-end test.
+
+`tests/integration/rls.test.ts` hits a real Supabase project's REST API
+with the anon key to verify `signups` accepts an insert but returns zero
+rows on select — it's outside `vitest.config.ts`'s default include glob
+(same live-network limitation as the Playwright suite), so run it
+explicitly: `npx vitest run tests/integration/rls.test.ts`.
 
 ## Known blocker: Apple Wallet
 
@@ -117,11 +151,10 @@ PRD's open questions — it just needs a Google Wallet issuer account set up.
   ledger (logs and corrects drift). The FIFO logic
   (`src/lib/ledger/expiry.ts`) is pure and shared between the Edge Function
   and its unit tests.
-- **Shopper landing page** (`src/app/[town]/page.tsx`) — the actual
-  "Add to Apple/Google Wallet" page R1 calls for. This was missed in the
-  first Phase A pass (only the `/api/pass` endpoint existed) and got built
-  alongside Phase B once the gap surfaced while wiring R12's poster QR,
-  which needed somewhere to point.
+- **Shopper landing page** — originally a standalone `/[town]` page with
+  just "Add to Apple/Google Wallet" buttons; since superseded by the
+  marketing homepage's `/[town]` (see "Two apps, one repo" above), which
+  absorbed the same functionality into its shopper-form success state.
 
 ### Phase B (R6–R12)
 
@@ -164,3 +197,54 @@ Phase C (letterbox campaign, 1,000-pass push, BID meeting) is a go-to-market
 motion, not a build item. Phase D (P1: push offers, missions/streaks, Google
 Wallet parity if needed, lapsed-customer list, multi-venue merchants,
 segmentation) is intentionally not built.
+
+### Marketing homepage (H1–H11)
+
+- **Town config** (`config/towns.ts`) — single source of truth for the hero
+  pill, the shopper form's town select, and the demand map's coordinates.
+  Currently seeded with Chichester (`coming-soon`) plus seven other South
+  East towns (`planned`) as a starting set — add more towns by adding rows,
+  no code changes needed.
+- **Both forms** (`src/components/marketing/ShopperForm.tsx`,
+  `MerchantForm.tsx`, `src/app/api/{signup,lead}/`) — real `<form
+  method="POST">` elements that work with JavaScript disabled (the route
+  handler renders a server-side success page) and are progressively
+  enhanced client-side into the richer inline states the PRD describes
+  (live-town wallet buttons, coming-soon/planned messaging, the merchant
+  trial-booking confirmation). Duplicate shopper sign-ups (same email +
+  town) are a no-op success, not an error — enforced by a unique index,
+  same fix pattern as `metrics_daily`'s.
+- **Demand map** (`src/components/marketing/DemandMap.tsx`,
+  `src/lib/marketing/demand-map.ts`) — signups aggregated by town, a simple
+  equirectangular lat/lng projection onto a stylised (not survey-accurate)
+  GB outline, dot radius area-proportional to count, live towns in yellow.
+  Cached 5 minutes (`export const revalidate = 300`) on both `/api/demand`
+  and the homepage itself — without that, Next tries to fully prerender the
+  page at build time and fails the same way the product's root-redirect
+  page once did (see the git history if curious).
+- **SEO** — per-route metadata, `generateStaticParams` for every configured
+  town, a `next/og`-rendered OG image (`/og`, optionally `?town=slug`).
+- **Analytics** (`src/lib/marketing/analytics.ts`) — Plausible (cookie-less,
+  so "no cookie banner required" holds with zero extra work); set
+  `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` to turn it on, otherwise every `track()`
+  call is a silent no-op. Covers pageview (automatic), CTA clicks, form
+  start/submit, and wallet-add, with UTM params auto-merged from the
+  current URL into every event.
+- **Merchant lead notifications** (`src/lib/marketing/notify-lead.ts`) —
+  best-effort email (via a direct Resend API call, no SDK dependency) plus
+  an optional generic webhook; needs `RESEND_API_KEY` /
+  `LEAD_NOTIFICATION_EMAIL` / `LEAD_NOTIFICATION_FROM` (webhook needs only
+  `LEAD_WEBHOOK_URL`). Neither is a hard blocker like Apple Wallet — the
+  lead is written to `merchant_leads` regardless of whether anyone gets
+  emailed about it — but nothing fires until those are set.
+- **Legal pages** (`/privacy`, `/terms`) — plain pages rather than MDX (no
+  functional difference for static placeholder text), both flagged
+  on-page as needing legal review per H11 and PRD open question #4.
+
+Illustrations (`src/components/marketing/illustrations/`) cover the six
+hero items the copy explicitly names (heel, martini, coffee cup,
+chopsticks, dumpling, lemon slice) out of the spec's full 24-item set —
+extending it is the same pattern repeated, and isn't required by any P0
+requirement. `/business` and `/pricing` redirect to `/#business` /
+`/#pricing` rather than duplicating homepage sections under their own URL,
+since the whole site is one page (S1–S11).

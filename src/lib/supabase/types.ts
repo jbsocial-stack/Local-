@@ -8,6 +8,8 @@ export type MerchantPlan = 'standard' | 'pro';
 export type MerchantStatus = 'pending' | 'live' | 'paused';
 export type PassPlatform = 'apple' | 'google';
 export type MerchantRole = 'owner' | 'staff';
+export type LeadCategory = 'cafe' | 'restaurant' | 'bar' | 'retail' | 'services' | 'other';
+export type LeadStatus = 'new' | 'contacted' | 'trial' | 'live' | 'lost';
 
 type NoRelationships = { Relationships: [] };
 
@@ -171,6 +173,52 @@ export interface Database {
           push_token: string;
         };
         Update: Partial<Database['public']['Tables']['apple_device_registrations']['Row']>;
+      } & NoRelationships;
+      signups: {
+        Row: {
+          id: string;
+          email: string;
+          town_slug: string | null;
+          town_free_text: string | null;
+          postcode: string | null;
+          consent_marketing: boolean;
+          consent_version: string;
+          source: string | null;
+          utm: Record<string, unknown>;
+          ref_code: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['signups']['Row']> & {
+          email: string;
+          consent_version: string;
+        };
+        Update: Partial<Database['public']['Tables']['signups']['Row']>;
+      } & NoRelationships;
+      merchant_leads: {
+        Row: {
+          id: string;
+          business_name: string;
+          contact_name: string;
+          email: string;
+          phone: string | null;
+          town_slug: string;
+          venues: MerchantTier;
+          category: LeadCategory;
+          notes: string | null;
+          source: string | null;
+          utm: Record<string, unknown>;
+          status: LeadStatus;
+          created_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['merchant_leads']['Row']> & {
+          business_name: string;
+          contact_name: string;
+          email: string;
+          town_slug: string;
+          venues: MerchantTier;
+          category: LeadCategory;
+        };
+        Update: Partial<Database['public']['Tables']['merchant_leads']['Row']>;
       } & NoRelationships;
       ops_users: {
         Row: {
