@@ -52,13 +52,15 @@ npm run dev
 ```
 
 Apply the schema against a Supabase project (SQL editor or `supabase db
-push` with the CLI), in order — `supabase/migrations/0001` through `0008`.
+push` with the CLI), in order — `supabase/migrations/0001` through `0009`.
 `0005` adds the trigger that mirrors new `auth.users` rows (merchant owners
 and ops staff, who sign in via magic link) into `public.users`; `0007`
 creates the `merchant-photos` (public) and `printables` (private) storage
 buckets; `0008` adds the marketing site's `signups` and `merchant_leads`
 tables (anon insert-only RLS — no select policy at all, verified by
-`tests/integration/rls.test.ts`).
+`tests/integration/rls.test.ts`); `0009` adds the signed-in shopper app's
+profile fields, venue gallery/social links, likes, and the `avatars`
+storage bucket.
 
 In the Supabase dashboard, set **Auth → URL Configuration → Site URL** to
 your app's origin and add it (plus `/auth/callback`) to the redirect
@@ -248,3 +250,49 @@ extending it is the same pattern repeated, and isn't required by any P0
 requirement. `/business` and `/pricing` redirect to `/#business` /
 `/#pricing` rather than duplicating homepage sections under their own URL,
 since the whole site is one page (S1–S11).
+
+## Signed-in shopper app (`/[town]/app/`)
+
+A four-tab app for shoppers who've claimed an account (R9) — Wallet,
+Discover, Offers, Profile — behind a floating glassmorphism bottom nav
+(`src/components/shopper/BottomNav.tsx`) that only renders once there's a
+real Supabase Auth session (`src/app/[town]/app/layout.tsx` checks this;
+each page separately enforces the redirect-to-sign-in via
+`requireShopper()`, same split as `requireOwner`/`requireOps`).
+
+- **Wallet** (`.../app/wallet`) — a Monzo-style card showing the pass
+  balance, and every ledger row for that pass (earned and spent) below it.
+- **Discover** (`.../app/discover`) — the same category-filterable
+  directory as the public `/[town]/shops` (they now share
+  `src/lib/directory/get-listings.ts`), but every card links to a level-2
+  venue page (`.../app/discover/[merchant]`): photo gallery, description,
+  current offers, social links, and a like button
+  (`merchant_likes`, toggled via `/api/merchants/[id]/like` — identity
+  always comes from the caller's own session, never a request body).
+- **Offers** (`.../app/offers`) — a deals feed built entirely from data
+  merchants already manage in Settings (base multiplier + scheduled
+  boosts) — no new "offer" concept on the merchant side. Classification
+  (`src/lib/offers.ts`, unit-tested) sorts live boosts first, then a
+  merchant's standing multiplier if above 1x, then upcoming boosts;
+  anything already ended is dropped.
+- **Profile** (`.../app/profile`) — name/phone/avatar editing (email is
+  read-only here; changing it needs Supabase Auth's own confirm-both-
+  addresses flow, out of scope for this pass) and **delete account**.
+  Deletion can't hard-delete a user with real ledger history — the schema
+  already blocks that (`ledger.pass_id ... on delete restrict`), on
+  purpose, to protect the financial record — so it revokes every pass,
+  scrubs PII from `users`, and deletes the underlying Supabase Auth
+  identity via the admin API instead.
+
+**Venue-side additions** (owner's existing `/m/[town]/[merchant]/settings`
+page): a gallery uploader (`merchant_photos`, distinct from the single
+`photo_url` used as the directory thumbnail) and a social links form
+(`merchants.social_links`) — both feed directly into what Discover's venue
+page displays, so there's no separate "build your page" form to maintain.
+
+Testing note: unlike the marketing forms, these pages read a real Supabase
+Auth session server-side (`requireShopper`) rather than taking client-side
+fetches that `page.route` can mock — so Playwright coverage here is limited
+to what's testable without a live session (the sign-in redirect, the nav's
+absence when signed out). Point a real deployment with a seeded, signed-in
+session at these routes to exercise the rest.

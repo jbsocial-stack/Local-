@@ -38,6 +38,8 @@ export interface Database {
           id: string;
           email: string | null;
           display_name: string | null;
+          phone: string | null;
+          avatar_url: string | null;
           claimed_at: string | null;
           created_at: string;
         };
@@ -83,6 +85,7 @@ export interface Database {
           plan: MerchantPlan;
           status: MerchantStatus;
           base_multiplier: number;
+          social_links: Record<string, string>;
           created_at: string;
         };
         Insert: Partial<Database['public']['Tables']['merchants']['Row']> & {
@@ -228,6 +231,33 @@ export interface Database {
         };
         Insert: Partial<Database['public']['Tables']['ops_users']['Row']> & { email: string };
         Update: Partial<Database['public']['Tables']['ops_users']['Row']>;
+      } & NoRelationships;
+      merchant_photos: {
+        Row: {
+          id: string;
+          merchant_id: string;
+          url: string;
+          position: number;
+          created_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['merchant_photos']['Row']> & {
+          merchant_id: string;
+          url: string;
+        };
+        Update: Partial<Database['public']['Tables']['merchant_photos']['Row']>;
+      } & NoRelationships;
+      merchant_likes: {
+        Row: {
+          id: string;
+          merchant_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['merchant_likes']['Row']> & {
+          merchant_id: string;
+          user_id: string;
+        };
+        Update: Partial<Database['public']['Tables']['merchant_likes']['Row']>;
       } & NoRelationships;
       metrics_daily: {
         Row: {

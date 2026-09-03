@@ -19,6 +19,13 @@ const hoursSchema = z.record(
 // R6: owner edits name/category/address/hours/base multiplier. Address
 // changes are re-geocoded here so the directory map (R8) never shows a
 // stale pin.
+const socialLinksSchema = z.object({
+  instagram: z.string().url().optional(),
+  facebook: z.string().url().optional(),
+  twitter: z.string().url().optional(),
+  website: z.string().url().optional(),
+});
+
 const bodySchema = z.object({
   name: z.string().min(1).optional(),
   category: z.string().min(1).optional(),
@@ -26,6 +33,7 @@ const bodySchema = z.object({
   address: z.string().min(1).optional(),
   hours: hoursSchema.optional(),
   baseMultiplier: z.number().int().min(1).max(5).optional(),
+  socialLinks: socialLinksSchema.optional(),
 });
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<Params> }) {
@@ -39,11 +47,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<Para
   if (!parsed.success) {
     return NextResponse.json({ error: 'invalid_request' }, { status: 400 });
   }
-  const { address, baseMultiplier, hours, ...rest } = parsed.data;
+  const { address, baseMultiplier, hours, socialLinks, ...rest } = parsed.data;
 
   const update: MerchantUpdate = { ...rest };
   if (hours) update.hours = hours;
   if (baseMultiplier) update.base_multiplier = baseMultiplier;
+  if (socialLinks) update.social_links = socialLinks;
 
   if (address) {
     try {
