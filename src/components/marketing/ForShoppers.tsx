@@ -49,7 +49,6 @@ function PhoneMock() {
       <text x="46" y="212" fontSize="20" fontWeight="700" fill="#fff9e6">
         £4.20
       </text>
-      <rect x="150" y="150" width="44" height="44" rx="6" fill="#fff9e6" />
     </svg>
   );
 }
