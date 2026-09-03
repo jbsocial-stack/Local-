@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 import './globals.css';
 import { ServiceWorkerRegister } from './sw-register';
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-display min-h-screen">
         {children}
         <ServiceWorkerRegister />
+        <VercelAnalytics />
       </body>
     </html>
   );
