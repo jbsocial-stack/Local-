@@ -1,0 +1,14 @@
+node_modules
+.next
+*.tsbuildinfo
+out
+dist
+.env
+.env.local
+*.pem
+*.p12
+certs/
+coverage
+test-results
+playwright-report
+.DS_Store
