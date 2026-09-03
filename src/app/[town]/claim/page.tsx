@@ -3,6 +3,7 @@
 import { useParams, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser';
+import { ClaimPasswordForm } from '@/components/shopper/ClaimPasswordForm';
 
 // R9: "claim my account with an email later, so I can recover my points if
 // I lose my phone." Reached from the pass back field or the directory page.
@@ -49,29 +50,41 @@ export default function ClaimPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-cream px-6">
-      <form onSubmit={submit} className="w-full max-w-sm text-center">
+    <main className="min-h-screen flex items-center justify-center bg-cream px-6 py-12">
+      <div className="w-full max-w-sm text-center">
         <h1 className="text-xl font-bold text-coral">Claim your {params.town} pass</h1>
         <p className="mt-1 text-sm text-neutral-600">
-          Add an email so you can recover your points if you lose your phone.
+          Add an email (and a password, if you&apos;d rather not deal with email links) so you can
+          recover your points if you lose your phone.
         </p>
-        <input
-          type="email"
-          required
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-4 w-full rounded border border-coral px-3 py-2"
-        />
-        <button
-          type="submit"
-          disabled={status === 'sending'}
-          className="mt-3 w-full rounded-full bg-coral text-white py-2 disabled:opacity-50"
-        >
-          {status === 'sending' ? 'Sending…' : 'Email me a link'}
-        </button>
-        {status === 'error' && <p className="mt-2 text-sm text-red-600">Could not send the link — try again.</p>}
-      </form>
+
+        <ClaimPasswordForm town={params.town} passId={passId} />
+
+        <div className="my-6 flex items-center gap-3 text-xs text-ink/40">
+          <span className="h-px flex-1 bg-ink/10" />
+          or
+          <span className="h-px flex-1 bg-ink/10" />
+        </div>
+
+        <form onSubmit={submit}>
+          <input
+            type="email"
+            required
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded border border-coral px-3 py-2"
+          />
+          <button
+            type="submit"
+            disabled={status === 'sending'}
+            className="mt-3 w-full rounded-full bg-coral text-white py-2 disabled:opacity-50"
+          >
+            {status === 'sending' ? 'Sending…' : 'Email me a link'}
+          </button>
+          {status === 'error' && <p className="mt-2 text-sm text-red-600">Could not send the link — try again.</p>}
+        </form>
+      </div>
     </main>
   );
 }

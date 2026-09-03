@@ -296,3 +296,30 @@ fetches that `page.route` can mock — so Playwright coverage here is limited
 to what's testable without a live session (the sign-in redirect, the nav's
 absence when signed out). Point a real deployment with a seeded, signed-in
 session at these routes to exercise the rest.
+
+### Password sign-in (alongside the magic link)
+
+Magic-link email is still the default entry point (every pass starts
+anonymous — R1 — and only gets an identity at claim time), but waiting on
+an email every time is friction, so there's now a password option
+alongside it everywhere a shopper authenticates:
+
+- **`/sign-in`** (town-agnostic, linked from the marketing header) and
+  **`/[town]/app/sign-in`** — `PasswordSignInForm` tries
+  `supabase.auth.signInWithPassword` first; the `MagicLinkForm` below it
+  ("No password yet?") is the fallback for anyone who hasn't set one.
+- **`/[town]/claim`** (reached by tapping the back of a pass) —
+  `ClaimPasswordForm` lets a shopper set a password *and* claim their pass
+  in one step (`supabase.auth.signUp` + `POST /api/claim`, which is the
+  client-driven counterpart to `/auth/callback`'s `passId` handling), with
+  the email-link form still underneath as a fallback.
+- **Profile → Password** — `supabase.auth.updateUser({ password })` lets
+  anyone who claimed via magic link retroactively set a password so they
+  don't need email next time.
+
+One thing to check in the Supabase dashboard: if **Authentication →
+Providers → Email → Confirm email** is turned on, `signUp` won't return a
+session immediately — the shopper gets a confirmation email once (a
+different email than the magic link, but still one email) before their
+password works. Turn that off for a fully email-free password sign-up;
+existing magic-link accounts are unaffected either way.

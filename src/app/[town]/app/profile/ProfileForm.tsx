@@ -87,8 +87,50 @@ export function ProfileForm({ town, initial }: { town: string; initial: ProfileD
         {status === 'error' && <span className="ml-3 text-sm text-red-600">Could not save.</span>}
       </form>
 
+      <ChangePassword />
+
       <DeleteAccount town={town} />
     </div>
+  );
+}
+
+function ChangePassword() {
+  const [password, setPassword] = useState('');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus('saving');
+    const { error } = await createBrowserSupabaseClient().auth.updateUser({ password });
+    if (error) {
+      setStatus('error');
+      return;
+    }
+    setPassword('');
+    setStatus('saved');
+  }
+
+  return (
+    <form onSubmit={submit} className="space-y-3 rounded-xl bg-white p-4 shadow-sm">
+      <h2 className="font-semibold">Password</h2>
+      <p className="text-sm text-ink/60">
+        Set a password so you can sign in without waiting on an email link next time.
+      </p>
+      <input
+        type="password"
+        required
+        minLength={8}
+        placeholder="New password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full rounded border border-ink/20 px-3 py-2"
+      />
+      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-coral px-6 py-2 text-cream disabled:opacity-50">
+        {status === 'saving' ? 'Saving…' : 'Set password'}
+      </button>
+      {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
+      {status === 'error' && <span className="ml-3 text-sm text-red-600">Could not save.</span>}
+    </form>
   );
 }
 
