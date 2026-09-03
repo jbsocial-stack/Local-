@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Real font values (--font-outfit/--font-inter) are set on <body> in
+   layout.tsx once next/font loads them; these are just the pre-hydration
+   fallback so there's no flash of an unstyled font family. */
 :root {
-  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-display: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
 }
 
 body {

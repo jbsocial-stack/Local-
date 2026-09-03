@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import { Outfit, Inter } from 'next/font/google';
-import '../../../styles/brand.css';
 import { Analytics } from '@/components/marketing/Analytics';
 import { Header } from '@/components/marketing/Header';
 
@@ -17,29 +15,15 @@ export const metadata: Metadata = {
   },
 };
 
-// H10: self-hosted fonts (next/font downloads and serves them from our own
-// origin, not Google's) with font-display: swap, the default here.
-const outfit = Outfit({ subsets: ['latin'], weight: ['800'], variable: '--font-outfit' });
-const inter = Inter({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-inter' });
-
-// Scoped to the marketing route group only — product pages keep their own
-// look. CSS custom properties cascade to every descendant, so this just
-// overrides --font-display/--font-body (already Tailwind-mapped in
-// tailwind.config.ts) for everything under app/(marketing)/.
+// Fonts (Outfit/Inter) and brand.css are loaded once, app-wide, in the
+// root layout — the whole app shares one typographic system now, not just
+// the marketing route group.
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className={`${outfit.variable} ${inter.variable} font-body`}
-      style={
-        {
-          '--font-display': 'var(--font-outfit)',
-          '--font-body': 'var(--font-inter)',
-        } as React.CSSProperties
-      }
-    >
+    <>
       <Analytics />
       <Header />
       {children}
-    </div>
+    </>
   );
 }

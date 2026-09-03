@@ -1,3 +1,5 @@
+import { Eyebrow } from './Eyebrow';
+
 const PROBLEMS = [
   {
     title: 'Re-invigorate the high street',
@@ -15,13 +17,16 @@ const PROBLEMS = [
 
 export function ProblemColumns() {
   return (
-    <div className="grid gap-8 sm:grid-cols-3">
-      {PROBLEMS.map((p) => (
-        <div key={p.title}>
-          <h3 className="font-display text-xl">{p.title}</h3>
-          <p className="mt-1 text-ink/80">{p.body}</p>
-        </div>
-      ))}
+    <div>
+      <Eyebrow>The problem</Eyebrow>
+      <div className="mt-4 grid gap-8 sm:grid-cols-3">
+        {PROBLEMS.map((p) => (
+          <div key={p.title}>
+            <h3 className="font-display text-xl">{p.title}</h3>
+            <p className="mt-1 text-ink/80">{p.body}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

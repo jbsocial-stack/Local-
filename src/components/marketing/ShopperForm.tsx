@@ -73,26 +73,30 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
       className="space-y-4"
     >
       <input type="hidden" name="source" value="homepage" />
+      <h3 className="font-display text-3xl">Get the pass</h3>
+      <p className="text-ink/70">Tell us where you shop and we&apos;ll send the link.</p>
+
       <label className="block">
-        <span className="text-sm font-medium">Email</span>
+        <span className="sr-only">Email</span>
         <input
           type="email"
           name="email"
           required
+          placeholder="you@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+          className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3 placeholder:text-ink/40"
         />
       </label>
 
       <label className="block">
-        <span className="text-sm font-medium">Town</span>
+        <span className="sr-only">Town</span>
         <select
           name="townSlug"
           required
           value={townSlug}
           onChange={(e) => setTownSlug(e.target.value)}
-          className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+          className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3"
         >
           <option value="" disabled>
             Choose your town
@@ -115,7 +119,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
             required
             value={townFreeText}
             onChange={(e) => setTownFreeText(e.target.value)}
-            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+            className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3"
           />
         </label>
       )}
@@ -127,7 +131,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
           name="postcode"
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
-          className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+          className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3"
         />
       </label>
 
@@ -144,11 +148,12 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="rounded-full bg-coral px-6 py-3 font-medium text-cream disabled:opacity-50"
+        className="w-full rounded-full bg-ink px-6 py-3 font-medium text-cream disabled:opacity-50 sm:w-auto"
       >
-        {status === 'submitting' ? 'Signing up…' : 'Sign up'}
+        {status === 'submitting' ? 'Signing up…' : 'Send my pass'}
       </button>
-      {status === 'error' && <p className="text-sm text-red-600">Something went wrong — try again.</p>}
+      <p className="text-sm text-ink/60">Free for shoppers. No card required.</p>
+      {status === 'error' && <p className="text-sm text-red-700">Something went wrong — try again.</p>}
     </form>
   );
 }

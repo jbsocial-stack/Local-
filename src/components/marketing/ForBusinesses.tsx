@@ -1,3 +1,5 @@
+import { Eyebrow } from './Eyebrow';
+
 const COLUMNS = [
   {
     title: 'Your customers, finally.',
@@ -16,7 +18,8 @@ const COLUMNS = [
 export function ForBusinesses() {
   return (
     <div>
-      <h2 className="font-display text-3xl">For businesses</h2>
+      <Eyebrow tone="cream">For independent shops</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl">For businesses</h2>
       <div className="mt-6 grid gap-8 sm:grid-cols-3">
         {COLUMNS.map((c) => (
           <div key={c.title}>

@@ -1,7 +1,10 @@
+import { Eyebrow } from './Eyebrow';
+
 export function PricingTable() {
   return (
     <div>
-      <h2 className="font-display text-3xl">Pricing</h2>
+      <Eyebrow>Simple, honest pricing</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl">Pricing</h2>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full min-w-[640px] border-collapse text-left">
           <thead>

@@ -21,7 +21,7 @@ export function DiscoverDirectory({ town, listings }: { town: string; listings: 
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={() => setCategory(null)}
-            className={`rounded-full px-3 py-1 text-xs font-medium ${category === null ? 'bg-coral text-cream' : 'bg-white text-ink/70'}`}
+            className={`rounded-full px-3 py-1 text-xs font-medium ${category === null ? 'bg-ink text-cream' : 'bg-white/70 text-ink/70'}`}
           >
             All
           </button>
@@ -29,7 +29,7 @@ export function DiscoverDirectory({ town, listings }: { town: string; listings: 
             <button
               key={c}
               onClick={() => setCategory(c)}
-              className={`rounded-full px-3 py-1 text-xs font-medium ${category === c ? 'bg-coral text-cream' : 'bg-white text-ink/70'}`}
+              className={`rounded-full px-3 py-1 text-xs font-medium ${category === c ? 'bg-ink text-cream' : 'bg-white/70 text-ink/70'}`}
             >
               {c}
             </button>
@@ -40,7 +40,7 @@ export function DiscoverDirectory({ town, listings }: { town: string; listings: 
           <DiscoverMap listings={filtered} town={town} />
         </div>
 
-        <ul className="mt-4 divide-y divide-ink/10 rounded-xl bg-white shadow-sm">
+        <ul className="mt-4 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white/70">
           {filtered.map((shop) => (
             <li key={shop.id}>
               <Link href={`/${town}/app/discover/${shop.slug}`} className="flex items-center gap-3 px-4 py-3">

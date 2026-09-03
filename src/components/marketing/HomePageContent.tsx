@@ -19,39 +19,39 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
     <>
       <Hero town={town} />
 
-      <SectionBand index={1}>
+      <SectionBand index={1} color="plain">
         <HowItWorks />
       </SectionBand>
 
-      <SectionBand index={1} color="cream">
+      <SectionBand index={1} color="card">
         <ProblemColumns />
       </SectionBand>
 
-      <SectionBand index={3} color="coral">
+      <SectionBand index={3} color="ink">
         <Mission />
       </SectionBand>
 
-      <SectionBand index={4}>
+      <SectionBand index={4} color="card">
         <ForShoppers town={town} />
       </SectionBand>
 
-      <SectionBand index={4} color="cream">
+      <SectionBand index={4} color="yellow">
         <ShopperForm defaultTown={town} />
       </SectionBand>
 
-      <SectionBand index={6} color="coral" id="business">
+      <SectionBand index={6} color="ink" id="business">
         <ForBusinesses />
       </SectionBand>
 
-      <SectionBand index={7} color="cream" id="pricing">
+      <SectionBand index={7} color="card" id="pricing">
         <PricingTable />
       </SectionBand>
 
-      <SectionBand index={8} color="coral">
+      <SectionBand index={8} color="ink">
         <MerchantForm />
       </SectionBand>
 
-      <SectionBand index={9} color="coral">
+      <SectionBand index={9} color="card">
         <DemandMap />
       </SectionBand>
 

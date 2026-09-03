@@ -59,28 +59,28 @@ export function ProfileForm({ town, initial }: { town: string; initial: ProfileD
         </label>
       </div>
 
-      <form onSubmit={save} className="space-y-4 rounded-xl bg-white p-4 shadow-sm">
+      <form onSubmit={save} className="space-y-4 rounded-2xl border border-ink/10 bg-white/60 p-4">
         <label className="block text-sm font-medium">
           Name
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+            className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-2.5"
           />
         </label>
         <label className="block text-sm font-medium">
           Email
-          <input value={initial.email} disabled className="mt-1 w-full rounded border border-ink/10 bg-ink/5 px-3 py-2 text-ink/50" />
+          <input value={initial.email} disabled className="mt-1 w-full rounded-full border border-ink/10 bg-ink/5 px-4 py-2.5 text-ink/50" />
         </label>
         <label className="block text-sm font-medium">
           Phone
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="mt-1 w-full rounded border border-ink/20 px-3 py-2"
+            className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-2.5"
           />
         </label>
-        <button type="submit" disabled={status === 'saving'} className="rounded-full bg-coral px-6 py-2 text-cream">
+        <button type="submit" disabled={status === 'saving'} className="rounded-full bg-ink px-6 py-2.5 text-cream">
           {status === 'saving' ? 'Saving…' : 'Save'}
         </button>
         {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
@@ -111,7 +111,7 @@ function ChangePassword() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-3 rounded-xl bg-white p-4 shadow-sm">
+    <form onSubmit={submit} className="space-y-3 rounded-2xl border border-ink/10 bg-white/60 p-4">
       <h2 className="font-semibold">Password</h2>
       <p className="text-sm text-ink/60">
         Set a password so you can sign in without waiting on an email link next time.
@@ -123,9 +123,9 @@ function ChangePassword() {
         placeholder="New password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="w-full rounded border border-ink/20 px-3 py-2"
+        className="w-full rounded-full border border-ink/15 bg-white px-4 py-2.5"
       />
-      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-coral px-6 py-2 text-cream disabled:opacity-50">
+      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-ink px-6 py-2.5 text-cream disabled:opacity-50">
         {status === 'saving' ? 'Saving…' : 'Set password'}
       </button>
       {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
@@ -150,7 +150,7 @@ function DeleteAccount({ town }: { town: string }) {
   }
 
   return (
-    <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+    <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
       <h2 className="font-semibold text-red-700">Delete account</h2>
       <p className="mt-1 text-sm text-red-700/80">
         Your passes will be revoked and your personal details removed. This can&apos;t be undone.

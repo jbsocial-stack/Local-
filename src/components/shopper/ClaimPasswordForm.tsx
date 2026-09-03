@@ -81,7 +81,7 @@ export function ClaimPasswordForm({ town, passId }: { town: string; passId: stri
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded border border-coral px-3 py-2"
+          className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-3"
         />
       </label>
       <label className="block text-sm font-medium">
@@ -92,13 +92,13 @@ export function ClaimPasswordForm({ town, passId }: { town: string; passId: stri
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 w-full rounded border border-coral px-3 py-2"
+          className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-3"
         />
       </label>
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full rounded-full bg-coral py-2 text-white disabled:opacity-50"
+        className="w-full rounded-full bg-ink py-3 font-medium text-cream disabled:opacity-50"
       >
         {status === 'submitting' ? 'Please wait…' : mode === 'create' ? 'Create password & claim pass' : 'Sign in & claim pass'}
       </button>
