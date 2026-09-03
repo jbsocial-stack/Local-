@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { TOWNS } from '../../../config/towns';
 import { track } from '@/lib/marketing/analytics';
-import { Eyebrow } from './Eyebrow';
 
 const CATEGORIES = ['cafe', 'restaurant', 'bar', 'retail', 'services', 'other'] as const;
 const VENUES = ['1', '2', '3-4', '5+'] as const;
@@ -53,7 +52,7 @@ export function MerchantForm() {
   if (status === 'sent') {
     return (
       <div id="merchant-form">
-        <Eyebrow tone="cream">For independent shops</Eyebrow>
+        <h2 className="font-display text-3xl">Start a free trial</h2>
         <p className="mt-2 font-medium">Thanks — we&apos;ll be in touch within 2 working days to book your trial.</p>
       </div>
     );
@@ -61,9 +60,8 @@ export function MerchantForm() {
 
   return (
     <div id="merchant-form">
-      <Eyebrow tone="cream">For independent shops</Eyebrow>
-      <h2 className="mt-2 font-display text-3xl">See who&apos;s coming back.</h2>
-      <p className="mt-2 text-cream/80">Not just who&apos;s passing.</p>
+      <h2 className="font-display text-3xl">Start a free trial</h2>
+      <p className="mt-2 text-cream/80">We&apos;ll be in touch within 2 working days.</p>
       <form
         method="POST"
         action="/api/lead"
@@ -78,7 +76,7 @@ export function MerchantForm() {
           required
           value={businessName}
           onChange={(e) => setBusinessName(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         />
       </Field>
       <Field label="Contact name">
@@ -87,7 +85,7 @@ export function MerchantForm() {
           required
           value={contactName}
           onChange={(e) => setContactName(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         />
       </Field>
       <Field label="Email">
@@ -97,7 +95,7 @@ export function MerchantForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         />
       </Field>
       <Field label="Phone (optional)">
@@ -105,7 +103,7 @@ export function MerchantForm() {
           name="phone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         />
       </Field>
       <Field label="Town">
@@ -114,7 +112,7 @@ export function MerchantForm() {
           required
           value={townSlug}
           onChange={(e) => setTownSlug(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         >
           <option value="" disabled>
             Choose a town
@@ -131,7 +129,7 @@ export function MerchantForm() {
           name="venues"
           value={venues}
           onChange={(e) => setVenues(e.target.value as (typeof VENUES)[number])}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         >
           {VENUES.map((v) => (
             <option key={v} value={v}>
@@ -145,7 +143,7 @@ export function MerchantForm() {
           name="category"
           value={category}
           onChange={(e) => setCategory(e.target.value as (typeof CATEGORIES)[number])}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -159,7 +157,7 @@ export function MerchantForm() {
           name="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/10 px-4 py-2.5 placeholder:text-cream/40"
+          className="mt-1 w-full rounded-2xl border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
           rows={3}
         />
       </Field>

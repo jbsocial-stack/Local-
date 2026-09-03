@@ -47,7 +47,7 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
         <PricingTable />
       </SectionBand>
 
-      <SectionBand index={8} color="ink">
+      <SectionBand index={8} color="coral">
         <MerchantForm />
       </SectionBand>
 
