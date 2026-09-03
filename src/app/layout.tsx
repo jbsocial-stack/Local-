@@ -1,5 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { ServiceWorkerRegister } from './sw-register';
 
 export const metadata: Metadata = {
   title: 'Local — Eat. Shop. Earn.',
@@ -7,10 +8,17 @@ export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
 };
 
+export const viewport: Viewport = {
+  themeColor: '#F76C5E',
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="font-display min-h-screen">{children}</body>
+      <body className="font-display min-h-screen">
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

@@ -45,8 +45,8 @@ export function verifyStaffSessionToken(
       StaffSessionPayload & { iat: number };
     const ageSeconds = Math.floor(now.getTime() / 1000) - body.iat;
     if (ageSeconds < 0 || ageSeconds > SESSION_TTL_SECONDS) return null;
-    const { iat: _iat, ...payload } = body;
-    return payload;
+    const { merchantUserId, merchantId, role, scope } = body;
+    return { merchantUserId, merchantId, role, scope };
   } catch {
     return null;
   }
