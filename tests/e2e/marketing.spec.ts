@@ -11,6 +11,13 @@ test('/chichester pre-fills the hero pill and the shopper form town field', asyn
   await expect(page.locator('#shopper-form select[name="townSlug"]')).toHaveValue('chichester');
 });
 
+test('header sign-in link takes an existing shopper to /sign-in', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Sign in' }).click();
+  await expect(page).toHaveURL('/sign-in');
+  await expect(page.getByRole('heading', { name: 'Sign in to Local' })).toBeVisible();
+});
+
 test('shopper form: live town shows wallet buttons on success', async ({ page }) => {
   await page.route('**/api/signup', async (route) => {
     const body = route.request().postDataJSON();

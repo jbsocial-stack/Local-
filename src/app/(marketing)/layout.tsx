@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Outfit, Inter } from 'next/font/google';
 import '../../../styles/brand.css';
 import { Analytics } from '@/components/marketing/Analytics';
+import { Header } from '@/components/marketing/Header';
 
 // H8: default metadata for every marketing route; town pages override
 // title/description in their own generateMetadata (see [town]/page.tsx).
@@ -37,6 +38,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       }
     >
       <Analytics />
+      <Header />
       {children}
     </div>
   );
