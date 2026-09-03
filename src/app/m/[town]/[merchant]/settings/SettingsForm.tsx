@@ -6,6 +6,7 @@ import type { Database } from '@/lib/supabase/types';
 type Merchant = Database['public']['Tables']['merchants']['Row'];
 type Boost = Database['public']['Tables']['merchant_boosts']['Row'];
 type Staff = Pick<Database['public']['Tables']['merchant_users']['Row'], 'id' | 'name' | 'role' | 'email'>;
+type Photo = Database['public']['Tables']['merchant_photos']['Row'];
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 type DayHours = { open: string; close: string } | null;
@@ -15,15 +16,19 @@ export function SettingsForm({
   merchant,
   boosts,
   staff,
+  photos,
 }: {
   merchant: Merchant;
   boosts: Boost[];
   staff: Staff[];
+  photos: Photo[];
 }) {
   return (
     <div className="mt-6 space-y-8">
       <DetailsSection merchant={merchant} />
       <PhotoSection merchant={merchant} />
+      <GallerySection merchantId={merchant.id} photos={photos} />
+      <SocialLinksSection merchant={merchant} />
       <BoostsSection merchantId={merchant.id} boosts={boosts} />
       <StaffSection merchantId={merchant.id} staff={staff} />
       <PrintablesSection merchantId={merchant.id} />
@@ -184,6 +189,113 @@ function PhotoSection({ merchant }: { merchant: Merchant }) {
       )}
       <input type="file" accept="image/jpeg,image/png,image/webp" onChange={upload} className="mt-3" disabled={uploading} />
     </div>
+  );
+}
+
+function GallerySection({ merchantId, photos: initialPhotos }: { merchantId: string; photos: Photo[] }) {
+  const [photos, setPhotos] = useState(initialPhotos);
+  const [uploading, setUploading] = useState(false);
+
+  async function upload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const form = new FormData();
+    form.set('photo', file);
+    const res = await fetch(`/api/merchants/${merchantId}/photos`, { method: 'POST', body: form });
+    if (res.ok) {
+      const body = await res.json();
+      setPhotos((p) => [...p, body.photo]);
+    }
+    setUploading(false);
+  }
+
+  async function remove(photoId: string) {
+    await fetch(`/api/merchants/${merchantId}/photos/${photoId}`, { method: 'DELETE' });
+    setPhotos((p) => p.filter((x) => x.id !== photoId));
+  }
+
+  return (
+    <div className="rounded-xl bg-white p-6 shadow">
+      <h2 className="font-semibold">Gallery</h2>
+      <p className="mt-1 text-sm text-neutral-600">Shown on your Discover page — the more, the better.</p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        {photos.map((p) => (
+          <div key={p.id} className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={p.url} alt="" className="h-20 w-20 rounded-lg object-cover" />
+            <button
+              onClick={() => remove(p.id)}
+              className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-xs text-white"
+              aria-label="Remove photo"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={upload}
+        className="mt-3"
+        disabled={uploading}
+      />
+    </div>
+  );
+}
+
+function SocialLinksSection({ merchant }: { merchant: Merchant }) {
+  const initial = (merchant.social_links as Record<string, string>) ?? {};
+  const [instagram, setInstagram] = useState(initial.instagram ?? '');
+  const [facebook, setFacebook] = useState(initial.facebook ?? '');
+  const [twitter, setTwitter] = useState(initial.twitter ?? '');
+  const [website, setWebsite] = useState(initial.website ?? '');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus('saving');
+    const socialLinks: Record<string, string> = {};
+    if (instagram) socialLinks.instagram = instagram;
+    if (facebook) socialLinks.facebook = facebook;
+    if (twitter) socialLinks.twitter = twitter;
+    if (website) socialLinks.website = website;
+    const res = await fetch(`/api/merchants/${merchant.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ socialLinks }),
+    });
+    setStatus(res.ok ? 'saved' : 'error');
+  }
+
+  return (
+    <form onSubmit={save} className="rounded-xl bg-white p-6 shadow space-y-3">
+      <h2 className="font-semibold">Social links</h2>
+      <p className="text-sm text-neutral-600">Shown on your Discover page — leave any blank you don&apos;t use.</p>
+      {[
+        { label: 'Instagram', value: instagram, set: setInstagram },
+        { label: 'Facebook', value: facebook, set: setFacebook },
+        { label: 'Twitter / X', value: twitter, set: setTwitter },
+        { label: 'Website', value: website, set: setWebsite },
+      ].map(({ label, value, set }) => (
+        <label key={label} className="block text-sm">
+          {label}
+          <input
+            type="url"
+            placeholder="https://…"
+            value={value}
+            onChange={(e) => set(e.target.value)}
+            className="mt-1 w-full rounded border px-3 py-2"
+          />
+        </label>
+      ))}
+      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-coral text-white px-6 py-2">
+        {status === 'saving' ? 'Saving…' : 'Save links'}
+      </button>
+      {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
+      {status === 'error' && <span className="ml-3 text-sm text-red-600">Could not save — check the URLs.</span>}
+    </form>
   );
 }
 

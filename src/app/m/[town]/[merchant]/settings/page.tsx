@@ -25,7 +25,7 @@ export default async function MerchantSettingsPage({
   const auth = await requireOwner(merchant.id);
   if (!auth.ok) redirect(`/m/${town}/${merchantSlug}/owner-login`);
 
-  const [{ data: boosts }, { data: staff }] = await Promise.all([
+  const [{ data: boosts }, { data: staff }, { data: photos }] = await Promise.all([
     supabase
       .from('merchant_boosts')
       .select('*')
@@ -36,13 +36,14 @@ export default async function MerchantSettingsPage({
       .select('id, name, role, email')
       .eq('merchant_id', merchant.id)
       .order('role', { ascending: true }),
+    supabase.from('merchant_photos').select('*').eq('merchant_id', merchant.id).order('position'),
   ]);
 
   return (
     <main className="min-h-screen bg-cream px-4 py-8">
       <div className="mx-auto max-w-lg">
         <h1 className="text-xl font-bold text-coral">{merchant.name} — settings</h1>
-        <SettingsForm merchant={merchant} boosts={boosts ?? []} staff={staff ?? []} />
+        <SettingsForm merchant={merchant} boosts={boosts ?? []} staff={staff ?? []} photos={photos ?? []} />
       </div>
     </main>
   );
