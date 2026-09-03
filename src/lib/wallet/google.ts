@@ -49,6 +49,7 @@ export interface GooglePassInput {
   balancePoints: number;
   lastActivityLabel: string;
   qrPayload: string;
+  claimUrl: string; // R8/R9: "linked from the pass back field"
 }
 
 /** Returns the "Add to Google Wallet" save URL, or throws if unconfigured. */
@@ -67,6 +68,7 @@ export function generateGoogleWalletSaveUrl(input: GooglePassInput): string {
       balance: { string: `£${(input.balancePoints / 100).toFixed(2)}` },
     },
     textModulesData: [{ header: 'LAST ACTIVITY', body: input.lastActivityLabel }],
+    linksModuleData: { uris: [{ uri: input.claimUrl, description: 'Directory & account' }] },
     barcode: { type: 'QR_CODE', value: input.qrPayload },
   };
 

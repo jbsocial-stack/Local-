@@ -19,10 +19,12 @@ export async function authenticateAppleRequest(
   const supabase = createServiceClient();
   const { data: pass } = await supabase
     .from('passes')
-    .select('id, secret')
+    .select('id, secret, revoked_at')
     .eq('serial', serialNumber)
     .maybeSingle();
-  if (!pass) return null;
+  // R9 AC: a revoked pass (re-issued to a new device) must stop
+  // authenticating web-service calls, the same as it stops scanning.
+  if (!pass || pass.revoked_at) return null;
 
   const expected = Buffer.from(pass.secret, 'utf8');
   const actual = Buffer.from(token, 'utf8');

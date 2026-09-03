@@ -119,6 +119,7 @@ export interface Database {
           role: MerchantRole;
           name: string;
           pin_hash: string | null;
+          email: string | null;
           created_at: string;
         };
         Insert: Partial<Database['public']['Tables']['merchant_users']['Row']> & {
@@ -170,6 +171,15 @@ export interface Database {
           push_token: string;
         };
         Update: Partial<Database['public']['Tables']['apple_device_registrations']['Row']>;
+      } & NoRelationships;
+      ops_users: {
+        Row: {
+          id: string;
+          email: string;
+          created_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['ops_users']['Row']> & { email: string };
+        Update: Partial<Database['public']['Tables']['ops_users']['Row']>;
       } & NoRelationships;
       metrics_daily: {
         Row: {

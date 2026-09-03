@@ -6,6 +6,7 @@ import { generateToken, encodeQrPayload } from '@/lib/token/rotating-token';
 import { generateApplePass, AppleCertificatesMissingError } from '@/lib/wallet/apple';
 import { generateGoogleWalletSaveUrl, GoogleWalletCredentialsMissingError } from '@/lib/wallet/google';
 import { formatLastActivity } from '@/lib/wallet/last-activity';
+import { buildClaimUrl } from '@/lib/wallet/claim-url';
 
 // R1: no-login onboarding. Creates an anonymous user + pass and returns a
 // signed .pkpass (Apple) or a Save-to-Google-Wallet URL — no email/password
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
   }
 
   const qrPayload = encodeQrPayload(generateToken(secret, pass.id));
+  const claimUrl = buildClaimUrl(req.nextUrl.origin, townSlug, pass.id);
 
   if (platform === 'apple') {
     try {
@@ -71,6 +73,7 @@ export async function POST(req: NextRequest) {
         balancePoints: 0,
         lastActivityLabel: formatLastActivity(null),
         qrPayload,
+        claimUrl,
       });
       return new NextResponse(new Uint8Array(buffer), {
         status: 201,
@@ -97,6 +100,7 @@ export async function POST(req: NextRequest) {
       balancePoints: 0,
       lastActivityLabel: formatLastActivity(null),
       qrPayload,
+      claimUrl,
     });
     return NextResponse.json({ passId: pass.id, saveUrl }, { status: 201 });
   } catch (err) {

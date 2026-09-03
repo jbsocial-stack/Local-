@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typedRoutes: true,
   headers: async () => [
     {
       source: '/manifest.webmanifest',

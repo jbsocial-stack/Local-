@@ -4,6 +4,7 @@ import { authenticateAppleRequest } from '@/lib/wallet/apple-webservice-auth';
 import { generateApplePass, AppleCertificatesMissingError } from '@/lib/wallet/apple';
 import { generateToken, encodeQrPayload } from '@/lib/token/rotating-token';
 import { formatLastActivity } from '@/lib/wallet/last-activity';
+import { buildClaimUrl } from '@/lib/wallet/claim-url';
 
 interface Params {
   passTypeIdentifier: string;
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<Params
     return new NextResponse(null, { status: 304 });
   }
 
-  const { data: town } = await supabase.from('towns').select('name').eq('id', pass.town_id).single();
+  const { data: town } = await supabase.from('towns').select('name, slug').eq('id', pass.town_id).single();
   const { data: lastLedgerRow } = await supabase
     .from('ledger')
     .select('type, points, created_at')
@@ -49,6 +50,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<Params
       balancePoints: pass.balance_points,
       lastActivityLabel: formatLastActivity(lastLedgerRow ?? null),
       qrPayload,
+      claimUrl: buildClaimUrl(req.nextUrl.origin, town?.slug ?? '', pass.id),
     });
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,

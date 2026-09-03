@@ -47,6 +47,7 @@ export interface ApplePassInput {
   balancePoints: number;
   lastActivityLabel: string;
   qrPayload: string; // R2: rotating token payload, refreshed on every regeneration
+  claimUrl: string; // R8/R9: "linked from the pass back field"
 }
 
 const MODEL_DIR = path.join(process.cwd(), 'src/lib/wallet/apple-pass-model');
@@ -99,6 +100,12 @@ export async function generateApplePass(input: ApplePassInput): Promise<Buffer> 
     message: input.qrPayload,
     format: 'PKBarcodeFormatQR',
     messageEncoding: 'iso-8859-1',
+  });
+  pass.backFields.push({
+    key: 'manage',
+    label: 'DIRECTORY & ACCOUNT',
+    value: input.claimUrl,
+    dataDetectorTypes: ['PKDataDetectorTypeLink'],
   });
 
   return pass.getAsBuffer();
