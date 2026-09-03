@@ -118,9 +118,13 @@ create table metrics_daily (
   redeems int not null default 0,
   points_issued int not null default 0,
   points_redeemed int not null default 0,
-  gmv_pence bigint not null default 0,
-  primary key (town_id, coalesce(merchant_id, '00000000-0000-0000-0000-000000000000'::uuid), date)
+  gmv_pence bigint not null default 0
 );
+-- A plain `primary key` can't reference an expression like coalesce(), only
+-- columns — this unique index enforces the same "one row per town, per
+-- merchant (or town-wide when null), per day" invariant instead.
+create unique index metrics_daily_unique_idx
+  on metrics_daily (town_id, coalesce(merchant_id, '00000000-0000-0000-0000-000000000000'::uuid), date);
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security
