@@ -21,7 +21,7 @@ const COLUMNS = [
   },
 ];
 
-export function ForBusinesses() {
+export function ForBusinesses({ formHref = '#merchant-form' }: { formHref?: string }) {
   return (
     <div>
       <Eyebrow tone="cream">For independent shops</Eyebrow>
@@ -46,6 +46,10 @@ export function ForBusinesses() {
           </div>
         ))}
       </div>
+
+      <a href={formHref} className="mt-8 inline-block rounded-full bg-cream px-6 py-3 font-medium text-ink">
+        Start a free trial →
+      </a>
     </div>
   );
 }
