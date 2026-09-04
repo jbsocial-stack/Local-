@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser';
 
-// R9 alt path: claim the pass with a password instead of an email link — no
-// email round-trip at all, unless the Supabase project still has "Confirm
-// email" turned on, in which case signUp won't return a session and we fall
-// back to asking them to confirm once.
+// R9: claim the pass with a password — no email round-trip, unless the
+// Supabase project still has "Confirm email" turned on, in which case
+// signUp won't return a session and we fall back to asking them to confirm
+// once.
 export function ClaimPasswordForm({ town, passId }: { town: string; passId: string }) {
   const [mode, setMode] = useState<'create' | 'signin'>('create');
   const [email, setEmail] = useState('');
@@ -58,7 +58,7 @@ export function ClaimPasswordForm({ town, passId }: { town: string; passId: stri
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setStatus('error');
-      setErrorMsg('Incorrect password — or you may not have set one yet. Use the email link below instead.');
+      setErrorMsg('Incorrect email or password.');
       return;
     }
     await finishClaim();

@@ -13,10 +13,23 @@ test('wallet redirects to sign-in when not signed in', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Sign in to Local' })).toBeVisible();
 });
 
-test('sign-in page offers a password option alongside the email link', async ({ page }) => {
+test('sign-in page is password-only', async ({ page }) => {
   await page.goto('/chichester/app/sign-in');
   await expect(page.getByRole('button', { name: 'Sign in with password' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'No password yet?' })).toBeVisible();
+  await expect(page.getByLabel('Email')).toBeVisible();
+  await expect(page.getByLabel('Password')).toBeVisible();
+});
+
+// resetPasswordForEmail/updateUser/getUser are real Supabase Auth client
+// calls (not our own API routes), so — same documented limitation as the
+// rest of this file — nothing past navigation is exercisable without a
+// live Supabase project.
+test('forgot password link leads to the reset-password flow', async ({ page }) => {
+  await page.goto('/chichester/app/sign-in');
+  await page.getByRole('link', { name: 'Forgot password?' }).click();
+  await expect(page).toHaveURL('/reset-password');
+  await expect(page.getByRole('heading', { name: 'Reset your password' })).toBeVisible();
+  await expect(page.getByLabel('Email')).toBeVisible();
 });
 
 test('the glass bottom nav is absent when signed out', async ({ page }) => {
