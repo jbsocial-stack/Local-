@@ -8,7 +8,7 @@ const BULLETS = [
   'Free. Forever.',
 ];
 
-export function ForShoppers({ town }: { town?: TownConfig }) {
+export function ForShoppers({ town, formHref = '#shopper-form' }: { town?: TownConfig; formHref?: string }) {
   const live = town?.status === 'live';
   return (
     <div className="grid items-center gap-10 md:grid-cols-2">
@@ -26,7 +26,7 @@ export function ForShoppers({ town }: { town?: TownConfig }) {
             </li>
           ))}
         </ul>
-        <a href="#shopper-form" className="mt-6 inline-block rounded-full bg-ink px-6 py-3 font-medium text-cream">
+        <a href={formHref} className="mt-6 inline-block rounded-full bg-ink px-6 py-3 font-medium text-cream">
           {live ? 'Get your pass' : 'Sign me up'}
         </a>
       </div>

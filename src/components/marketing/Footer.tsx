@@ -1,5 +1,5 @@
 const LINKS = [
-  { label: 'Shoppers', href: '#shopper-form' },
+  { label: 'Shoppers', href: '/shoppers' },
   { label: 'Businesses', href: '/business' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Privacy', href: '/privacy' },

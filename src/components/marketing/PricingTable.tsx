@@ -6,7 +6,7 @@ const TIERS = [
     price: 'Free',
     unit: 'forever',
     bullets: ['Pass, earn, spend, map, missions'],
-    cta: { label: 'Get your pass', href: '#shopper-form' },
+    cta: { label: 'Get your pass', href: '/shoppers' },
     style: 'card' as const,
   },
   {
@@ -19,7 +19,7 @@ const TIERS = [
       'Map listing, 1 push offer/week',
       'Poster & window sticker',
     ],
-    cta: { label: 'Request a trial', href: '#merchant-form' },
+    cta: { label: 'Request a trial', href: '/business' },
     style: 'ink' as const,
   },
   {
@@ -27,7 +27,7 @@ const TIERS = [
     price: '+£60',
     unit: '/mo',
     bullets: ['Unlimited push', 'Lapsed-customer lists', 'Segmentation', 'Email lead gen'],
-    cta: { label: 'Ask about Pro', href: '#merchant-form' },
+    cta: { label: 'Ask about Pro', href: '/business' },
     style: 'card' as const,
   },
 ];

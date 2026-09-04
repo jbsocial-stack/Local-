@@ -202,13 +202,24 @@ motion, not a build item. Phase D (P1: push offers, missions/streaks, Google
 Wallet parity if needed, lapsed-customer list, multi-venue merchants,
 segmentation) is intentionally not built.
 
-### Marketing homepage (H1–H11)
+### Marketing site (H1–H11)
 
 - **Town config** (`config/towns.ts`) — single source of truth for the hero
   pill, the shopper form's town select, and the demand map's coordinates.
   Currently seeded with Chichester (`coming-soon`) plus seven other South
   East towns (`planned`) as a starting set — add more towns by adding rows,
   no code changes needed.
+- **Site structure**: the homepage (`/`, `/[town]`) is an overview — the
+  benefits of being a shopper or a business, plus a link out for each —
+  rather than a single long page with both sign-up forms embedded. The
+  forms themselves live on their own pages: `/shoppers` (and the
+  town-scoped `/[town]/shoppers`, which pre-fills the town field) and
+  `/business`. `ShopperPageContent.tsx`/`BusinessPageContent.tsx` compose
+  each page from the same benefit components (`ForShoppers`,
+  `ForBusinesses`) the homepage uses — so the "why" is consistent
+  everywhere, only the form is page-specific. `BurgerMenu.tsx` (in the
+  sticky `Header`) is how you get between all of these, particularly on
+  mobile where there's no room for a full nav bar.
 - **Both forms** (`src/components/marketing/ShopperForm.tsx`,
   `MerchantForm.tsx`, `src/app/api/{signup,lead}/`) — real `<form
   method="POST">` elements that work with JavaScript disabled (the route
@@ -218,6 +229,15 @@ segmentation) is intentionally not built.
   trial-booking confirmation). Duplicate shopper sign-ups (same email +
   town) are a no-op success, not an error — enforced by a unique index,
   same fix pattern as `metrics_daily`'s.
+- **Cards-stacking scroll effect** (`SectionBand`'s `stackOrder` prop,
+  `styles/brand.css`) — consecutive sections passed a sequential
+  `stackOrder` are `position: sticky` at a shared offset with increasing
+  z-index, so each one's top edge catches up to and visually covers the
+  previous one as you scroll. Pure CSS (no scroll-jank risk), falls back to
+  normal static flow under `prefers-reduced-motion: reduce`. Stacking cards
+  must use fully opaque backgrounds (`STACK_CARD_STYLES` in
+  `SectionBand.tsx`) — a translucent one lets whatever's underneath show
+  through mid-transition.
 - **Demand map** (`src/components/marketing/DemandMap.tsx`,
   `src/lib/marketing/demand-map.ts`) — signups aggregated by town, a simple
   equirectangular lat/lng projection onto a stylised (not survey-accurate)
@@ -245,13 +265,9 @@ segmentation) is intentionally not built.
   functional difference for static placeholder text), both flagged
   on-page as needing legal review per H11 and PRD open question #4.
 
-Illustrations (`src/components/marketing/illustrations/`) cover the six
-hero items the copy explicitly names (heel, martini, coffee cup,
-chopsticks, dumpling, lemon slice) out of the spec's full 24-item set —
-extending it is the same pattern repeated, and isn't required by any P0
-requirement. `/business` and `/pricing` redirect to `/#business` /
-`/#pricing` rather than duplicating homepage sections under their own URL,
-since the whole site is one page (S1–S11).
+`/business` is a real page (see above); `/pricing` still redirects to
+`/#pricing` since pricing — both shopper and business tiers together — only
+makes sense as one comparison, not split across the shopper/business pages.
 
 ## Signed-in shopper app (`/[town]/app/`)
 

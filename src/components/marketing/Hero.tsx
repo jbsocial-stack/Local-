@@ -3,14 +3,14 @@
 import type { TownConfig } from '../../../config/towns';
 import { track } from '@/lib/marketing/analytics';
 
-// S1: two CTAs of equal weight, a town pill driven by config, and a static
-// pass-card mockup (same visual language as the real WalletCard in the
-// signed-in app). `town` is omitted on the generic homepage and passed on
-// `/[town]` to pre-fill the pill (H4/H8).
+// S1: a centred hero — headline, a 2-up choice between shopper/business (not
+// full-width CTAs), a town pill, and a personalised-feeling pass-card
+// mockup. `town` is omitted on the generic homepage and passed on `/[town]`
+// to pre-fill the pill (H4/H8).
 export function Hero({ town }: { town?: TownConfig }) {
   return (
     <section className="px-4 py-4 sm:px-6">
-      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-coral px-6 py-16 text-cream sm:px-10">
+      <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl bg-coral px-6 py-16 text-center text-cream sm:px-10">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-orange-400/40 blur-2xl"
@@ -20,35 +20,30 @@ export function Hero({ town }: { town?: TownConfig }) {
           className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-cream/10 blur-xl"
         />
 
-        <div className="relative grid items-center gap-10 md:grid-cols-2">
-          <div>
-            <span className="inline-block rounded-full bg-ink px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-cream">
-              High-street loyalty, together
-            </span>
-            <h1 className="mt-4 font-display text-[14vw] leading-[0.85] md:text-8xl">Local</h1>
-            <p className="mt-4 text-lg font-medium text-cream">Unlocking collective loyalty marketing.</p>
+        <div className="relative mx-auto flex max-w-md flex-col items-center">
+          <h1 className="font-display text-[14vw] leading-[0.85] sm:text-7xl">Local</h1>
+          <p className="mt-4 text-lg font-medium text-cream">Unlocking collective loyalty marketing.</p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#shopper-form"
-                onClick={() => track('cta_click', { type: 'shopper', town: town?.slug ?? '' })}
-                className="rounded-full bg-ink px-6 py-3 text-center font-medium text-cream"
-              >
-                I&apos;m a shopper →
-              </a>
-              <a
-                href="#merchant-form"
-                onClick={() => track('cta_click', { type: 'merchant', town: town?.slug ?? '' })}
-                className="rounded-full bg-cream px-6 py-3 text-center font-medium text-ink"
-              >
-                I run a business →
-              </a>
-            </div>
-
-            <TownPill town={town} />
+          <div className="mt-8 grid w-full grid-cols-2 gap-3">
+            <ChoiceTile
+              href="/shoppers"
+              label="I'm a shopper"
+              detail="Get the pass"
+              tone="ink"
+              onClick={() => track('cta_click', { type: 'shopper', town: town?.slug ?? '' })}
+            />
+            <ChoiceTile
+              href="/business"
+              label="I run a business"
+              detail="Start a trial"
+              tone="cream"
+              onClick={() => track('cta_click', { type: 'merchant', town: town?.slug ?? '' })}
+            />
           </div>
 
-          <div className="flex justify-center">
+          <TownPill town={town} />
+
+          <div className="mt-10 w-full max-w-xs">
             <PassCardMock />
           </div>
         </div>
@@ -57,20 +52,49 @@ export function Hero({ town }: { town?: TownConfig }) {
   );
 }
 
+function ChoiceTile({
+  href,
+  label,
+  detail,
+  tone,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  detail: string;
+  tone: 'ink' | 'cream';
+  onClick: () => void;
+}) {
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl px-3 text-center ${
+        tone === 'ink' ? 'bg-ink text-cream' : 'bg-cream text-ink'
+      }`}
+    >
+      <span className="font-display text-lg leading-tight">{label}</span>
+      <span className={`text-sm ${tone === 'ink' ? 'text-cream/70' : 'text-ink/60'}`}>{detail} →</span>
+    </a>
+  );
+}
+
 function PassCardMock() {
   return (
-    <div className="w-full max-w-xs rounded-3xl bg-ink p-6 text-cream shadow-xl">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/60">Local pass</span>
-        <span className="rounded-full bg-accent-yellow px-3 py-1 text-xs font-semibold text-ink">Chichester</span>
-      </div>
-      <p className="mt-10 font-display text-5xl">£24.60</p>
-      <p className="mt-1 text-sm text-cream/70">2,460 points · ready to spend</p>
-      <div className="mt-8 flex items-center gap-3 border-t border-cream/15 pt-4">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/15 text-sm font-semibold">
-          L
+    <div className="aspect-[1.586/1] w-full rounded-2xl bg-gradient-to-br from-ink to-ink/80 p-5 text-left text-cream shadow-2xl">
+      <div className="flex items-start justify-between">
+        <span className="h-6 w-8 rounded-md bg-accent-yellow/90" aria-hidden />
+        <span className="rounded-full bg-cream/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide">
+          Chichester
         </span>
-        <span className="text-sm text-cream/70">Lives in Apple &amp; Google Wallet</span>
+      </div>
+      <p className="mt-4 font-mono text-lg tracking-[0.2em] text-cream/90">•••• •••• •••• 24A6</p>
+      <div className="mt-4 flex items-end justify-between">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-cream/50">Cardholder</p>
+          <p className="text-sm font-medium">Alex Morgan</p>
+        </div>
+        <span className="font-display text-xl">Local</span>
       </div>
     </div>
   );
