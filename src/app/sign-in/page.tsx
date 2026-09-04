@@ -3,9 +3,9 @@
 import { PasswordSignInForm } from '@/components/shopper/PasswordSignInForm';
 
 // Town-agnostic entry point, linked from the marketing header. Password-only
-// — an account gets its password when the pass is claimed (see
-// /[town]/claim). Lands on /app, which looks up which town's pass this
-// email owns and forwards to that town's wallet.
+// — the account and its password are created together at signup
+// (/[town]/shoppers, for a live town). Lands on /app, which looks up which
+// town's pass this email owns and forwards to that town's wallet.
 export default function SignInPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-cream px-4 py-12">

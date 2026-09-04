@@ -50,7 +50,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<Params
       balancePoints: pass.balance_points,
       lastActivityLabel: formatLastActivity(lastLedgerRow ?? null),
       qrPayload,
-      claimUrl: buildClaimUrl(req.nextUrl.origin, town?.slug ?? '', pass.id),
+      claimUrl: buildClaimUrl(req.nextUrl.origin, town?.slug ?? ''),
     });
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,

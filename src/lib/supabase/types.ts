@@ -51,7 +51,7 @@ export interface Database {
           id: string;
           user_id: string;
           town_id: string;
-          platform: PassPlatform;
+          platform: PassPlatform | null;
           serial: string;
           secret: string;
           balance_points: number;
@@ -62,7 +62,6 @@ export interface Database {
         Insert: Partial<Database['public']['Tables']['passes']['Row']> & {
           user_id: string;
           town_id: string;
-          platform: PassPlatform;
           serial: string;
           secret: string;
         };

@@ -2,10 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { resolveSignupTown } from '../../src/lib/marketing/signup';
 
 describe('resolveSignupTown', () => {
-  it('resolves a coming-soon config town by slug', () => {
+  it('resolves a live config town by slug', () => {
     const result = resolveSignupTown('chichester', null);
-    expect(result.kind).toBe('coming-soon');
+    expect(result.kind).toBe('live');
     expect(result.label).toBe('Chichester');
+  });
+
+  it('resolves a planned config town by slug', () => {
+    const result = resolveSignupTown('winchester', null);
+    expect(result.kind).toBe('planned');
+    expect(result.town?.slug).toBe('winchester');
+    expect(result.label).toBe('Winchester');
   });
 
   it('falls through to planned for a slug not in config', () => {

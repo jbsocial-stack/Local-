@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { requireShopper } from '@/lib/auth/require-shopper';
 import { createServiceClient } from '@/lib/supabase/server';
 import { NoPassMessage } from '@/components/shopper/NoPassMessage';
+import { AddToWalletButtons } from '@/components/shopper/AddToWalletButtons';
 import { formatPence } from '@/lib/ledger/points';
 import { findTown } from '../../../../../config/towns';
 
@@ -40,7 +41,8 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-ink/45">
           Your wallet pass, always in your pocket
         </p>
-        <WalletCard balancePoints={auth.pass.balancePoints} townName={townName} />
+        <WalletCard balancePoints={auth.pass.balancePoints} townName={townName} platform={auth.pass.platform} />
+        {!auth.pass.platform && <AddToWalletButtons town={town} />}
 
         <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-ink/50">Activity</h2>
         <ul className="mt-3 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white/60">
@@ -71,7 +73,15 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
   );
 }
 
-function WalletCard({ balancePoints, townName }: { balancePoints: number; townName: string }) {
+function WalletCard({
+  balancePoints,
+  townName,
+  platform,
+}: {
+  balancePoints: number;
+  townName: string;
+  platform: 'apple' | 'google' | null;
+}) {
   return (
     <div className="mt-3 rounded-3xl bg-gradient-to-br from-coral to-orange-400 p-6 text-cream shadow-lg">
       <div className="flex items-center justify-between">
@@ -88,7 +98,9 @@ function WalletCard({ balancePoints, townName }: { balancePoints: number; townNa
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/20 text-sm font-semibold">
           L
         </span>
-        <span className="text-sm text-cream/80">Tap to open in Apple or Google Wallet</span>
+        <span className="text-sm text-cream/80">
+          {platform ? `In your ${platform === 'apple' ? 'Apple' : 'Google'} Wallet` : 'Not yet added to a wallet'}
+        </span>
       </div>
     </div>
   );

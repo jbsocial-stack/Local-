@@ -5,7 +5,7 @@ import type { PassPlatform } from '../supabase/types';
 export interface ShopperPass {
   id: string;
   balancePoints: number;
-  platform: PassPlatform;
+  platform: PassPlatform | null;
 }
 
 export type RequireShopperResult =

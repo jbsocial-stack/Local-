@@ -7,13 +7,19 @@ import { test, expect } from '@playwright/test';
 //
 // The shopper/merchant forms live on their own pages now (/shoppers,
 // /business), not inline on the homepage — see HomePageContent.tsx.
+// Chichester is the one `live` town in config/towns.ts, so it's the one
+// that gets the password field and a real account+pass on signup; every
+// other configured town is `planned` and stays on the waitlist path.
 
-test('/chichester pre-fills the hero pill; /chichester/shoppers pre-fills the form', async ({ page }) => {
+test('/chichester pre-fills the hero pill (live); /chichester/shoppers pre-fills the form and asks for a password', async ({
+  page,
+}) => {
   await page.goto('/chichester');
-  await expect(page.getByText('Launching in Chichester · Autumn 2026')).toBeVisible();
+  await expect(page.getByText('Live now in Chichester')).toBeVisible();
 
   await page.goto('/chichester/shoppers');
   await expect(page.locator('#shopper-form select[name="townSlug"]')).toHaveValue('chichester');
+  await expect(page.locator('#shopper-form input[name="password"]')).toBeVisible();
 });
 
 test('header sign-in link takes an existing shopper to /sign-in', async ({ page }) => {
@@ -35,79 +41,70 @@ test('burger menu links to the shopper and business pages', async ({ page }) => 
   await expect(page).toHaveURL('/business');
 });
 
-test('shopper form: live town shows wallet buttons on success', async ({ page }) => {
+// One form, one step: signing up for a live town creates the account, the
+// pass, and a signed-in session in a single request, then sends the
+// browser straight into the wallet — no separate claim page, no wallet-app
+// dependency to get there. requireShopper's real check (a live Supabase
+// session) isn't exercisable in this sandbox, so this just confirms the
+// client acts on a successful response by navigating to `redirectTo`.
+test('shopper form: signing up for the live town goes straight into the signed-in wallet', async ({ page }) => {
   await page.route('**/api/signup', async (route) => {
     const body = route.request().postDataJSON();
     expect(body.email).toBe('laura@example.com');
+    expect(body.password).toBe('correcthorsebattery');
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ status: 'live', townName: 'Chichester' }),
+      body: JSON.stringify({ status: 'live', townName: 'Chichester', redirectTo: '/chichester/app/wallet' }),
     });
+  });
+  // The wallet page itself needs a real session to render — redirect it to
+  // something inert rather than letting the real (session-gated) route run.
+  await page.route('**/chichester/app/wallet', (route) => route.fulfill({ status: 200, body: 'ok' }));
+
+  await page.goto('/chichester/shoppers');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form input[name="password"]').fill('correcthorsebattery');
+  await page.locator('#shopper-form button[type="submit"]').click();
+
+  await page.waitForURL('**/chichester/app/wallet');
+});
+
+test('shopper form: an existing account with the wrong password gets a clear error, not a dead end', async ({
+  page,
+}) => {
+  await page.route('**/api/signup', async (route) => {
+    await route.fulfill({ status: 409, contentType: 'application/json', body: JSON.stringify({ error: 'incorrect_password' }) });
   });
 
   await page.goto('/chichester/shoppers');
   await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form input[name="password"]').fill('wrongpassword');
   await page.locator('#shopper-form button[type="submit"]').click();
 
-  await expect(page.getByText("You're in! Add your pass now:")).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Add to Apple Wallet' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Add to Google Wallet' })).toBeVisible();
+  await expect(
+    page.getByText('You already have an account — sign in instead, or reset your password.'),
+  ).toBeVisible();
 });
 
-// Regression test: Apple/Google Wallet needing real certs/credentials is a
-// known deploy blocker (README), which makes /api/pass return a 503 — but
-// it still creates the pass row and returns its id, so the shopper must
-// still be able to reach /[town]/claim rather than getting stuck on a bare
-// error with no way to set up their account.
-test('shopper form: wallet-not-configured error still surfaces a claim link', async ({ page }) => {
+test('shopper form: coming-soon status from the API shows the waiting-list message', async ({ page }) => {
   await page.route('**/api/signup', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ status: 'live', townName: 'Chichester' }),
-    });
-  });
-  await page.route('**/api/pass', async (route) => {
-    await route.fulfill({
-      status: 503,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        error: 'google_wallet_not_configured',
-        message: 'Google Wallet is not configured yet.',
-        passId: '11111111-1111-1111-1111-111111111111',
-      }),
+      body: JSON.stringify({ status: 'coming-soon', townName: 'Winchester' }),
     });
   });
 
-  await page.goto('/chichester/shoppers');
-  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
-  await page.locator('#shopper-form button[type="submit"]').click();
-  await page.getByRole('button', { name: 'Add to Google Wallet' }).click();
-
-  await expect(page.getByText('Google Wallet is not configured yet.')).toBeVisible();
-  const claimLink = page.getByRole('link', { name: 'Set up your account →' });
-  await expect(claimLink).toBeVisible();
-  await expect(claimLink).toHaveAttribute(
-    'href',
-    '/chichester/claim?passId=11111111-1111-1111-1111-111111111111',
-  );
-});
-
-test('shopper form: coming-soon town shows the waiting-list message', async ({ page }) => {
-  await page.route('**/api/signup', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ status: 'coming-soon', townName: 'Chichester' }),
-    });
-  });
-
-  await page.goto('/chichester/shoppers');
+  // Winchester is `planned` in config, not `live` — no password field, so
+  // this exercises the plain waitlist submit path.
+  await page.goto('/shoppers');
+  await page.locator('#shopper-form select[name="townSlug"]').selectOption('winchester');
+  await expect(page.locator('#shopper-form input[name="password"]')).toHaveCount(0);
   await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
   await page.locator('#shopper-form button[type="submit"]').click();
 
-  await expect(page.getByText("You're in. We'll tell you the day Chichester goes live.")).toBeVisible();
+  await expect(page.getByText("You're in. We'll tell you the day Winchester goes live.")).toBeVisible();
 });
 
 test('shopper form: planned/other town shows the vote count', async ({ page }) => {

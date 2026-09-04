@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
   const balancePoints = finalPass?.balance_points ?? 0;
 
   const qrPayload = encodeQrPayload(generateToken(secret, newPass.id));
-  const claimUrl = buildClaimUrl(req.nextUrl.origin, townSlug, newPass.id);
+  const claimUrl = buildClaimUrl(req.nextUrl.origin, townSlug);
 
   if (platform === 'apple') {
     try {
