@@ -128,6 +128,18 @@ Google Wallet (`src/lib/wallet/google.ts`) follows the same pattern against
 `GOOGLE_WALLET_SERVICE_ACCOUNT_KEY`, and is not blocked by anything in the
 PRD's open questions — it just needs a Google Wallet issuer account set up.
 
+**Until either is configured, shoppers can still fully onboard.** `/api/pass`
+creates the `users`/`passes` rows regardless of whether the wallet part
+succeeds, and returns the new pass's id even on the `503` (`ShopperForm`'s
+`WalletButtons` reads it from the JSON body on error, or the `X-Pass-Id`
+response header on an Apple success, since that response body is the
+`.pkpass` binary). Either way, a "Set up your account →" link to
+`/[town]/claim?passId=...` appears right there — this is the fallback for
+reaching the claim page without needing a real device with the pass
+actually added to a wallet app (normally you'd tap the back of the pass;
+that link only exists once it's genuinely in Apple/Google Wallet, which
+doesn't work for desktop testing or before wallet is configured).
+
 ## What's implemented
 
 ### Phase A (R1–R5)

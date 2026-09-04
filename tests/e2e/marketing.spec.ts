@@ -55,6 +55,45 @@ test('shopper form: live town shows wallet buttons on success', async ({ page })
   await expect(page.getByRole('button', { name: 'Add to Google Wallet' })).toBeVisible();
 });
 
+// Regression test: Apple/Google Wallet needing real certs/credentials is a
+// known deploy blocker (README), which makes /api/pass return a 503 — but
+// it still creates the pass row and returns its id, so the shopper must
+// still be able to reach /[town]/claim rather than getting stuck on a bare
+// error with no way to set up their account.
+test('shopper form: wallet-not-configured error still surfaces a claim link', async ({ page }) => {
+  await page.route('**/api/signup', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ status: 'live', townName: 'Chichester' }),
+    });
+  });
+  await page.route('**/api/pass', async (route) => {
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        error: 'google_wallet_not_configured',
+        message: 'Google Wallet is not configured yet.',
+        passId: '11111111-1111-1111-1111-111111111111',
+      }),
+    });
+  });
+
+  await page.goto('/chichester/shoppers');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form button[type="submit"]').click();
+  await page.getByRole('button', { name: 'Add to Google Wallet' }).click();
+
+  await expect(page.getByText('Google Wallet is not configured yet.')).toBeVisible();
+  const claimLink = page.getByRole('link', { name: 'Set up your account →' });
+  await expect(claimLink).toBeVisible();
+  await expect(claimLink).toHaveAttribute(
+    'href',
+    '/chichester/claim?passId=11111111-1111-1111-1111-111111111111',
+  );
+});
+
 test('shopper form: coming-soon town shows the waiting-list message', async ({ page }) => {
   await page.route('**/api/signup', async (route) => {
     await route.fulfill({

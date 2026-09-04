@@ -80,6 +80,11 @@ export async function POST(req: NextRequest) {
         headers: {
           'Content-Type': 'application/vnd.apple.pkpass',
           'Content-Disposition': `attachment; filename="local-${townSlug}.pkpass"`,
+          // Read by the client to link straight to /[town]/claim — the
+          // pass's own back-field link only works once it's actually been
+          // added to a real Apple Wallet, which isn't always possible
+          // (desktop browsers, testing, non-Apple devices).
+          'X-Pass-Id': pass.id,
         },
       });
     } catch (err) {

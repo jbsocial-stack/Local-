@@ -186,6 +186,13 @@ function ShopperSuccess({ state }: { state: SuccessState }) {
 
 function WalletButtons({ townSlug }: { townSlug: string }) {
   const [error, setError] = useState<string | null>(null);
+  // A pass row is created whether or not the wallet part succeeds (Apple/
+  // Google Wallet needing real certs/credentials is a known deploy
+  // blocker — see README) — so the claim link should show up either way,
+  // rather than leaving a shopper stuck with just an error and no way to
+  // reach /[town]/claim (which normally needs the pass's own back-field
+  // link, only reachable once it's actually in a real wallet app).
+  const [passId, setPassId] = useState<string | null>(null);
 
   async function issue(platform: 'apple' | 'google') {
     setError(null);
@@ -199,8 +206,10 @@ function WalletButtons({ townSlug }: { townSlug: string }) {
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         setError(body.message ?? 'Could not create your pass');
+        if (body.passId) setPassId(body.passId);
         return;
       }
+      setPassId(res.headers.get('X-Pass-Id'));
       const blob = await res.blob();
       window.location.href = URL.createObjectURL(blob);
       return;
@@ -208,20 +217,32 @@ function WalletButtons({ townSlug }: { townSlug: string }) {
     const body = await res.json();
     if (!res.ok) {
       setError(body.message ?? 'Could not create your pass');
+      if (body.passId) setPassId(body.passId);
       return;
     }
+    setPassId(body.passId);
     window.location.href = body.saveUrl;
   }
 
   return (
-    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-      <button onClick={() => issue('apple')} className="rounded-full bg-black px-5 py-2.5 text-cream">
-        Add to Apple Wallet
-      </button>
-      <button onClick={() => issue('google')} className="rounded-full bg-coral px-5 py-2.5 text-cream">
-        Add to Google Wallet
-      </button>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+    <div className="mt-3">
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <button onClick={() => issue('apple')} className="rounded-full bg-black px-5 py-2.5 text-cream">
+          Add to Apple Wallet
+        </button>
+        <button onClick={() => issue('google')} className="rounded-full bg-coral px-5 py-2.5 text-cream">
+          Add to Google Wallet
+        </button>
+      </div>
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {passId && (
+        <a
+          href={`/${townSlug}/claim?passId=${passId}`}
+          className="mt-3 inline-block rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-cream"
+        >
+          Set up your account →
+        </a>
+      )}
     </div>
   );
 }
