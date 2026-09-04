@@ -30,8 +30,8 @@ function base64url(input: Buffer): string {
   return input.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-/** Minimal RS256 JWT signer — avoids pulling in a JWT library for one call site. */
-function signRS256(claims: Record<string, unknown>, privateKeyPem: string): string {
+/** Minimal RS256 JWT signer — avoids pulling in a JWT library for a couple of call sites. */
+export function signRS256(claims: Record<string, unknown>, privateKeyPem: string): string {
   const header = { alg: 'RS256', typ: 'JWT' };
   const signingInput = `${base64url(Buffer.from(JSON.stringify(header)))}.${base64url(
     Buffer.from(JSON.stringify(claims)),
@@ -82,4 +82,58 @@ export function generateGoogleWalletSaveUrl(input: GooglePassInput): string {
 
   const token = signRS256(claims, config.serviceAccountKey.replace(/\\n/g, '\n'));
   return `https://pay.google.com/gp/v/save/${token}`;
+}
+
+/**
+ * R1: "the pass shows the new balance within 30s" — for Google Wallet this
+ * is a direct PATCH of the loyaltyObject; Google propagates it to devices
+ * on its own, no separate push notification step. Auth is the standard
+ * service-account JWT-bearer OAuth2 flow (RFC 7523): a self-signed JWT
+ * traded at Google's token endpoint for a short-lived access token.
+ */
+export async function pushGoogleWalletBalance(input: { serial: string; balancePoints: number }): Promise<void> {
+  const config = loadConfig();
+  const objectId = `${config.issuerId}.${input.serial}`;
+  const now = Math.floor(Date.now() / 1000);
+
+  const assertion = signRS256(
+    {
+      iss: config.serviceAccountEmail,
+      scope: 'https://www.googleapis.com/auth/wallet_object.issuer',
+      aud: 'https://oauth2.googleapis.com/token',
+      iat: now,
+      exp: now + 3600,
+    },
+    config.serviceAccountKey.replace(/\\n/g, '\n'),
+  );
+
+  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion,
+    }),
+  });
+  if (!tokenRes.ok) {
+    throw new Error(`Google OAuth token exchange failed: ${tokenRes.status} ${await tokenRes.text()}`);
+  }
+  const { access_token: accessToken } = (await tokenRes.json()) as { access_token: string };
+
+  const patchRes = await fetch(`https://walletobjects.googleapis.com/walletobjects/v1/loyaltyObject/${objectId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      loyaltyPoints: {
+        label: 'Balance',
+        balance: { string: `£${(input.balancePoints / 100).toFixed(2)}` },
+      },
+    }),
+  });
+  if (!patchRes.ok) {
+    throw new Error(`Google Wallet PATCH failed: ${patchRes.status} ${await patchRes.text()}`);
+  }
 }
