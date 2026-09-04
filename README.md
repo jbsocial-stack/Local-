@@ -5,35 +5,39 @@ one loyalty programme.
 
 This repo implements **Phase A and Phase B of the product PRD** (schema/
 ledger, scan-to-earn/redeem, the merchant PWA, the nightly expiry job,
-merchant onboarding/settings, the shopper directory + map, account claim,
-the merchant dashboard, the ops console, printables) plus the full
-**Marketing Homepage PRD** (the public `/` and `/[town]` site — hero,
-pitch, pricing, both sign-up forms, the UK demand map) for the Chichester
-pilot. Product Phase C (letterbox campaign) and Phase D (P1 features: push
-offers, missions, lapsed-customer lists) are not built. See the two PRDs
-for full context.
+merchant onboarding/settings, the shopper directory + map, account
+sign-up/sign-in, the merchant dashboard, the ops console, printables) plus
+the full **Marketing Homepage PRD** (the public `/` and `/[town]` site —
+hero, pitch, pricing, both sign-up forms, the UK demand map) for the
+Chichester pilot. Product Phase C (letterbox campaign) and Phase D (P1
+features: push offers, missions, lapsed-customer lists) are not built. See
+the two PRDs for full context.
 
 ## Two apps, one repo
 
 `src/app/(marketing)/` is the public marketing site (`/`, `/[town]`,
-`/business`, `/pricing`, `/privacy`, `/terms`) — its own layout, fonts
-(self-hosted Outfit/Inter via `next/font`), and `styles/brand.css`. Every
-other route (`/m/...`, `/ops/...`, the bare `/[town]/shops` /
-`/[town]/claim` / `/[town]/reissue`, all of `/api/...`) is the product app
-and is untouched by the marketing layout. The two `[town]` dynamic segments
-— `app/(marketing)/[town]/page.tsx` and `app/[town]/shops/page.tsx` —
-coexist fine since route groups don't add a URL segment and the two never
-claim the exact same path; this is confirmed by `next build`, which errors
-loudly on any real route conflict.
+`/shoppers`, `/[town]/shoppers`, `/business`, `/pricing`, `/privacy`,
+`/terms`) — its own layout, fonts (self-hosted Outfit/Inter via
+`next/font`), and `styles/brand.css`. Every other route (`/m/...`,
+`/ops/...`, the bare `/[town]/shops` / `/[town]/reissue`, all of
+`/api/...`) is the product app and is untouched by the marketing layout.
+The two `[town]` dynamic segments — `app/(marketing)/[town]/page.tsx` and
+`app/[town]/shops/page.tsx` — coexist fine since route groups don't add a
+URL segment and the two never claim the exact same path; this is confirmed
+by `next build`, which errors loudly on any real route conflict.
 
 **The marketing homepage absorbed the product's old `/[town]` landing
 page.** R1 originally called for `/[town]` to be a simple "Add to Wallet"
 page; the Marketing Homepage PRD independently claims `/` and `/[town]` for
 the full pitch-and-signup page. Per the resolution in that PRD, `/[town]`
-is now the marketing page, and a live town's shopper-form success state
-calls `/api/pass` inline and shows the wallet buttons directly — the old
-standalone landing page and its `IssuePassButtons` component were removed,
-their logic folded into `ShopperForm.tsx`'s `WalletButtons`.
+is now the marketing page (an overview, linking out to `/[town]/shoppers`
+for the actual sign-up), and a live town's shopper form creates the
+account, the pass, and a signed-in session all in one step (see
+"Password sign-in" below) — the old standalone landing page and its
+`IssuePassButtons` component were removed early on, and the anonymous
+pass + separate claim-page flow that replaced it was removed later still,
+once it turned out to be exactly the kind of friction it was meant to
+avoid.
 
 ## Stack
 
@@ -52,15 +56,18 @@ npm run dev
 ```
 
 Apply the schema against a Supabase project (SQL editor or `supabase db
-push` with the CLI), in order — `supabase/migrations/0001` through `0009`.
+push` with the CLI), in order — `supabase/migrations/0001` through `0010`.
 `0005` adds the trigger that mirrors new `auth.users` rows (merchant owners
-and ops staff, who sign in via magic link) into `public.users`; `0007`
-creates the `merchant-photos` (public) and `printables` (private) storage
-buckets; `0008` adds the marketing site's `signups` and `merchant_leads`
-tables (anon insert-only RLS — no select policy at all, verified by
+and ops staff, who sign in via magic link; shoppers too, now, since signup
+creates a real Supabase Auth account) into `public.users`; `0007` creates
+the `merchant-photos` (public) and `printables` (private) storage buckets;
+`0008` adds the marketing site's `signups` and `merchant_leads` tables
+(anon insert-only RLS — no select policy at all, verified by
 `tests/integration/rls.test.ts`); `0009` adds the signed-in shopper app's
 profile fields, venue gallery/social links, likes, and the `avatars`
-storage bucket.
+storage bucket; `0010` drops `passes.platform`'s `not null` — a pass exists
+from the moment of signup, before a wallet platform has necessarily been
+chosen.
 
 In the Supabase dashboard, set **Auth → URL Configuration → Site URL** to
 your app's origin and add it (plus `/auth/callback`) to the redirect
@@ -128,17 +135,15 @@ Google Wallet (`src/lib/wallet/google.ts`) follows the same pattern against
 `GOOGLE_WALLET_SERVICE_ACCOUNT_KEY`, and is not blocked by anything in the
 PRD's open questions — it just needs a Google Wallet issuer account set up.
 
-**Until either is configured, shoppers can still fully onboard.** `/api/pass`
-creates the `users`/`passes` rows regardless of whether the wallet part
-succeeds, and returns the new pass's id even on the `503` (`ShopperForm`'s
-`WalletButtons` reads it from the JSON body on error, or the `X-Pass-Id`
-response header on an Apple success, since that response body is the
-`.pkpass` binary). Either way, a "Set up your account →" link to
-`/[town]/claim?passId=...` appears right there — this is the fallback for
-reaching the claim page without needing a real device with the pass
-actually added to a wallet app (normally you'd tap the back of the pass;
-that link only exists once it's genuinely in Apple/Google Wallet, which
-doesn't work for desktop testing or before wallet is configured).
+**Until either is configured, shoppers can still fully onboard.** Signing up
+for a live town (`/api/signup`) creates the account, the pass, and a
+signed-in session in one step, with no dependency on Apple/Google Wallet at
+all — see "Password sign-in" below. Adding the pass to an actual wallet app
+is a separate, later, optional action from the wallet page
+(`AddToWalletButtons.tsx` → `/api/pass`, which requires the shopper to
+already be signed in and just generates the file for their existing pass);
+until that's configured, that one button shows an inline error but nothing
+else about the product is blocked.
 
 ## What's implemented
 
@@ -184,15 +189,13 @@ doesn't work for desktop testing or before wallet is configured).
   boosts (CRUD), photo upload (Supabase Storage), staff PIN invites.
 - **R8 directory + map** (`src/app/[town]/shops/`) — public, logged-out,
   category filter, live multiplier + boosted badges, Leaflet/OSM map.
-- **R9 account claim + re-issue** (`src/app/[town]/claim/`,
-  `src/app/[town]/reissue/`, `src/lib/account/claim.ts`,
-  `src/app/api/pass/reissue/`) — claim sets a password
-  (`ClaimPasswordForm`/`supabase.auth.signUp` + `POST /api/claim`) and
-  re-points the anonymous pass at the authenticated user; reissue (a
-  separate, lost-device recovery flow) still goes through the magic link.
-  Re-issuing to a new device revokes the old pass (including its Apple
-  web-service auth) and transfers the balance via a pair of ledger `adjust`
-  entries. Both wallet passes' back fields link to the claim page.
+- **R9 account + pass re-issue** (`src/app/[town]/reissue/`,
+  `src/app/api/pass/reissue/`) — an account and its pass are created
+  together at signup (see "Password sign-in" below), so there's no separate
+  claim step; reissue (a distinct lost-device recovery flow, still
+  magic-link) revokes the old pass (including its Apple web-service auth)
+  and transfers the balance to a new one via a pair of ledger `adjust`
+  entries. Every wallet pass's back field links to `/[town]/app/sign-in`.
 - **R10 merchant dashboard** (`src/app/m/[town]/[merchant]/dashboard/`) —
   visits (7/30d), unique/repeat customers (30d), points issued/redeemed,
   net position, recent transactions with owner-only void (writes a
@@ -283,7 +286,7 @@ makes sense as one comparison, not split across the shopper/business pages.
 
 ## Signed-in shopper app (`/[town]/app/`)
 
-A four-tab app for shoppers who've claimed an account (R9) — Wallet,
+A four-tab app for shoppers with an account (created at signup, R9) — Wallet,
 Discover, Offers, Profile — behind a floating glassmorphism bottom nav
 (`src/components/shopper/BottomNav.tsx`) that only renders once there's a
 real Supabase Auth session (`src/app/[town]/app/layout.tsx` checks this;
@@ -329,33 +332,40 @@ session at these routes to exercise the rest.
 
 ### Password sign-in (shopper auth is password-only)
 
-Every pass starts anonymous (R1) and only gets an identity at claim time.
-Claiming and signing in are both password-based — no magic-link email in
-this path at all (merchant owner/ops sign-in, and the separate lost-device
-pass-reissue flow, still use magic link; see below):
+One form, one step, no email round-trip: signing up for a live town
+(`/[town]/shoppers` or `/shoppers`) creates the account, the pass, and a
+signed-in session together, in a single `POST /api/signup` — no separate
+claim page, and no dependency on Apple/Google Wallet (that's a later,
+optional action from the wallet page; see "Known blocker: Apple Wallet"
+above). Merchant owner/ops sign-in and the separate lost-device
+pass-reissue flow still use magic link — see below.
 
-- **`/[town]/claim`** (reached by tapping the back of a pass) —
-  `ClaimPasswordForm` lets a shopper set a password *and* claim their pass
-  in one step (`supabase.auth.signUp` + `POST /api/claim`, the
-  client-driven counterpart to `/auth/callback`'s `passId` handling).
+- **`/[town]/shoppers`** (also plain **`/shoppers`**, town-agnostic) —
+  `ShopperForm` shows a password field once the selected town resolves to
+  `live` (`config/towns.ts`). On submit, `/api/signup` does everything
+  server-side in one request: `supabase.auth.admin.createUser({ email,
+  password, email_confirm: true })` (the service-role admin API — no
+  confirmation email is ever sent, regardless of the project's own
+  "Confirm email" dashboard setting), creates the pass row, then signs the
+  shopper in (`signInWithPassword`, via the route-handler client so the
+  session cookie lands on this same response) and returns
+  `{ status: 'live', redirectTo }`. The client just navigates there. If
+  the email's already registered, it falls back to treating the submitted
+  password as a sign-in attempt instead of erroring.
 - **`/sign-in`** (town-agnostic, linked from the marketing header) and
   **`/[town]/app/sign-in`** — `PasswordSignInForm` calls
-  `supabase.auth.signInWithPassword`.
+  `supabase.auth.signInWithPassword` for a returning shopper.
 - **Profile → Password** — `supabase.auth.updateUser({ password })` lets a
   shopper change their password once signed in.
 - **`/reset-password`** ("Forgot password?" on the sign-in form) — the one
-  email Supabase still sends in this path: `supabase.auth
+  email this path can still send: `supabase.auth
   .resetPasswordForEmail(email, { redirectTo })` mails a recovery link that
-  round-trips through `/auth/callback?next=/reset-password/confirm` (same
-  generic exchange route as everything else here) and lands on
+  round-trips through `/auth/callback?next=/reset-password/confirm` (the
+  same generic code-exchange route used everywhere else here) and lands on
   `/reset-password/confirm`, which just calls `updateUser({ password })`
-  against the session that exchange already established — no separate
-  "recovery token" handling needed.
+  against the session that exchange already established.
 
 `/[town]/reissue` (lost-device pass transfer) is a separate,
-intentionally-still-magic-link flow, not a shopper sign-in/password path.
-
-One thing to check in the Supabase dashboard: if **Authentication →
-Providers → Email → Confirm email** is turned on, `signUp` won't return a
-session immediately — the shopper gets a one-off confirmation email before
-their password works. Turn that off for a fully email-free claim flow.
+intentionally-still-magic-link flow, not a shopper sign-up/sign-in path —
+it's for someone who already has an account and lost the device the pass
+was on, so email is the right recovery mechanism there.

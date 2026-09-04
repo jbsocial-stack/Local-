@@ -4,10 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser';
 
-// Password-only shopper sign-in — a password is set when the pass is
-// claimed (see /[town]/claim) or later in profile settings. redirectTo is
-// the final destination — signInWithPassword establishes the session
-// directly, no /auth/callback round-trip needed.
+// Password-only shopper sign-in — the password is set at signup
+// (/[town]/shoppers, for a live town) or later in profile settings.
+// redirectTo is the final destination — signInWithPassword establishes the
+// session directly, no /auth/callback round-trip needed.
 export function PasswordSignInForm({
   redirectTo,
   title,
@@ -71,8 +71,7 @@ export function PasswordSignInForm({
       </Link>
       {status === 'error' && (
         <p className="mt-2 text-sm text-red-600">
-          Incorrect email or password. If you haven&apos;t claimed your pass yet, tap the back of your
-          pass to set one up.
+          Incorrect email or password. New here? <Link href="/shoppers" className="underline">Sign up</Link> instead.
         </p>
       )}
     </form>

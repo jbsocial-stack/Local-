@@ -113,7 +113,9 @@ export async function POST(req: NextRequest) {
     .eq('id', passId)
     .single();
 
-  await pushPassUpdate({ passId, platform: pass.platform, serial: pass.serial });
+  // No push target until the shopper has actually added the pass to a
+  // wallet (platform is null until then — see /api/pass).
+  if (pass.platform) await pushPassUpdate({ passId, platform: pass.platform, serial: pass.serial });
 
   return NextResponse.json({
     points,

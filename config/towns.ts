@@ -19,7 +19,7 @@ export const TOWNS: TownConfig[] = [
   {
     slug: 'chichester',
     name: 'Chichester',
-    status: 'coming-soon',
+    status: 'live',
     region: 'South East',
     lat: 50.8365,
     lng: -0.7792,
