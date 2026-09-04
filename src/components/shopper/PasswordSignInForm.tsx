@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser';
 
 // Password-only shopper sign-in — a password is set when the pass is
@@ -65,6 +66,9 @@ export function PasswordSignInForm({
       >
         {status === 'submitting' ? 'Signing in…' : 'Sign in with password'}
       </button>
+      <Link href="/reset-password" className="mt-3 inline-block text-sm text-ink/60 underline">
+        Forgot password?
+      </Link>
       {status === 'error' && (
         <p className="mt-2 text-sm text-red-600">
           Incorrect email or password. If you haven&apos;t claimed your pass yet, tap the back of your

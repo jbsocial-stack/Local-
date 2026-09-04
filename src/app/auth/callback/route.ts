@@ -3,8 +3,9 @@ import { createRouteHandlerSupabaseClient } from '@/lib/supabase/route-handler';
 import { claimPassForUser } from '@/lib/account/claim';
 
 // Supabase Auth magic-link redirect target, shared by shopper claim (R9),
-// merchant owner sign-in (R6), and ops sign-in (R11) — they all just need a
-// session; only the shopper claim path also needs a follow-up write.
+// password reset, merchant owner sign-in (R6), and ops sign-in (R11) —
+// they all just need a session; only the shopper claim path also needs a
+// follow-up write.
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = req.nextUrl;
   const code = searchParams.get('code');

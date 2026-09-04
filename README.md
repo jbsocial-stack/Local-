@@ -315,10 +315,17 @@ pass-reissue flow, still use magic link; see below):
   `supabase.auth.signInWithPassword`.
 - **Profile → Password** — `supabase.auth.updateUser({ password })` lets a
   shopper change their password once signed in.
+- **`/reset-password`** ("Forgot password?" on the sign-in form) — the one
+  email Supabase still sends in this path: `supabase.auth
+  .resetPasswordForEmail(email, { redirectTo })` mails a recovery link that
+  round-trips through `/auth/callback?next=/reset-password/confirm` (same
+  generic exchange route as everything else here) and lands on
+  `/reset-password/confirm`, which just calls `updateUser({ password })`
+  against the session that exchange already established — no separate
+  "recovery token" handling needed.
 
-There's no password-reset flow yet — losing a password currently means
-re-claiming the pass. `/[town]/reissue` (lost-device pass transfer) is a
-separate, intentionally-still-magic-link flow, not a shopper sign-in path.
+`/[town]/reissue` (lost-device pass transfer) is a separate,
+intentionally-still-magic-link flow, not a shopper sign-in/password path.
 
 One thing to check in the Supabase dashboard: if **Authentication →
 Providers → Email → Confirm email** is turned on, `signUp` won't return a
