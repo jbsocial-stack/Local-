@@ -39,4 +39,8 @@
   .stack-card-wrapper {
     min-height: 0 !important;
   }
+  .stack-card-fill {
+    display: block !important;
+    min-height: 0 !important;
+  }
 }

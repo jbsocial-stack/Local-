@@ -52,11 +52,18 @@ export function SectionBand({
 
   const stacking = stackOrder !== undefined;
 
+  // While stacking, the card itself fills the viewport (from the sticky
+  // offset down) and centers its own content — that's what keeps the
+  // "stack" continuous, with the next card sliding straight in to fully
+  // replace this one and no blank page background ever showing between
+  // them. A short card that just hugged its own content would leave a gap
+  // below it for the rest of the dwell scroll, which reads as the stack
+  // breaking rather than continuing.
   const card = (
     <div
-      className={`mx-auto max-w-5xl rounded-3xl px-6 py-12 sm:px-10 sm:py-16 ${stacking ? 'shadow-xl' : ''} ${
-        (stacking ? STACK_CARD_STYLES : CARD_STYLES)[resolved]
-      }`}
+      className={`stack-card-fill mx-auto max-w-5xl rounded-3xl px-6 py-12 sm:px-10 sm:py-16 ${
+        stacking ? 'flex min-h-[calc(100vh-5rem)] flex-col justify-center shadow-xl' : ''
+      } ${(stacking ? STACK_CARD_STYLES : CARD_STYLES)[resolved]}`}
     >
       {children}
     </div>
@@ -70,13 +77,12 @@ export function SectionBand({
     );
   }
 
-  // `stack-card-wrapper` gets a min-height of one full viewport (regardless
-  // of how tall the card itself is) so the sticky card has real scroll
-  // distance to sit still and fully cover the previous one before the next
-  // section's wrapper starts feeding its own card in — without this, a
-  // short card's wrapper ends (and unsticks) almost immediately, so the
-  // next card starts sliding over before the current one has finished
-  // covering the one before it.
+  // `stack-card-wrapper` gets a min-height of one full viewport as a floor
+  // under the card's own height, so the sticky card always has real scroll
+  // distance to sit still before the next section's wrapper starts feeding
+  // its own card in — without this, a card's wrapper ends (and unsticks)
+  // almost immediately, so the next card starts sliding over before the
+  // current one has finished displaying.
   return (
     <section
       id={id}
