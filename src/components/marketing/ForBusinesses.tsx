@@ -21,9 +21,25 @@ const COLUMNS = [
   },
 ];
 
-export function ForBusinesses({ formHref = '#merchant-form' }: { formHref?: string }) {
+export function ForBusinesses({
+  formHref = '#merchant-form',
+  headline,
+}: {
+  formHref?: string;
+  /** The core KPI a prospective merchant cares about most: how many
+      shoppers are already using Local, right now (see
+      lib/marketing/shopper-count.ts). Omitted on the illustrative-only
+      contexts this component doesn't currently have, but always passed by
+      the real /business page. */
+  headline?: string;
+}) {
   return (
     <div>
+      {headline && (
+        <p className="mb-6 inline-block rounded-full bg-cream/10 px-4 py-1.5 text-sm font-medium text-cream">
+          {headline}
+        </p>
+      )}
       <Eyebrow tone="cream">For independent shops</Eyebrow>
       <h2 className="mt-2 font-display text-3xl leading-tight">
         See who&apos;s coming back — not just who&apos;s passing.

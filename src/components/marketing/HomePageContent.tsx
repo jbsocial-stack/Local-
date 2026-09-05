@@ -5,15 +5,15 @@ import { HowItWorks } from './HowItWorks';
 import { ProblemColumns } from './ProblemColumns';
 import { Mission } from './Mission';
 import { ForShoppers } from './ForShoppers';
-import { ForBusinesses } from './ForBusinesses';
-import { PricingTable } from './PricingTable';
 import { DemandMap } from './DemandMap';
 import { Footer } from './Footer';
 
 // Shared by `/` (no town) and `/[town]` (H8: pre-fills the hero pill and
-// links out to the town-scoped shopper page). The shopper/merchant sign-up
-// forms live on their own pages now (/shoppers, /business) — this stays
-// the overview: benefits + a link out for each persona, then everything
+// links out to the town-scoped shopper page). Shopper-first: every
+// business-facing section (benefits, pricing, the trial form) now lives
+// only on /business — a business owner still finds their way there via the
+// hero's "I run a business" tile and every header/footer/burger-menu nav,
+// same as before. What's left here is the shopper pitch, then everything
 // else, as a stack of cards (SectionBand's `stackOrder`) that pile up as
 // you scroll past them.
 export function HomePageContent({ town }: { town?: TownConfig }) {
@@ -37,15 +37,7 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
         <ForShoppers town={town} formHref={town ? `/${town.slug}/shoppers` : '/shoppers'} />
       </SectionBand>
 
-      <SectionBand index={6} color="ink" id="business" stackOrder={3}>
-        <ForBusinesses formHref="/business" />
-      </SectionBand>
-
-      <SectionBand index={7} color="card" id="pricing" stackOrder={4}>
-        <PricingTable />
-      </SectionBand>
-
-      <SectionBand index={9} color="card" stackOrder={5}>
+      <SectionBand index={9} color="card" stackOrder={3}>
         <DemandMap />
       </SectionBand>
 

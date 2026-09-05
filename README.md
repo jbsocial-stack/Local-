@@ -225,17 +225,28 @@ segmentation) is intentionally not built.
   Currently seeded with Chichester (`coming-soon`) plus seven other South
   East towns (`planned`) as a starting set — add more towns by adding rows,
   no code changes needed.
-- **Site structure**: the homepage (`/`, `/[town]`) is an overview — the
-  benefits of being a shopper or a business, plus a link out for each —
-  rather than a single long page with both sign-up forms embedded. The
-  forms themselves live on their own pages: `/shoppers` (and the
-  town-scoped `/[town]/shoppers`, which pre-fills the town field) and
-  `/business`. `ShopperPageContent.tsx`/`BusinessPageContent.tsx` compose
-  each page from the same benefit components (`ForShoppers`,
-  `ForBusinesses`) the homepage uses — so the "why" is consistent
-  everywhere, only the form is page-specific. `BurgerMenu.tsx` (in the
-  sticky `Header`) is how you get between all of these, particularly on
-  mobile where there's no room for a full nav bar.
+- **Site structure**: the homepage (`/`, `/[town]`) is shopper-first — the
+  shopper pitch (`ForShoppers`) plus everything general-purpose (mission,
+  the problem, the demand map), not a dual-audience overview. Every
+  business-facing section (`ForBusinesses`, `PricingTable`, the trial
+  form) lives only on `/business`, which also carries the one KPI a
+  prospective merchant actually cares about — how many shoppers are
+  already using Local, right now (`getShopperCounts`/
+  `formatTractionHeadline` in `src/lib/marketing/shopper-count.ts`, a
+  non-revoked-`passes` count per live town, same distinction /api/signup's
+  launch-capacity check makes). `/pricing` redirects to `/business#pricing`
+  (pricing tiers are business content — the one shopper tier, "Free
+  forever", is already a bullet in `ForShoppers`). The shopper sign-up form
+  lives on its own pages too: `/shoppers` and the town-scoped
+  `/[town]/shoppers` (pre-fills the town field). `ShopperPageContent.tsx`
+  composes the shopper page from the same `ForShoppers` component the
+  homepage uses, so the "why" is consistent in both places, only the form
+  is page-specific. A business owner still reaches `/business` from the
+  homepage — the hero's "I run a business" tile, and every
+  header/footer/burger-menu nav — it just isn't pitched inline on `/`
+  any more. `BurgerMenu.tsx` (in the sticky `Header`) is how you get
+  between all of these, particularly on mobile where there's no room for a
+  full nav bar.
 - **Both forms** (`src/components/marketing/ShopperForm.tsx`,
   `MerchantForm.tsx`, `src/app/api/{signup,lead}/`) — real `<form
   method="POST">` elements that work with JavaScript disabled (the route
@@ -261,7 +272,9 @@ segmentation) is intentionally not built.
   Cached 5 minutes (`export const revalidate = 300`) on both `/api/demand`
   and the homepage itself — without that, Next tries to fully prerender the
   page at build time and fails the same way the product's root-redirect
-  page once did (see the git history if curious).
+  page once did (see the git history if curious). `/business` sets the
+  same `revalidate = 300` for the same reason, now that it fetches the
+  shopper-count KPI above.
 - **SEO** — per-route metadata, `generateStaticParams` for every configured
   town, a `next/og`-rendered OG image (`/og`, optionally `?town=slug`).
 - **Analytics** (`src/lib/marketing/analytics.ts`) — Plausible (cookie-less,

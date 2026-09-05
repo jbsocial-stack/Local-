@@ -41,6 +41,30 @@ test('burger menu links to the shopper and business pages', async ({ page }) => 
   await expect(page).toHaveURL('/business');
 });
 
+// Homepage is shopper-first: business benefits, pricing, and the trial
+// form live only on /business now — reachable from the hero, header,
+// footer, and burger menu, but not shown inline on `/`.
+test('homepage has no business content; /business has the benefits, pricing, and the core traction KPI', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'For independent shops' })).toHaveCount(0);
+  await expect(page.getByText('Pricing that keeps you independent.')).toHaveCount(0);
+
+  await page.goto('/business');
+  await expect(page.getByRole('heading', { name: "See who's coming back — not just who's passing." })).toBeVisible();
+  await expect(page.getByText('Pricing that keeps you independent.')).toBeVisible();
+  // No live Supabase project in this sandbox, so the KPI falls back to its
+  // zero-count copy rather than a real number — still proves the banner
+  // renders on this page and not the homepage.
+  await expect(page.getByText(/first shops|already earning points/)).toBeVisible();
+});
+
+test('/pricing redirects to the business page (pricing is business content now)', async ({ page }) => {
+  await page.goto('/pricing');
+  await expect(page).toHaveURL(/\/business#pricing$/);
+});
+
 test('burger menu links to the about page', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Open menu' }).click();
