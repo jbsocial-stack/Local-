@@ -6,8 +6,8 @@ const SUPPORTING = [
     body: "We all want to shop independently. Other than \"it's the right thing to do\", nothing rewards us for it.",
   },
   {
-    title: 'Who are my customers?',
-    body: "Independents don't know who comes back, how often, or who's stopped.",
+    title: 'Your loyalty, scattered.',
+    body: 'A punch card at the café, another at the bakery — none of them add up to anything.',
   },
 ];
 
