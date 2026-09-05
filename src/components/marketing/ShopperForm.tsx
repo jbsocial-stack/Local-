@@ -1,12 +1,18 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TOWNS, type TownConfig } from '../../../config/towns';
 import { track } from '@/lib/marketing/analytics';
 
-type SuccessState =
-  | { kind: 'coming-soon'; townName: string }
-  | { kind: 'planned'; townName: string; count?: number };
+type SuccessState = {
+  kind: 'coming-soon' | 'planned' | 'capacity';
+  townName: string;
+  count?: number;
+  path: string; // where to send a referred friend, e.g. /chichester/shoppers
+  referralCode?: string;
+  position?: number;
+  totalInQueue?: number;
+};
 
 // S6. Progressive enhancement: this is a real <form method="POST"
 // action="/api/signup"> — without JS the browser posts it directly and the
@@ -16,7 +22,9 @@ type SuccessState =
 // One form, one step: picking a live town reveals a password field, and
 // submitting creates the account, the pass, and a signed-in session all in
 // one request — no separate claim page, no wallet-file dependency. Picking
-// anywhere else is still just the waitlist signup it always was.
+// anywhere else — or a live town whose first LAUNCH_CARD_LIMIT passes are
+// already claimed (the API reports that back as `status: 'capacity'`) —
+// is still the same waitlist signup, with a referral link to move up it.
 export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
   const [townSlug, setTownSlug] = useState(defaultTown?.slug ?? '');
   const [townFreeText, setTownFreeText] = useState('');
@@ -24,6 +32,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
   const [password, setPassword] = useState('');
   const [postcode, setPostcode] = useState('');
   const [consent, setConsent] = useState(false);
+  const [refCode, setRefCode] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('Something went wrong — try again.');
   const [success, setSuccess] = useState<SuccessState | null>(null);
@@ -31,6 +40,11 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
 
   const selectedTown = TOWNS.find((t) => t.slug === townSlug);
   const isLive = selectedTown?.status === 'live';
+
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref) setRefCode(ref);
+  }, []);
 
   function onFormFocus() {
     if (startedRef.current) return;
@@ -53,6 +67,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
         postcode: postcode || undefined,
         consentMarketing: consent,
         source: 'homepage',
+        refCode,
       }),
     });
     if (!res.ok) {
@@ -72,11 +87,15 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
       return;
     }
     setStatus('idle');
-    setSuccess(
-      body.status === 'coming-soon'
-        ? { kind: 'coming-soon', townName: body.townName }
-        : { kind: 'planned', townName: body.townName, count: body.count },
-    );
+    setSuccess({
+      kind: body.status,
+      townName: body.townName,
+      count: body.count,
+      path: townSlug && townSlug !== '__other__' ? `/${townSlug}/shoppers` : '/shoppers',
+      referralCode: body.referralCode,
+      position: body.position,
+      totalInQueue: body.totalInQueue,
+    });
   }
 
   if (success) return <ShopperSuccess state={success} />;
@@ -91,6 +110,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
       className="space-y-4"
     >
       <input type="hidden" name="source" value="homepage" />
+      {refCode && <input type="hidden" name="refCode" value={refCode} />}
       <h3 className="font-display text-3xl">Get the pass</h3>
       <p className="text-ink/70">Tell us where you shop and we&apos;ll set you up.</p>
 
@@ -193,19 +213,95 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
 }
 
 function ShopperSuccess({ state }: { state: SuccessState }) {
-  if (state.kind === 'coming-soon') {
-    return (
-      <div id="shopper-form">
-        <p className="font-medium">You&apos;re in. We&apos;ll tell you the day {state.townName} goes live.</p>
-      </div>
+  const heading =
+    state.kind === 'coming-soon' ? (
+      <p className="font-medium">You&apos;re in. We&apos;ll tell you the day {state.townName} goes live.</p>
+    ) : state.kind === 'capacity' ? (
+      <>
+        <p className="font-medium">You&apos;re in.</p>
+        <p className="mt-1 text-ink/70">
+          {state.townName}&apos;s first passes are already claimed — you&apos;re on the early-access list.
+        </p>
+      </>
+    ) : (
+      <>
+        <p className="font-medium">Thanks — you just voted for {state.townName}.</p>
+        <p className="mt-1 text-ink/70">
+          {state.count ?? 1} {state.count === 1 ? 'person' : 'people'} in {state.townName} want Local.
+        </p>
+      </>
     );
-  }
+
   return (
     <div id="shopper-form">
-      <p className="font-medium">Thanks — you just voted for {state.townName}.</p>
-      <p className="mt-1 text-ink/70">
-        {state.count ?? 1} {state.count === 1 ? 'person' : 'people'} in {state.townName} want Local.
+      {heading}
+      {state.referralCode && (
+        <ReferralShare
+          code={state.referralCode}
+          path={state.path}
+          position={state.position}
+          totalInQueue={state.totalInQueue}
+        />
+      )}
+    </div>
+  );
+}
+
+function ReferralShare({
+  code,
+  path,
+  position,
+  totalInQueue,
+}: {
+  code: string;
+  path: string;
+  position?: number;
+  totalInQueue?: number;
+}) {
+  const [copied, setCopied] = useState(false);
+  const [link, setLink] = useState('');
+
+  useEffect(() => {
+    setLink(`${window.location.origin}${path}?ref=${code}`);
+  }, [path, code]);
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API can be unavailable (older browsers, insecure
+      // context) — the link is still selectable in the input either way.
+    }
+  }
+
+  return (
+    <div className="mt-4 rounded-2xl border border-ink/10 bg-white/60 p-4">
+      {position !== undefined && totalInQueue !== undefined && (
+        <p className="text-sm font-medium">
+          You&apos;re #{position} of {totalInQueue} in line.
+        </p>
+      )}
+      <p className="mt-1 text-sm text-ink/70">
+        Refer friends to move up — everyone who signs up with your link jumps you both ahead of anyone who hasn&apos;t.
       </p>
+      <div className="mt-3 flex gap-2">
+        <input
+          type="text"
+          readOnly
+          value={link}
+          onFocus={(e) => e.currentTarget.select()}
+          className="w-full min-w-0 rounded-full border-none bg-white px-4 py-2 text-sm text-ink/70"
+        />
+        <button
+          type="button"
+          onClick={copyLink}
+          className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
+        >
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
     </div>
   );
 }

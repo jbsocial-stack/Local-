@@ -56,7 +56,7 @@ npm run dev
 ```
 
 Apply the schema against a Supabase project (SQL editor or `supabase db
-push` with the CLI), in order — `supabase/migrations/0001` through `0010`.
+push` with the CLI), in order — `supabase/migrations/0001` through `0011`.
 `0005` adds the trigger that mirrors new `auth.users` rows (merchant owners
 and ops staff, who sign in via magic link; shoppers too, now, since signup
 creates a real Supabase Auth account) into `public.users`; `0007` creates
@@ -67,7 +67,8 @@ the `merchant-photos` (public) and `printables` (private) storage buckets;
 profile fields, venue gallery/social links, likes, and the `avatars`
 storage bucket; `0010` drops `passes.platform`'s `not null` — a pass exists
 from the moment of signup, before a wallet platform has necessarily been
-chosen.
+chosen; `0011` adds `signups.referral_code` for the refer-a-friend/
+early-access mechanic (see "Password sign-in" below).
 
 In the Supabase dashboard, set **Auth → URL Configuration → Site URL** to
 your app's origin and add it (plus `/auth/callback`) to the redirect
@@ -369,3 +370,20 @@ pass-reissue flow still use magic link — see below.
 intentionally-still-magic-link flow, not a shopper sign-up/sign-in path —
 it's for someone who already has an account and lost the device the pass
 was on, so email is the right recovery mechanism there.
+
+#### Refer-a-friend / early access
+
+Only `LAUNCH_CARD_LIMIT` (`config/towns.ts`, currently 500) passes go out
+per town at launch. Every `/api/signup` call — waitlist or live — writes a
+`signups` row and gets back a `referral_code` (`supabase/migrations/0011`).
+Once a live town's non-revoked `passes` count hits the limit, `/api/signup`
+stops creating accounts for it and falls back onto the same waitlist path
+as a not-yet-live town, reporting `status: 'capacity'` instead of `'live'`.
+
+Anyone on a waitlist (`coming-soon` / `planned` / `capacity`) sees their
+queue position and a shareable link (`?ref=<code>`, read client-side in
+`ShopperForm` and threaded back into the next `/api/signup` call as
+`refCode`). Position is ranked purely by referral count, tie-broken by
+signup order (`computeWaitlistStats` in `src/lib/marketing/waitlist.ts`) —
+referring friends is the only way to move up. `GET /api/waitlist/status?
+code=<code>` re-checks a position without re-submitting the form.

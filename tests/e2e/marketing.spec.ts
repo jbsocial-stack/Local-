@@ -41,6 +41,14 @@ test('burger menu links to the shopper and business pages', async ({ page }) => 
   await expect(page).toHaveURL('/business');
 });
 
+test('burger menu links to the about page', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open menu' }).click();
+  await page.getByRole('navigation', { name: 'Site' }).getByRole('link', { name: 'About us' }).click();
+  await expect(page).toHaveURL('/about');
+  await expect(page.getByRole('heading', { name: 'One high street. Then the next one on the list.' })).toBeVisible();
+});
+
 // One form, one step: signing up for a live town creates the account, the
 // pass, and a signed-in session in a single request, then sends the
 // browser straight into the wallet — no separate claim page, no wallet-app
@@ -126,6 +134,54 @@ test('shopper form: planned/other town shows the vote count', async ({ page }) =
 
   await expect(page.getByText('Thanks — you just voted for Bognor Regis.')).toBeVisible();
   await expect(page.getByText('7 people in Bognor Regis want Local.')).toBeVisible();
+});
+
+// Refer-a-friend: only LAUNCH_CARD_LIMIT passes go out per town at launch;
+// once a live town hits that, /api/signup reports `status: 'capacity'`
+// instead of `'live'` and the shopper lands on the same waitlist as a
+// not-yet-live town, with a referral link to move up it.
+test('shopper form: capacity status shows early-access messaging and a referral link', async ({ page }) => {
+  await page.route('**/api/signup', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        status: 'capacity',
+        townName: 'Chichester',
+        referralCode: 'abc12345',
+        position: 5,
+        totalInQueue: 12,
+      }),
+    });
+  });
+
+  await page.goto('/chichester/shoppers');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form input[name="password"]').fill('correcthorsebattery');
+  await page.locator('#shopper-form button[type="submit"]').click();
+
+  await expect(page.getByText("Chichester's first passes are already claimed")).toBeVisible();
+  await expect(page.getByText("You're #5 of 12 in line.")).toBeVisible();
+  await expect(page.locator('#shopper-form input[readonly]')).toHaveValue(/\/chichester\/shoppers\?ref=abc12345$/);
+});
+
+test('shopper form: a ?ref= link in the URL is carried through to the signup request', async ({ page }) => {
+  await page.route('**/api/signup', async (route) => {
+    const body = route.request().postDataJSON();
+    expect(body.refCode).toBe('friendcode');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ status: 'coming-soon', townName: 'Winchester' }),
+    });
+  });
+
+  await page.goto('/shoppers?ref=friendcode');
+  await page.locator('#shopper-form select[name="townSlug"]').selectOption('winchester');
+  await page.locator('#shopper-form input[name="email"]').fill('laura@example.com');
+  await page.locator('#shopper-form button[type="submit"]').click();
+
+  await expect(page.getByText("You're in. We'll tell you the day Winchester goes live.")).toBeVisible();
 });
 
 test('merchant form submits and shows the trial-booking message', async ({ page }) => {

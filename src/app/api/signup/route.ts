@@ -4,7 +4,9 @@ import { z } from 'zod';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createRouteHandlerSupabaseClient } from '@/lib/supabase/route-handler';
 import { resolveSignupTown } from '@/lib/marketing/signup';
+import { computeWaitlistStats, fetchTownQueue } from '@/lib/marketing/waitlist';
 import { formPage, isFormPost } from '@/lib/marketing/form-page';
+import { LAUNCH_CARD_LIMIT } from '../../../../config/towns';
 
 // H11: bump this whenever the consent checkbox copy changes, so every row
 // records exactly which wording the shopper agreed to.
@@ -37,11 +39,69 @@ async function parseBody(req: NextRequest): Promise<unknown> {
   };
 }
 
-// One form, one step: for a live town this creates the account AND the
-// pass AND signs the shopper in — no separate claim step, no wallet-file
-// dependency (that's a later, optional action from the wallet page). For
-// anywhere else, it's still just the waitlist signup it always was — there's
-// no pass to sign into yet.
+type SupabaseServiceClient = ReturnType<typeof createServiceClient>;
+
+/**
+ * Writes the waitlist row every signup gets (live-town signups included —
+ * it's also how a live town's queue is seeded for when it hits capacity).
+ * "Duplicate email+town is a no-op success" (AC): on a conflict, this
+ * looks up and returns the row that already exists instead of erroring, so
+ * a returning visitor still gets back their own referral code. Returns
+ * null only on a genuine write failure.
+ */
+async function upsertSignup(
+  supabase: SupabaseServiceClient,
+  data: z.infer<typeof bodySchema>,
+  validatedRefCode: string | null,
+): Promise<{ referralCode: string } | null> {
+  const townColumn = data.townSlug ? 'town_slug' : 'town_free_text';
+  const townValue = data.townSlug ?? data.townFreeText ?? '';
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { data: inserted, error } = await supabase
+      .from('signups')
+      .insert({
+        email: data.email,
+        town_slug: data.townSlug ?? null,
+        town_free_text: data.townFreeText ?? null,
+        postcode: data.postcode || null,
+        consent_marketing: data.consentMarketing,
+        consent_version: CONSENT_VERSION,
+        source: data.source ?? null,
+        utm: data.utm,
+        ref_code: validatedRefCode,
+      })
+      .select('referral_code')
+      .single();
+    if (!error) return { referralCode: inserted.referral_code };
+    if (error.code !== '23505') return null;
+
+    // Conflict is almost always the expected email+town duplicate; on the
+    // astronomically unlikely chance it's a referral_code collision
+    // instead, this lookup finds nothing and the loop retries once so the
+    // DB default regenerates a fresh code.
+    const { data: existing } = await supabase
+      .from('signups')
+      .select('referral_code')
+      .eq('email', data.email)
+      .eq(townColumn, townValue)
+      .maybeSingle();
+    if (existing) return { referralCode: existing.referral_code };
+  }
+  return null;
+}
+
+async function waitlistStats(supabase: SupabaseServiceClient, townSlug: string | null, townFreeText: string | null, code: string) {
+  const rows = await fetchTownQueue(supabase, townSlug, townFreeText);
+  return computeWaitlistStats(rows, code);
+}
+
+// One form, one step: for a live town under its launch cap, this creates
+// the account AND the pass AND signs the shopper in — no separate claim
+// step, no wallet-file dependency (that's a later, optional action from
+// the wallet page). For anywhere else — not live yet, or a live town whose
+// first LAUNCH_CARD_LIMIT passes are already claimed — it's the same
+// waitlist signup, with a referral code to move up it.
 export async function POST(req: NextRequest) {
   const isForm = isFormPost(req);
   const parsed = bodySchema.safeParse(await parseBody(req));
@@ -58,19 +118,15 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createServiceClient();
-  const { error: signupError } = await supabase.from('signups').insert({
-    email: data.email,
-    town_slug: data.townSlug ?? null,
-    town_free_text: data.townFreeText ?? null,
-    postcode: data.postcode || null,
-    consent_marketing: data.consentMarketing,
-    consent_version: CONSENT_VERSION,
-    source: data.source ?? null,
-    utm: data.utm,
-    ref_code: data.refCode ?? null,
-  });
-  // AC: "duplicate email+town is a no-op success, ... no second row is written."
-  if (signupError && signupError.code !== '23505') {
+
+  let validatedRefCode: string | null = null;
+  if (data.refCode) {
+    const { data: referrer } = await supabase.from('signups').select('id').eq('referral_code', data.refCode).maybeSingle();
+    if (referrer) validatedRefCode = data.refCode;
+  }
+
+  const signup = await upsertSignup(supabase, data, validatedRefCode);
+  if (!signup) {
     return isForm
       ? formPage('Something went wrong', '<h1>Something went wrong</h1><p>Please try again.</p>', 500)
       : NextResponse.json({ error: 'signup_failed' }, { status: 500 });
@@ -78,28 +134,51 @@ export async function POST(req: NextRequest) {
 
   const resolution = resolveSignupTown(data.townSlug ?? null, data.townFreeText ?? null);
 
-  if (resolution.kind !== 'live') {
-    let count: number | undefined;
-    if (resolution.kind === 'planned') {
-      const identifier = data.townSlug ?? data.townFreeText ?? '';
-      const [bySlug, byFreeText] = await Promise.all([
-        supabase.from('signups').select('id', { count: 'exact', head: true }).eq('town_slug', identifier),
-        supabase.from('signups').select('id', { count: 'exact', head: true }).eq('town_free_text', identifier),
-      ]);
-      count = (bySlug.count ?? 0) + (byFreeText.count ?? 0);
+  // A live town whose launch batch is already claimed falls back onto the
+  // exact same waitlist path as a not-yet-live one.
+  let atCapacity = false;
+  let liveTown: { id: string; name: string } | null = null;
+  if (resolution.kind === 'live') {
+    const { data: town } = await supabase.from('towns').select('id, name').eq('slug', data.townSlug!).maybeSingle();
+    if (town) {
+      liveTown = town;
+      const { count } = await supabase
+        .from('passes')
+        .select('id', { count: 'exact', head: true })
+        .eq('town_id', town.id)
+        .is('revoked_at', null);
+      atCapacity = (count ?? 0) >= LAUNCH_CARD_LIMIT;
     }
+    // No `towns` row yet: config says live, ops hasn't onboarded it — the
+    // account-creation branch below re-checks this and returns
+    // `town_not_ready`, so nothing more to do here.
+  }
+
+  if (resolution.kind !== 'live' || atCapacity) {
+    const stats = await waitlistStats(supabase, data.townSlug ?? null, data.townFreeText ?? null, signup.referralCode);
+    const kind = atCapacity ? 'capacity' : resolution.kind;
+    const townName = atCapacity && liveTown ? liveTown.name : resolution.label;
 
     if (isForm) {
       const body =
-        resolution.kind === 'coming-soon'
-          ? `<h1>You're in.</h1><p>We'll tell you the day ${resolution.label} goes live.</p>`
-          : `<h1>Thanks — you just voted for ${resolution.label}.</h1><p>${count} ${count === 1 ? 'person' : 'people'} in ${resolution.label} want Local.</p>`;
+        kind === 'coming-soon'
+          ? `<h1>You're in.</h1><p>We'll tell you the day ${townName} goes live.</p>`
+          : kind === 'capacity'
+            ? `<h1>You're in.</h1><p>${townName}'s first ${LAUNCH_CARD_LIMIT} passes are already claimed — you're on the early-access list. Refer friends to move up.</p>`
+            : `<h1>Thanks — you just voted for ${townName}.</h1><p>${stats?.totalInQueue ?? 1} ${stats?.totalInQueue === 1 ? 'person' : 'people'} in ${townName} want Local.</p>`;
       return formPage('Signed up — Local', body);
     }
-    return NextResponse.json({ status: resolution.kind, townName: resolution.label, count });
+    return NextResponse.json({
+      status: kind,
+      townName,
+      count: stats?.totalInQueue,
+      referralCode: signup.referralCode,
+      position: stats?.position,
+      totalInQueue: stats?.totalInQueue,
+    });
   }
 
-  // Live town: this is a real account, not a waitlist entry.
+  // Live town, under capacity: this is a real account, not a waitlist entry.
   if (!data.password) {
     return isForm
       ? formPage('Password required', '<h1>Please set a password</h1>', 400)
@@ -107,7 +186,7 @@ export async function POST(req: NextRequest) {
   }
   const townSlug = data.townSlug!;
 
-  const { data: town } = await supabase.from('towns').select('id, name').eq('slug', townSlug).maybeSingle();
+  const town = liveTown;
   if (!town) {
     // config/towns.ts says this town is live, but ops hasn't onboarded it
     // in the database yet — there's nothing to create a pass against.
