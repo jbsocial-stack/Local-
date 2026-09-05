@@ -34,6 +34,14 @@ export const TOWNS: TownConfig[] = [
   { slug: 'arundel', name: 'Arundel', status: 'planned', region: 'South East', lat: 50.8546, lng: -0.5559 },
 ];
 
+/**
+ * Refer-a-friend / early-access mechanic: only this many passes go out in
+ * each town at launch. Once a live town hits it, further shopper signups
+ * fall back onto the same waitlist as a not-yet-live town (see
+ * /api/signup) — referring friends is the only way to move up it.
+ */
+export const LAUNCH_CARD_LIMIT = 500;
+
 export function findTown(slug: string): TownConfig | undefined {
   return TOWNS.find((t) => t.slug === slug);
 }

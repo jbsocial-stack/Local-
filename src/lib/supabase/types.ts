@@ -188,6 +188,7 @@ export interface Database {
           source: string | null;
           utm: Record<string, unknown>;
           ref_code: string | null;
+          referral_code: string;
           created_at: string;
         };
         Insert: Partial<Database['public']['Tables']['signups']['Row']> & {

@@ -8,6 +8,7 @@ const LINKS = [
   { label: 'For shoppers', href: '/shoppers' },
   { label: 'For businesses', href: '/business' },
   { label: 'Pricing', href: '/pricing' },
+  { label: 'About us', href: '/about' },
 ];
 
 // Site-wide nav — the marketing site is now split across a few real pages

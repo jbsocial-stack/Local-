@@ -2,6 +2,7 @@ const LINKS = [
   { label: 'Shoppers', href: '/shoppers' },
   { label: 'Businesses', href: '/business' },
   { label: 'Pricing', href: '/pricing' },
+  { label: 'About us', href: '/about' },
   { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },
   { label: 'Contact', href: 'mailto:hello@local.app' },
