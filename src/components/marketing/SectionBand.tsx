@@ -51,23 +51,39 @@ export function SectionBand({
   }
 
   const stacking = stackOrder !== undefined;
-  const stickyStyle: React.CSSProperties | undefined = stacking
-    ? { position: 'sticky', top: '5rem', zIndex: 10 + stackOrder }
-    : undefined;
 
+  const card = (
+    <div
+      className={`mx-auto max-w-5xl rounded-3xl px-6 py-12 sm:px-10 sm:py-16 ${stacking ? 'shadow-xl' : ''} ${
+        (stacking ? STACK_CARD_STYLES : CARD_STYLES)[resolved]
+      }`}
+    >
+      {children}
+    </div>
+  );
+
+  if (!stacking) {
+    return (
+      <section id={id} className={`px-4 py-4 sm:px-6 ${className}`}>
+        {card}
+      </section>
+    );
+  }
+
+  // `stack-card-wrapper` gets a min-height of one full viewport (regardless
+  // of how tall the card itself is) so the sticky card has real scroll
+  // distance to sit still and fully cover the previous one before the next
+  // section's wrapper starts feeding its own card in — without this, a
+  // short card's wrapper ends (and unsticks) almost immediately, so the
+  // next card starts sliding over before the current one has finished
+  // covering the one before it.
   return (
     <section
       id={id}
-      style={stickyStyle}
-      className={`${stacking ? 'stack-card' : ''} px-4 py-4 sm:px-6 ${className}`}
+      className={`stack-card-wrapper relative min-h-screen px-4 py-4 sm:px-6 ${className}`}
+      style={{ zIndex: 10 + stackOrder }}
     >
-      <div
-        className={`mx-auto max-w-5xl rounded-3xl px-6 py-12 sm:px-10 sm:py-16 ${stacking ? 'shadow-xl' : ''} ${
-          (stacking ? STACK_CARD_STYLES : CARD_STYLES)[resolved]
-        }`}
-      >
-        {children}
-      </div>
+      <div className="stack-card sticky top-20">{card}</div>
     </section>
   );
 }
