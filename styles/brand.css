@@ -36,4 +36,7 @@
   .stack-card {
     position: static !important;
   }
+  .stack-card-wrapper {
+    min-height: 0 !important;
+  }
 }
