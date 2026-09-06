@@ -136,15 +136,26 @@ Google Wallet (`src/lib/wallet/google.ts`) follows the same pattern against
 `GOOGLE_WALLET_SERVICE_ACCOUNT_KEY`, and is not blocked by anything in the
 PRD's open questions — it just needs a Google Wallet issuer account set up.
 
-**Until either is configured, shoppers can still fully onboard.** Signing up
-for a live town (`/api/signup`) creates the account, the pass, and a
-signed-in session in one step, with no dependency on Apple/Google Wallet at
-all — see "Password sign-in" below. Adding the pass to an actual wallet app
-is a separate, later, optional action from the wallet page
+**Until either is configured, shoppers can still fully onboard — and scan.**
+Signing up for a live town (`/api/signup`) creates the account, the pass,
+and a signed-in session in one step, with no dependency on Apple/Google
+Wallet at all — see "Password sign-in" below. Adding the pass to an actual
+wallet app is a separate, later, optional action from the wallet page
 (`AddToWalletButtons.tsx` → `/api/pass`, which requires the shopper to
 already be signed in and just generates the file for their existing pass);
 until that's configured, that one button shows an inline error but nothing
 else about the product is blocked.
+
+That includes scanning: tapping the wallet card (`FlippableWalletCard.tsx`)
+flips it over to reveal the same rotating QR code
+(`encodeQrPayload(generateToken(...))`, `src/lib/token/rotating-token.ts`)
+a real wallet pass's barcode would show, rendered as a plain PNG
+(`GET /api/pass/qr`, using the `qrcode` package already used for
+printables) rather than embedded in a `.pkpass`/Google Wallet object.
+`/api/scan/verify` reads the same payload format either way, so the
+merchant scanner needs no changes — this is a genuine fallback for the
+whole earn/redeem loop, not just a UI placeholder, and it's what makes the
+product usable end-to-end before any wallet credentials exist.
 
 ## What's implemented
 
