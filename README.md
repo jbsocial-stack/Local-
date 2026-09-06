@@ -56,7 +56,7 @@ npm run dev
 ```
 
 Apply the schema against a Supabase project (SQL editor or `supabase db
-push` with the CLI), in order — `supabase/migrations/0001` through `0011`.
+push` with the CLI), in order — `supabase/migrations/0001` through `0012`.
 `0005` adds the trigger that mirrors new `auth.users` rows (merchant owners
 and ops staff, who sign in via magic link; shoppers too, now, since signup
 creates a real Supabase Auth account) into `public.users`; `0007` creates
@@ -68,7 +68,9 @@ profile fields, venue gallery/social links, likes, and the `avatars`
 storage bucket; `0010` drops `passes.platform`'s `not null` — a pass exists
 from the moment of signup, before a wallet platform has necessarily been
 chosen; `0011` adds `signups.referral_code` for the refer-a-friend/
-early-access mechanic (see "Password sign-in" below).
+early-access mechanic (see "Password sign-in" below); `0012` adds
+`merchant_sumup_connections` and `sumup_webhook_events` for the SumUp POS
+integration (see "Known blocker: SumUp" below).
 
 In the Supabase dashboard, set **Auth → URL Configuration → Site URL** to
 your app's origin and add it (plus `/auth/callback`) to the redirect
@@ -156,6 +158,62 @@ printables) rather than embedded in a `.pkpass`/Google Wallet object.
 merchant scanner needs no changes — this is a genuine fallback for the
 whole earn/redeem loop, not just a UI placeholder, and it's what makes the
 product usable end-to-end before any wallet credentials exist.
+
+## Known blocker: SumUp (POS integration, in progress)
+
+R6-adjacent (not in the original PRD's numbered requirements): letting a
+merchant's SumUp card terminal award points automatically, instead of
+staff re-keying the basket total into our scanner after taking payment
+separately. **Nothing about the core product depends on this** — scan/
+earn/redeem (`/api/scan/verify`, `/api/ledger/{earn,redeem}`) works fully
+today with no SumUp connection at all; this only removes a second manual
+step for merchants who use SumUp.
+
+Confirmed against developer.sumup.com (Sept 2026):
+- SumUp exposes a **Cloud API** for triggering card-present checkouts on a
+  merchant's own Solo/Air terminal from a backend — the right fit here,
+  since it's *us* that needs to initiate the checkout right after scanning
+  the shopper's Local QR, not just passively watch for unrelated SumUp
+  activity.
+- **OAuth 2.0** (`https://api.sumup.com/authorize` +
+  `https://api.sumup.com/token`, standard authorization-code grant) is
+  SumUp's own recommended auth for "any app that connects to multiple
+  merchants" — one merchant, one connection, via
+  `GET /api/merchants/{merchantId}/sumup/connect` →
+  `GET /api/sumup/callback` (a single static callback URL registered with
+  SumUp; which merchant it's for travels through the OAuth `state` param,
+  since `redirect_uri` can't vary per merchant).
+- **Webhooks**: SumUp POSTs `{ event_type, id }` to a `return_url` you set
+  when creating a checkout, signed HMAC-SHA256 in an
+  `x-payload-signature` header. SumUp's own docs say never to trust the
+  payload beyond "something changed" — always re-fetch the checkout by id
+  to confirm the actual result — and retry failed deliveries at 1min/
+  5min/20min, so the receiver must be idempotent.
+- A separate, self-serve-looking **Affiliate Key** (developer portal →
+  For Developers → Toolkit) identifies Local as the integration to SumUp,
+  used alongside OAuth — not to be confused with SumUp's unrelated
+  marketing "Affiliate Program" (referral commissions), a completely
+  different thing under a confusingly similar name.
+
+**What's built so far** (`src/lib/sumup/`, migration `0012`): the OAuth
+connect/callback round-trip (stores a per-merchant access/refresh token in
+`merchant_sumup_connections`), a "Connect SumUp" button in merchant
+settings, and a webhook receiver that verifies the signature and records
+the event in `sumup_webhook_events` — all gated behind
+`SUMUP_CLIENT_ID` / `SUMUP_CLIENT_SECRET` / `SUMUP_REDIRECT_URI` /
+`SUMUP_WEBHOOK_SECRET` (`.env.example`), same "throws a typed error /
+returns 503 until configured" pattern as Apple/Google Wallet.
+
+**Deliberately not built yet**: the webhook receiver does not re-fetch the
+checkout to confirm its result or award ledger points — this needs a real
+SumUp developer/sandbox account to confirm the exact Create-Checkout and
+Get-Checkout request/response shapes (this was scoped from search-derived
+documentation summaries; direct access to developer.sumup.com wasn't
+available while writing this) before it's safe to wire up automatically.
+Also not built: the actual Cloud API call that triggers a checkout on a
+merchant's terminal, and staff-facing "How To" guides for connecting and
+using this at the till — both follow once the above is confirmed against
+a live account.
 
 ## What's implemented
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Database } from '@/lib/supabase/types';
 
 type Merchant = Database['public']['Tables']['merchants']['Row'];
@@ -17,11 +17,13 @@ export function SettingsForm({
   boosts,
   staff,
   photos,
+  sumupConnected,
 }: {
   merchant: Merchant;
   boosts: Boost[];
   staff: Staff[];
   photos: Photo[];
+  sumupConnected: boolean;
 }) {
   return (
     <div className="mt-6 space-y-8">
@@ -32,6 +34,42 @@ export function SettingsForm({
       <BoostsSection merchantId={merchant.id} boosts={boosts} />
       <StaffSection merchantId={merchant.id} staff={staff} />
       <PrintablesSection merchantId={merchant.id} />
+      <SumUpSection merchantId={merchant.id} connected={sumupConnected} />
+    </div>
+  );
+}
+
+function SumUpSection({ merchantId, connected }: { merchantId: string; connected: boolean }) {
+  const [justConnected, setJustConnected] = useState(false);
+  const [justErrored, setJustErrored] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setJustConnected(params.get('sumup') === 'connected');
+    setJustErrored(params.get('sumup') === 'error');
+  }, []);
+
+  return (
+    <div className="rounded-xl bg-white p-6 shadow">
+      <h2 className="font-semibold">SumUp</h2>
+      <p className="mt-1 text-sm text-neutral-600">
+        Connect your SumUp account so a card payment on your terminal can award points automatically — this is
+        early: for now it only records what SumUp tells us, it doesn&apos;t award points yet.
+      </p>
+      {justConnected && <p className="mt-2 text-sm font-medium text-green-700">Connected.</p>}
+      {justErrored && <p className="mt-2 text-sm font-medium text-red-600">Couldn&apos;t connect — try again.</p>}
+      <p className="mt-3 text-sm">
+        {connected ? (
+          <span className="font-medium text-green-700">Connected</span>
+        ) : (
+          <a
+            href={`/api/merchants/${merchantId}/sumup/connect`}
+            className="rounded-full border border-coral px-4 py-1.5 text-coral"
+          >
+            Connect SumUp
+          </a>
+        )}
+      </p>
     </div>
   );
 }
