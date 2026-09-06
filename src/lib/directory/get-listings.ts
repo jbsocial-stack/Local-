@@ -14,6 +14,7 @@ export interface ShopListing {
   photoUrl: string | null;
   activeMultiplier: number;
   boosted: boolean;
+  offerLabel: string | null;
 }
 
 /** Shared by the public directory (R8) and the signed-in Discover tab. */
@@ -34,7 +35,7 @@ export async function getShopListings(townSlug: string): Promise<{ townId: strin
     merchantIds.length > 0
       ? await supabase
           .from('merchant_boosts')
-          .select('merchant_id, multiplier, starts_at, ends_at')
+          .select('merchant_id, multiplier, starts_at, ends_at, label')
           .in('merchant_id', merchantIds)
       : { data: [] };
 
@@ -42,6 +43,8 @@ export async function getShopListings(townSlug: string): Promise<{ townId: strin
   const listings: ShopListing[] = (merchants ?? []).map((m) => {
     const merchantBoosts = (boosts ?? []).filter((b) => b.merchant_id === m.id);
     const activeMultiplier = resolveActiveMultiplier(m.base_multiplier, merchantBoosts, now);
+    const boosted = activeMultiplier > m.base_multiplier;
+    const activeBoost = merchantBoosts.find((b) => new Date(b.starts_at) <= now && now < new Date(b.ends_at));
     return {
       id: m.id,
       name: m.name,
@@ -54,7 +57,8 @@ export async function getShopListings(townSlug: string): Promise<{ townId: strin
       hours: (m.hours as ShopListing['hours']) ?? {},
       photoUrl: m.photo_url,
       activeMultiplier,
-      boosted: activeMultiplier > m.base_multiplier,
+      boosted,
+      offerLabel: boosted ? (activeBoost?.label ?? `${activeMultiplier}x points today`) : null,
     };
   });
 

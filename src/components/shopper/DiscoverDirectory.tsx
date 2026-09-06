@@ -4,42 +4,59 @@ import { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { ShopListing } from '@/lib/directory/get-listings';
+import { VenueLowerThird } from './VenueLowerThird';
 
 const DiscoverMap = dynamic(() => import('./DiscoverMap'), { ssr: false });
 
 export function DiscoverDirectory({ town, listings }: { town: string; listings: ShopListing[] }) {
   const categories = useMemo(() => Array.from(new Set(listings.map((l) => l.category))).sort(), [listings]);
   const [category, setCategory] = useState<string | null>(null);
+  const [selected, setSelected] = useState<ShopListing | null>(null);
   const filtered = category ? listings.filter((l) => l.category === category) : listings;
 
+  function pickCategory(c: string | null) {
+    setCategory(c);
+    setSelected(null);
+  }
+
   return (
-    <main className="px-4 pt-10">
-      <div className="mx-auto max-w-md">
+    <main className="pt-10">
+      <div className="mx-auto max-w-md px-4">
         <h1 className="font-display text-2xl">Discover</h1>
         <p className="text-sm text-ink/60">Every independent in the scheme, near you.</p>
+      </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+      {/* Full-bleed map — edge to edge, breaking out of the page's usual
+          max-w-md/px-4 container so it reads as a real map, not a card. */}
+      <div className="relative mt-4 h-[60vh] w-full">
+        <DiscoverMap listings={filtered} selectedId={selected?.id ?? null} onSelect={setSelected} />
+
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex flex-wrap gap-2 p-3">
           <button
-            onClick={() => setCategory(null)}
-            className={`rounded-full px-3 py-1 text-xs font-medium ${category === null ? 'bg-ink text-cream' : 'bg-white/70 text-ink/70'}`}
+            onClick={() => pickCategory(null)}
+            className={`pointer-events-auto rounded-full px-3 py-1 text-xs font-medium shadow ${
+              category === null ? 'bg-ink text-cream' : 'bg-white/90 text-ink/70 backdrop-blur'
+            }`}
           >
             All
           </button>
           {categories.map((c) => (
             <button
               key={c}
-              onClick={() => setCategory(c)}
-              className={`rounded-full px-3 py-1 text-xs font-medium ${category === c ? 'bg-ink text-cream' : 'bg-white/70 text-ink/70'}`}
+              onClick={() => pickCategory(c)}
+              className={`pointer-events-auto rounded-full px-3 py-1 text-xs font-medium shadow ${
+                category === c ? 'bg-ink text-cream' : 'bg-white/90 text-ink/70 backdrop-blur'
+              }`}
             >
               {c}
             </button>
           ))}
         </div>
 
-        <div className="mt-4">
-          <DiscoverMap listings={filtered} town={town} />
-        </div>
+        {selected && <VenueLowerThird shop={selected} town={town} onClose={() => setSelected(null)} />}
+      </div>
 
+      <div className="mx-auto max-w-md px-4">
         <ul className="mt-4 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white/70">
           {filtered.map((shop) => (
             <li key={shop.id}>
