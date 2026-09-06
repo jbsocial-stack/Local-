@@ -58,11 +58,13 @@ export function SectionBand({
   // replace this one and no blank page background ever showing between
   // them. A short card that just hugged its own content would leave a gap
   // below it for the rest of the dwell scroll, which reads as the stack
-  // breaking rather than continuing.
+  // breaking rather than continuing. `dvh` (not `vh`) so this doesn't
+  // undershoot the real visible viewport on mobile browsers whose address
+  // bar shows/hides as you scroll.
   const card = (
     <div
       className={`stack-card-fill mx-auto max-w-5xl rounded-3xl px-6 py-12 sm:px-10 sm:py-16 ${
-        stacking ? 'flex min-h-[calc(100vh-5rem)] flex-col justify-center shadow-xl' : ''
+        stacking ? 'flex min-h-[calc(100dvh-5rem)] flex-col justify-center shadow-xl' : ''
       } ${(stacking ? STACK_CARD_STYLES : CARD_STYLES)[resolved]}`}
     >
       {children}
@@ -77,16 +79,19 @@ export function SectionBand({
     );
   }
 
-  // `stack-card-wrapper` gets a min-height of one full viewport as a floor
-  // under the card's own height, so the sticky card always has real scroll
-  // distance to sit still before the next section's wrapper starts feeding
-  // its own card in — without this, a card's wrapper ends (and unsticks)
-  // almost immediately, so the next card starts sliding over before the
-  // current one has finished displaying.
+  // A `position: sticky` element only stays pinned for as much extra
+  // scroll distance as its containing block (this wrapper) has *beyond*
+  // the element's own offset + height — here, exactly one viewport
+  // (`top-20` + the card's `100dvh - 5rem` = 100dvh). A wrapper that's
+  // only `min-h-screen` gives it none: the card is never actually stuck,
+  // it just flows past at normal scroll speed like any other section, so
+  // nothing visibly stacks. `180dvh` gives it real room — 80dvh of dwell,
+  // during which the card stays pinned and fully covers the previous one
+  // — before the next section's wrapper starts feeding its own card in.
   return (
     <section
       id={id}
-      className={`stack-card-wrapper relative min-h-screen px-4 py-4 sm:px-6 ${className}`}
+      className={`stack-card-wrapper relative min-h-[180dvh] px-4 py-4 sm:px-6 ${className}`}
       style={{ zIndex: 10 + stackOrder }}
     >
       <div className="stack-card sticky top-20">{card}</div>
