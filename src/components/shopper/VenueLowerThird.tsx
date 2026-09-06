@@ -7,7 +7,11 @@ import type { ShopListing } from '@/lib/directory/get-listings';
 // tap through to the full relationship page rather than replacing the map.
 export function VenueLowerThird({ shop, town, onClose }: { shop: ShopListing; town: string; onClose: () => void }) {
   return (
-    <div className="fixed inset-x-4 bottom-24 z-40 rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-[0_8px_32px_rgba(43,43,43,0.2)] backdrop-blur-xl">
+    // z-[1100]: Leaflet's own panes/controls go up to z-index 1000
+    // (leaflet.css) regardless of this element's own stacking context —
+    // anything lower gets painted over by the map wherever they overlap
+    // on screen, even though this is `position: fixed` on top of it.
+    <div className="fixed inset-x-4 bottom-24 z-[1100] rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-[0_8px_32px_rgba(43,43,43,0.2)] backdrop-blur-xl">
       <button
         type="button"
         onClick={onClose}
