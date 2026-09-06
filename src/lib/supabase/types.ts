@@ -115,6 +115,42 @@ export interface Database {
         };
         Update: Partial<Database['public']['Tables']['merchant_boosts']['Row']>;
       } & NoRelationships;
+      merchant_sumup_connections: {
+        Row: {
+          id: string;
+          merchant_id: string;
+          sumup_merchant_code: string | null;
+          access_token: string;
+          refresh_token: string;
+          expires_at: string;
+          connected_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['merchant_sumup_connections']['Row']> & {
+          merchant_id: string;
+          access_token: string;
+          refresh_token: string;
+          expires_at: string;
+        };
+        Update: Partial<Database['public']['Tables']['merchant_sumup_connections']['Row']>;
+      } & NoRelationships;
+      sumup_webhook_events: {
+        Row: {
+          id: string;
+          checkout_id: string;
+          event_type: string;
+          confirmed_status: string | null;
+          raw_payload: Record<string, unknown>;
+          received_at: string;
+        };
+        Insert: Partial<Database['public']['Tables']['sumup_webhook_events']['Row']> & {
+          checkout_id: string;
+          event_type: string;
+          raw_payload: Record<string, unknown>;
+        };
+        Update: Partial<Database['public']['Tables']['sumup_webhook_events']['Row']>;
+      } & NoRelationships;
       merchant_users: {
         Row: {
           id: string;
