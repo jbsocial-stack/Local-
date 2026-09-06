@@ -380,11 +380,26 @@ each page separately enforces the redirect-to-sign-in via
   balance, and every ledger row for that pass (earned and spent) below it.
 - **Discover** (`.../app/discover`) — the same category-filterable
   directory as the public `/[town]/shops` (they now share
-  `src/lib/directory/get-listings.ts`), but every card links to a level-2
-  venue page (`.../app/discover/[merchant]`): photo gallery, description,
-  current offers, social links, and a like button
-  (`merchant_likes`, toggled via `/api/merchants/[id]/like` — identity
-  always comes from the caller's own session, never a request body).
+  `src/lib/directory/get-listings.ts`). The map (`DiscoverMap.tsx`) is
+  full-bleed — it breaks out of the page's usual `max-w-md`/`px-4`
+  container rather than sitting in a padded card — with coral divIcon pins
+  (no external marker-icon asset to theme) and the category filter pills
+  overlaid directly on top of it. Tapping a pin opens a "lower third"
+  (`VenueLowerThird.tsx`, a broadcast-graphics term: a panel across the
+  bottom of the screen) showing the venue's name, category, address, and
+  any live offer, with one CTA through to the full venue page — it doesn't
+  replace the map. Every card/pin ultimately links to a level-2 venue page
+  (`.../app/discover/[merchant]`): photo gallery, description, current
+  offers, social links, a like button (`merchant_likes`, toggled via
+  `/api/merchants/[id]/like` — identity always comes from the caller's own
+  session, never a request body), and — deliberately framed as "your story
+  here," not a bare transaction list, since that's what the wallet page's
+  town-wide Activity list already is — a relationship section
+  (`computeVenueRelationship`, `src/lib/ledger/venue-relationship.ts`,
+  unit tested): visits, points earned specifically at this venue, and how
+  long they've been coming. Only `earn` ledger rows count as a visit, since
+  a redemption can happen at any merchant in the scheme regardless of
+  where the points were earned.
 - **Offers** (`.../app/offers`) — a deals feed built entirely from data
   merchants already manage in Settings (base multiplier + scheduled
   boosts) — no new "offer" concept on the merchant side. Classification

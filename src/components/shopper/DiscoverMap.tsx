@@ -1,40 +1,72 @@
 'use client';
 
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useEffect } from 'react';
 import type { ShopListing } from '@/lib/directory/get-listings';
 
-const icon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+// Coral teardrop pin (matches the brand's coral, #F76C5E) instead of
+// Leaflet's default blue marker — a plain divIcon so there's no external
+// marker-icon.png dependency to theme.
+function pinIcon(active: boolean) {
+  const fill = active ? '#2B2B2B' : '#F76C5E';
+  return L.divIcon({
+    className: '',
+    html: `<svg width="32" height="42" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 26 16 26s16-15 16-26c0-8.8-7.2-16-16-16z" fill="${fill}"/>
+      <circle cx="16" cy="16" r="6.5" fill="#FFF9E6"/>
+    </svg>`,
+    iconSize: [32, 42],
+    iconAnchor: [16, 42],
+  });
+}
 
-export default function DiscoverMap({ listings, town }: { listings: ShopListing[]; town: string }) {
+// Recenters when the filtered set changes (e.g. picking a category) rather
+// than only on first mount, so the map still makes sense after filtering.
+function RecenterOnChange({ center }: { center: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center);
+  }, [center, map]);
+  return null;
+}
+
+export default function DiscoverMap({
+  listings,
+  selectedId,
+  onSelect,
+}: {
+  listings: ShopListing[];
+  selectedId: string | null;
+  onSelect: (shop: ShopListing) => void;
+}) {
   if (listings.length === 0) return null;
   const center: [number, number] = [listings[0]!.lat, listings[0]!.lng];
 
   return (
-    <MapContainer center={center} zoom={15} scrollWheelZoom={false} className="h-64 w-full rounded-xl">
+    <MapContainer
+      center={center}
+      zoom={15}
+      scrollWheelZoom={false}
+      zoomControl={false}
+      className="h-full w-full"
+    >
+      {/* Default zoom control sits top-left, same corner as the category
+          filter pills overlaid on the map — move it out of the way. */}
+      <ZoomControl position="bottomright" />
+      <RecenterOnChange center={center} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {listings.map((shop) => (
-        <Marker key={shop.id} position={[shop.lat, shop.lng]} icon={icon}>
-          <Popup>
-            <a href={`/${town}/app/discover/${shop.slug}`}>
-              <strong>{shop.name}</strong>
-            </a>
-            <br />
-            {shop.category} · {shop.activeMultiplier}x
-          </Popup>
-        </Marker>
+        <Marker
+          key={shop.id}
+          position={[shop.lat, shop.lng]}
+          icon={pinIcon(shop.id === selectedId)}
+          eventHandlers={{ click: () => onSelect(shop) }}
+        />
       ))}
     </MapContainer>
   );
