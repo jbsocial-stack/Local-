@@ -10,7 +10,19 @@
   --font-body: system-ui, sans-serif;
 }
 
+/* The wordmark's font — used only via Tailwind's font-logo utility on the
+   handful of places the logo itself is rendered (Header, Hero, Footer,
+   PassCardMock). Not a next/font Google font like display/body, so it's
+   declared directly against the static file in public/fonts/. */
+@font-face {
+  font-family: 'Windsor Pro';
+  src: url('/fonts/windsor-pro-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-  background-color: #fff9e6;
-  color: #1a1a1a;
+  background-color: #f3f1ec;
+  color: #1b263b;
 }

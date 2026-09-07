@@ -1,9 +1,10 @@
-/* Marketing homepage PRD §4: brand tokens shared across app/(marketing). */
+/* Marketing homepage PRD §4: brand tokens shared across app/(marketing).
+   Navy ink on a light stone background is the base palette; coral is the
+   one accent colour kept for CTAs, highlights, and section bands. */
 :root {
   --coral: #f76c5e;
-  --cream: #fff9e6;
-  --yellow: #ffd400;
-  --ink: #2b2b2b;
+  --cream: #f3f1ec;
+  --ink: #1b263b;
 }
 
 /* S1 AC: "respect prefers-reduced-motion" — animation is opt-in only when

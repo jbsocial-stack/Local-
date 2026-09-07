@@ -12,6 +12,12 @@ export async function GET(req: Request) {
   const townSlug = searchParams.get('town');
   const town = townSlug ? findTown(townSlug) : undefined;
 
+  // Self-fetch from public/ — the standard way to get a real font into an
+  // edge ImageResponse, since it can't read the filesystem directly.
+  const windsorPro = await fetch(new URL('/fonts/windsor-pro-bold.ttf', req.url)).then((res) =>
+    res.arrayBuffer(),
+  );
+
   return new ImageResponse(
     (
       <div
@@ -28,30 +34,42 @@ export async function GET(req: Request) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#FFF9E6',
+            backgroundColor: '#F3F1EC',
             borderRadius: 24,
             padding: '48px 64px',
             width: 760,
           }}
         >
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#F76C5E', lineHeight: 0.95 }}>
+          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#1B263B', lineHeight: 0.95 }}>
             Eat.
           </div>
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#F76C5E', lineHeight: 0.95 }}>
+          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#1B263B', lineHeight: 0.95 }}>
             Shop.
           </div>
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#F76C5E', lineHeight: 0.95 }}>
+          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#1B263B', lineHeight: 0.95 }}>
             Earn.
           </div>
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#F76C5E', lineHeight: 0.95 }}>
-            Regulars.
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 96,
+              fontFamily: 'Windsor Pro',
+              color: '#F76C5E',
+              lineHeight: 0.95,
+            }}
+          >
+            REGULARS.
           </div>
           {town && (
-            <div style={{ display: 'flex', marginTop: 24, fontSize: 32, color: '#2B2B2B' }}>{town.name}</div>
+            <div style={{ display: 'flex', marginTop: 24, fontSize: 32, color: '#1B263B' }}>{town.name}</div>
           )}
         </div>
       </div>
     ),
-    { width: 1200, height: 630 },
+    {
+      width: 1200,
+      height: 630,
+      fonts: [{ name: 'Windsor Pro', data: windsorPro, weight: 700, style: 'normal' }],
+    },
   );
 }

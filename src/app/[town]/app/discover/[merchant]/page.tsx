@@ -88,7 +88,7 @@ export default async function VenuePage({
         </div>
 
         <div className="mt-3 flex items-center gap-2">
-          <span className="rounded-full bg-accent-yellow px-3 py-1 text-xs font-semibold">
+          <span className="rounded-full bg-coral/15 px-3 py-1 text-xs font-semibold text-coral">
             {activeMultiplier}x points
           </span>
           {activeMultiplier > merchant.base_multiplier && (

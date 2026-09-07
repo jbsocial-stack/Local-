@@ -1,11 +1,10 @@
 // Every section on the marketing site is a rounded, inset card sitting on
-// the cream page background — coral/yellow/ink for colored cards, or a
+// the cream page background — coral/ink for colored cards, or a
 // thin-bordered neutral card for everything else. `color="plain"` skips the
 // card chrome entirely, for sections (like HowItWorks) that build their own
 // smaller cards internally.
 const CARD_STYLES: Record<string, string> = {
   coral: 'bg-coral text-cream',
-  yellow: 'bg-accent-yellow text-ink',
   ink: 'bg-ink text-cream',
   card: 'border border-ink/10 bg-white/60 text-ink',
 };
@@ -31,7 +30,7 @@ export function SectionBand({
   children: React.ReactNode;
   className?: string;
   id?: string;
-  color?: 'coral' | 'yellow' | 'ink' | 'card' | 'plain';
+  color?: 'coral' | 'ink' | 'card' | 'plain';
   /** Cards-stacking scroll effect: pass a sequential number (0, 1, 2…) on
       consecutive sections that should stack as the user scrolls past them;
       omit for sections that should scroll normally (Hero, HowItWorks,

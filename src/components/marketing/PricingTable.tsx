@@ -39,7 +39,7 @@ const CARD_STYLE: Record<string, string> = {
 
 const DOT_STYLE: Record<string, string> = {
   card: 'bg-coral',
-  ink: 'bg-accent-yellow',
+  ink: 'bg-coral',
 };
 
 export function PricingTable() {
@@ -71,7 +71,7 @@ export function PricingTable() {
             <a
               href={tier.cta.href}
               className={`mt-6 block rounded-full px-5 py-2.5 text-center text-sm font-medium ${
-                tier.style === 'ink' ? 'bg-accent-yellow text-ink' : 'bg-ink text-cream'
+                tier.style === 'ink' ? 'bg-coral text-cream' : 'bg-ink text-cream'
               }`}
             >
               {tier.cta.label}

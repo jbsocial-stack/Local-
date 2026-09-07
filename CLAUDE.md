@@ -30,7 +30,7 @@ Regulars is a town-wide loyalty card for independent businesses, launching in Ch
 7. Stack: Next.js 15 App Router + TypeScript, Supabase (Postgres/Auth/RLS/cron), Tailwind + shadcn/ui, passkit-generator, Google Wallet API, @zxing/browser, otplib, Leaflet/OSM, Web Push, Vercel.
 
 ## Brand tokens
-coral `#F76C5E` · cream `#FFF9E6` · yellow `#FFD400` · ink `#2B2B2B` · display: Outfit 800 (or Fredoka One) · body: Inter. Sections alternate coral/cream, never white. Flat coral silhouettes with yellow "+N points" pills. No gradients, shadows, emoji, photos.
+coral `#F76C5E` (the one accent colour — CTAs, highlights, section bands) · cream/stone `#F3F1EC` (background) · ink/navy `#1B263B` (text) · display: Outfit 800 (or Fredoka One) · body: Inter · logo: Windsor Pro Bold, uppercase, used only for the wordmark itself (Header/Hero/Footer/PassCardMock/printables/OG image — `font-logo` in Tailwind, `public/fonts/windsor-pro-bold.ttf`). Navy text on a very light stone background is the base palette; no yellow. Sections alternate coral/stone, never pure white. No gradients, shadows, emoji, photos.
 
 ## Build order (Phase A, weeks 1–3)
 1. Schema + RLS + seed (`towns: chichester`, 3 merchants).

@@ -21,7 +21,7 @@ export function Hero({ town }: { town?: TownConfig }) {
         />
 
         <div className="relative mx-auto flex max-w-md flex-col items-center">
-          <h1 className="font-display text-[14vw] leading-[0.85] sm:text-7xl">Regulars</h1>
+          <h1 className="font-logo uppercase text-[14vw] leading-[0.85] sm:text-7xl">Regulars</h1>
           <p className="mt-4 text-lg font-medium text-cream">
             Get Regular. Eat, shop and earn points in your town.
           </p>
@@ -85,7 +85,7 @@ function PassCardMock() {
   return (
     <div className="aspect-[1.586/1] w-full rounded-2xl bg-gradient-to-br from-ink to-ink/80 p-5 text-left text-cream shadow-2xl">
       <div className="flex items-start justify-between">
-        <span className="h-6 w-8 rounded-md bg-accent-yellow/90" aria-hidden />
+        <span className="h-6 w-8 rounded-md bg-coral/90" aria-hidden />
         <span className="rounded-full bg-cream/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide">
           Chichester
         </span>
@@ -96,7 +96,7 @@ function PassCardMock() {
           <p className="text-[10px] uppercase tracking-[0.15em] text-cream/50">Cardholder</p>
           <p className="text-sm font-medium">Alex Morgan</p>
         </div>
-        <span className="font-display text-xl">Regulars</span>
+        <span className="font-logo uppercase text-xl">Regulars</span>
       </div>
     </div>
   );

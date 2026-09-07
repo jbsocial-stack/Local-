@@ -14,7 +14,7 @@ export function ShopperPageContent({ town }: { town?: TownConfig }) {
         <ForShoppers town={town} />
       </SectionBand>
 
-      <SectionBand index={1} color="yellow">
+      <SectionBand index={1} color="card">
         <ShopperForm defaultTown={town} />
       </SectionBand>
 

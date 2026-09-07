@@ -1,6 +1,6 @@
 // Numbered circle used in "how it works"-style step lists, rotating
 // through the three accent colors so a sequence of steps reads as a set.
-const COLORS = ['bg-accent-yellow text-ink', 'bg-coral text-cream', 'bg-ink text-cream'];
+const COLORS = ['bg-coral/30 text-ink', 'bg-coral text-cream', 'bg-ink text-cream'];
 
 export function StepBadge({ index, children }: { index: number; children: React.ReactNode }) {
   return (
