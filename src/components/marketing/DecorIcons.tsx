@@ -10,7 +10,7 @@ export function DecorField() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 bg-[length:220px_220px] bg-repeat sm:bg-[length:260px_260px]"
+      className="pointer-events-none absolute inset-0 -z-10 bg-[length:280px_280px] bg-repeat sm:bg-[length:330px_330px]"
       style={{ backgroundImage: "url('/icons/decor/pattern-navy.svg')" }}
     />
   );
