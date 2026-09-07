@@ -7,6 +7,7 @@ import { Mission } from './Mission';
 import { ForShoppers } from './ForShoppers';
 import { DemandMap } from './DemandMap';
 import { Footer } from './Footer';
+import { DecorField } from './DecorIcons';
 
 // Shared by `/` (no town) and `/[town]` (H8: pre-fills the hero pill and
 // links out to the town-scoped shopper page). Shopper-first: every
@@ -18,7 +19,9 @@ import { Footer } from './Footer';
 // you scroll past them.
 export function HomePageContent({ town }: { town?: TownConfig }) {
   return (
-    <>
+    <div className="relative">
+      <DecorField />
+
       <Hero town={town} />
 
       <SectionBand index={1} color="plain">
@@ -42,6 +45,6 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
       </SectionBand>
 
       <Footer />
-    </>
+    </div>
   );
 }
