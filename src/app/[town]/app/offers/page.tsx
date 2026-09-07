@@ -66,7 +66,7 @@ export default async function OffersPage({ params }: { params: Promise<{ town: s
                   <p className="font-medium">{offer.merchantName}</p>
                   <p className="text-sm text-ink/60">{offer.label}</p>
                 </div>
-                <span className="rounded-full bg-accent-yellow px-3 py-1 text-xs font-semibold">
+                <span className="rounded-full bg-coral/15 px-3 py-1 text-xs font-semibold text-coral">
                   {KIND_TAG[offer.kind]}
                 </span>
               </Link>

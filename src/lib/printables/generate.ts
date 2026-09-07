@@ -1,3 +1,6 @@
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import QRCode from 'qrcode';
 
@@ -6,8 +9,14 @@ import QRCode from 'qrcode';
 // Wallet landing page (open question #7's recommendation — the directory
 // is linked from the pass back field instead, per R8/R9).
 const CORAL = rgb(0xf7 / 255, 0x6c / 255, 0x5e / 255);
-const CREAM = rgb(0xff / 255, 0xf9 / 255, 0xe6 / 255);
-const INK = rgb(0.1, 0.1, 0.1);
+const CREAM = rgb(0xf3 / 255, 0xf1 / 255, 0xec / 255);
+const INK = rgb(0x1b / 255, 0x26 / 255, 0x3b / 255);
+
+async function embedLogoFont(pdf: PDFDocument) {
+  pdf.registerFontkit(fontkit);
+  const bytes = await readFile(path.join(process.cwd(), 'public/fonts/windsor-pro-bold.ttf'));
+  return pdf.embedFont(bytes);
+}
 
 async function embedQr(pdf: PDFDocument, url: string) {
   const png = await QRCode.toBuffer(url, { margin: 1, width: 600, color: { dark: '#1a1a1a', light: '#ffffffff' } });
@@ -28,15 +37,16 @@ export async function generatePosterPdf(input: {
   const { width, height } = page.getSize();
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
+  const logo = await embedLogoFont(pdf);
 
   page.drawRectangle({ x: 0, y: 0, width, height, color: CREAM });
   page.drawRectangle({ x: 0, y: height - 140, width, height: 140, color: CORAL });
 
-  page.drawText('Regulars', {
+  page.drawText('REGULARS', {
     x: 48,
     y: height - 95,
     size: 56,
-    font: bold,
+    font: logo,
     color: rgb(1, 1, 1),
   });
   page.drawText('Get Regular. Eat, shop and earn points in your town.', {
@@ -93,13 +103,13 @@ export async function generateStickerPdf(input: {
   const pdf = await PDFDocument.create();
   const size = 297.6; // ~105mm square, a standard window-sticker size
   const page = pdf.addPage([size, size]);
-  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
+  const logo = await embedLogoFont(pdf);
 
   page.drawRectangle({ x: 0, y: 0, width: size, height: size, color: rgb(1, 1, 1) });
   page.drawRectangle({ x: 6, y: 6, width: size - 12, height: size - 12, borderColor: CORAL, borderWidth: 3 });
 
-  page.drawText('Regulars', { x: 24, y: size - 40, size: 26, font: bold, color: CORAL });
+  page.drawText('REGULARS', { x: 24, y: size - 40, size: 26, font: logo, color: CORAL });
   page.drawText(input.merchantName, {
     x: 24,
     y: size - 58,

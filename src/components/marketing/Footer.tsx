@@ -12,7 +12,7 @@ export function Footer() {
   return (
     <footer className="bg-cream px-6 py-10 text-ink">
       <div className="mx-auto max-w-5xl">
-        <p className="font-display text-2xl text-coral">Regulars</p>
+        <p className="font-logo uppercase text-2xl text-coral">Regulars</p>
         <p className="mt-1 text-ink/70">Get Regular. Eat, shop and earn points in your town.</p>
 
         <nav className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">

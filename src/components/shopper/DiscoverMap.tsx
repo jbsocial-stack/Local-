@@ -10,12 +10,12 @@ import type { ShopListing } from '@/lib/directory/get-listings';
 // Leaflet's default blue marker — a plain divIcon so there's no external
 // marker-icon.png dependency to theme.
 function pinIcon(active: boolean) {
-  const fill = active ? '#2B2B2B' : '#F76C5E';
+  const fill = active ? '#1B263B' : '#F76C5E';
   return L.divIcon({
     className: '',
     html: `<svg width="32" height="42" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg">
       <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 26 16 26s16-15 16-26c0-8.8-7.2-16-16-16z" fill="${fill}"/>
-      <circle cx="16" cy="16" r="6.5" fill="#FFF9E6"/>
+      <circle cx="16" cy="16" r="6.5" fill="#F3F1EC"/>
     </svg>`,
     iconSize: [32, 42],
     iconAnchor: [16, 42],

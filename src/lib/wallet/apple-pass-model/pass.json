@@ -4,6 +4,6 @@
   "description": "Regulars loyalty pass",
   "storeCard": {},
   "backgroundColor": "rgb(247, 108, 94)",
-  "foregroundColor": "rgb(255, 249, 230)",
-  "labelColor": "rgb(255, 212, 0)"
+  "foregroundColor": "rgb(243, 241, 236)",
+  "labelColor": "rgb(230, 214, 205)"
 }

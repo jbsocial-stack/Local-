@@ -67,7 +67,7 @@ export function FlippableWalletCard({
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-coral to-orange-400 p-6 text-cream shadow-lg [backface-visibility:hidden]">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/80">Regulars pass</span>
-              <span className="rounded-full bg-accent-yellow px-3 py-1 text-xs font-semibold text-ink">{townName}</span>
+              <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-coral">{townName}</span>
             </div>
             <p className="mt-8 font-display text-5xl">
               {formatPence(balancePoints)}

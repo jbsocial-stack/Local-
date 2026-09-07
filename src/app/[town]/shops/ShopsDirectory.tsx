@@ -79,7 +79,7 @@ export function ShopsDirectory({ townName, listings }: { townName: string; listi
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <p className="font-semibold">{shop.name}</p>
-                  <span className="rounded-full bg-accent-yellow px-2 py-0.5 text-xs font-medium">
+                  <span className="rounded-full bg-coral/15 px-2 py-0.5 text-xs font-medium text-coral">
                     {shop.activeMultiplier}x
                   </span>
                   {shop.boosted && (

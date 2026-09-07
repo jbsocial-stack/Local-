@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-16 text-ink">
-      <p className="mb-6 rounded-lg bg-accent-yellow/30 px-4 py-3 text-sm">
+      <p className="mb-6 rounded-lg bg-coral/15 px-4 py-3 text-sm">
         <strong>Placeholder — flagged for legal review</strong> before launch (PRD open question #4:
         company entity, ICO registration, and privacy policy author still TBD).
       </p>

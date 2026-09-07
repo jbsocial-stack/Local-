@@ -7,13 +7,17 @@ const config: Config = {
     extend: {
       colors: {
         coral: '#F76C5E',
-        cream: '#FFF9E6',
-        'accent-yellow': '#FFD400',
-        ink: '#2B2B2B',
+        cream: '#F3F1EC',
+        ink: '#1B263B',
       },
       fontFamily: {
         display: ['var(--font-display)', 'system-ui', 'sans-serif'],
         body: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        // The wordmark only — "Windsor Pro" is a @font-face declared in
+        // globals.css (public/fonts/windsor-pro-bold.ttf), not a next/font
+        // Google font like display/body, since it's used in exactly the
+        // handful of places the logo itself is rendered.
+        logo: ['"Windsor Pro"', 'var(--font-display)', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -19,7 +19,7 @@ export function ProblemColumns() {
         Every shop has its own stamp card. Nobody carries them.
       </h2>
 
-      <div className="mt-6 flex items-center gap-4 rounded-2xl bg-accent-yellow px-5 py-4">
+      <div className="mt-6 flex items-center gap-4 rounded-2xl bg-coral/15 px-5 py-4">
         <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-cream">
           ★
         </span>
