@@ -46,7 +46,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<Params
     const buffer = await generateApplePass({
       serial: pass.serial,
       authenticationToken: pass.secret,
-      townName: town?.name ?? 'Local',
+      townName: town?.name ?? 'Regulars',
       balancePoints: pass.balance_points,
       lastActivityLabel: formatLastActivity(lastLedgerRow ?? null),
       qrPayload,

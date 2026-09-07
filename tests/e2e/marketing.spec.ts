@@ -69,7 +69,7 @@ test('header sign-in link takes an existing shopper to /sign-in', async ({ page 
   await page.goto('/');
   await page.getByRole('link', { name: 'Sign in' }).click();
   await expect(page).toHaveURL('/sign-in');
-  await expect(page.getByRole('heading', { name: 'Sign in to Local' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Sign in to Regulars' })).toBeVisible();
 });
 
 test('burger menu links to the shopper and business pages', async ({ page }) => {
@@ -200,7 +200,7 @@ test('shopper form: planned/other town shows the vote count', async ({ page }) =
   await page.locator('#shopper-form button[type="submit"]').click();
 
   await expect(page.getByText('Thanks — you just voted for Bognor Regis.')).toBeVisible();
-  await expect(page.getByText('7 people in Bognor Regis want Local.')).toBeVisible();
+  await expect(page.getByText('7 people in Bognor Regis want Regulars.')).toBeVisible();
 });
 
 // Refer-a-friend: only LAUNCH_CARD_LIMIT passes go out per town at launch;

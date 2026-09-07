@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'About — Local',
-  description: 'Why Local started in Chichester, and why now.',
+  title: 'About — Regulars',
+  description: 'Why Regulars started in Chichester, and why now.',
 };
 
 export default function AboutPage() {
@@ -13,7 +13,7 @@ export default function AboutPage() {
       <h1 className="mt-2 font-display text-3xl">One high street. Then the next one on the list.</h1>
 
       <p className="mt-6 text-ink/80">
-        Local isn&apos;t a national rollout with Chichester as stop one — it&apos;s the other way round.
+        Regulars isn&apos;t a national rollout with Chichester as stop one — it&apos;s the other way round.
         Our founder lives in Chichester, so that&apos;s the high street we built this for first: the café
         that remembers your order, the bookshop owner who&apos;ll order in the title you asked about last
         month. We wanted to prove this works somewhere we could feel it working, not just read it in a
@@ -33,7 +33,7 @@ export default function AboutPage() {
         Both are aimed at supply — making it cheaper and more possible to run a shop on a high street.
         Neither puts a single extra customer through the door. That&apos;s the gap we think is left once the
         reforms do their job: someone still has to give people a reason to choose the shop on their street
-        over the app on their phone. That&apos;s what Local is for.
+        over the app on their phone. That&apos;s what Regulars is for.
       </p>
 
       <h2 className="mt-10 font-display text-2xl">Why Chichester first</h2>

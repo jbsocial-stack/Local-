@@ -165,8 +165,8 @@ export async function POST(req: NextRequest) {
           ? `<h1>You're in.</h1><p>We'll tell you the day ${townName} goes live.</p>`
           : kind === 'capacity'
             ? `<h1>You're in.</h1><p>${townName}'s first ${LAUNCH_CARD_LIMIT} passes are already claimed — you're on the early-access list. Refer friends to move up.</p>`
-            : `<h1>Thanks — you just voted for ${townName}.</h1><p>${stats?.totalInQueue ?? 1} ${stats?.totalInQueue === 1 ? 'person' : 'people'} in ${townName} want Local.</p>`;
-      return formPage('Signed up — Local', body);
+            : `<h1>Thanks — you just voted for ${townName}.</h1><p>${stats?.totalInQueue ?? 1} ${stats?.totalInQueue === 1 ? 'person' : 'people'} in ${townName} want Regulars.</p>`;
+      return formPage('Signed up — Regulars', body);
     }
     return NextResponse.json({
       status: kind,

@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
 
   if (isForm) {
     return formPage(
-      'Thanks — Local',
+      'Thanks — Regulars',
       "<h1>Thanks!</h1><p>We'll be in touch within 2 working days to book your trial.</p>",
     );
   }

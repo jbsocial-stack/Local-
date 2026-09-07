@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy — Local',
-  description: 'How Local collects, uses, and protects your data.',
+  title: 'Privacy — Regulars',
+  description: 'How Regulars collects, uses, and protects your data.',
 };
 
 // H11: "privacy policy... placeholder copy flagged for review." Implemented
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
       </p>
       <h1 className="font-display text-3xl">Privacy policy</h1>
       <p className="mt-4 text-ink/80">
-        Local collects the information you give us when you sign up (email, town, optional
+        Regulars collects the information you give us when you sign up (email, town, optional
         postcode) and, once you claim a pass, your loyalty activity with participating merchants.
         We use it to run the scheme, tell you when your town goes live, and — only if you&apos;ve
         opted in — send you occasional updates. We never sell your data.
@@ -29,8 +29,8 @@ export default function PrivacyPage() {
       </p>
       <p className="mt-4 text-ink/80">
         To ask what we hold on you, or to have it deleted, email{' '}
-        <a href="mailto:hello@local.app" className="underline">
-          hello@local.app
+        <a href="mailto:hello@regulars.app" className="underline">
+          hello@regulars.app
         </a>
         .
       </p>

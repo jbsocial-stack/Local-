@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
         status: 201,
         headers: {
           'Content-Type': 'application/vnd.apple.pkpass',
-          'Content-Disposition': `attachment; filename="local-${townSlug}.pkpass"`,
+          'Content-Disposition': `attachment; filename="regulars-${townSlug}.pkpass"`,
         },
       });
     } catch (err) {

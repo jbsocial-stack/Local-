@@ -1,7 +1,7 @@
-# Local
+# Regulars
 
-Eat. Shop. Earn. Local. — all the independent shops in your town rolled into
-one loyalty programme.
+Get Regular. Eat, shop and earn points in your town — one loyalty card for
+every independent shop on the high street.
 
 This repo implements **Phase A and Phase B of the product PRD** (schema/
 ledger, scan-to-earn/redeem, the merchant PWA, the nightly expiry job,
@@ -173,7 +173,7 @@ Confirmed against developer.sumup.com (Sept 2026):
 - SumUp exposes a **Cloud API** for triggering card-present checkouts on a
   merchant's own Solo/Air terminal from a backend — the right fit here,
   since it's *us* that needs to initiate the checkout right after scanning
-  the shopper's Local QR, not just passively watch for unrelated SumUp
+  the shopper's Regulars QR, not just passively watch for unrelated SumUp
   activity.
 - **OAuth 2.0** (`https://api.sumup.com/authorize` +
   `https://api.sumup.com/token`, standard authorization-code grant) is
@@ -190,7 +190,7 @@ Confirmed against developer.sumup.com (Sept 2026):
   to confirm the actual result — and retry failed deliveries at 1min/
   5min/20min, so the receiver must be idempotent.
 - A separate, self-serve-looking **Affiliate Key** (developer portal →
-  For Developers → Toolkit) identifies Local as the integration to SumUp,
+  For Developers → Toolkit) identifies Regulars as the integration to SumUp,
   used alongside OAuth — not to be confused with SumUp's unrelated
   marketing "Affiliate Program" (referral commissions), a completely
   different thing under a confusingly similar name.
@@ -300,7 +300,7 @@ segmentation) is intentionally not built.
   business-facing section (`ForBusinesses`, `PricingTable`, the trial
   form) lives only on `/business`, which also carries the one KPI a
   prospective merchant actually cares about — how many shoppers are
-  already using Local, right now (`getShopperCounts`/
+  already using Regulars, right now (`getShopperCounts`/
   `formatTractionHeadline` in `src/lib/marketing/shopper-count.ts`, a
   non-revoked-`passes` count per live town, same distinction /api/signup's
   launch-capacity check makes). `/pricing` redirects to `/business#pricing`

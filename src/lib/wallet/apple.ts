@@ -90,7 +90,7 @@ export async function generateApplePass(input: ApplePassInput): Promise<Buffer> 
     value: (input.balancePoints / 100).toFixed(2),
     currencyCode: 'GBP',
   });
-  pass.primaryFields.push({ key: 'town', label: 'LOCAL', value: input.townName });
+  pass.primaryFields.push({ key: 'town', label: 'TOWN', value: input.townName });
   pass.secondaryFields.push({
     key: 'lastActivity',
     label: 'LAST ACTIVITY',

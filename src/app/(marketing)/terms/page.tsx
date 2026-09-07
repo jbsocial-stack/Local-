@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms — Local',
-  description: "Local's terms for shoppers and merchants.",
+  title: 'Terms — Regulars',
+  description: "Regulars' terms for shoppers and merchants.",
 };
 
 // H11: "terms... placeholder copy flagged for review."
@@ -14,7 +14,7 @@ export default function TermsPage() {
       </p>
       <h1 className="font-display text-3xl">Terms</h1>
       <p className="mt-4 text-ink/80">
-        Local is free for shoppers, forever. 1 point = 1p, redeemable at any participating
+        Regulars is free for shoppers, forever. 1 point = 1p, redeemable at any participating
         merchant. Points expire 12 months after they&apos;re earned. We can pause or remove a
         merchant from the scheme at any time; points already earned there stay valid to spend
         elsewhere in the scheme.
@@ -25,8 +25,8 @@ export default function TermsPage() {
       </p>
       <p className="mt-4 text-ink/80">
         Questions? Email{' '}
-        <a href="mailto:hello@local.app" className="underline">
-          hello@local.app
+        <a href="mailto:hello@regulars.app" className="underline">
+          hello@regulars.app
         </a>
         .
       </p>

@@ -44,7 +44,7 @@ export async function GET(req: Request) {
             Earn.
           </div>
           <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#F76C5E', lineHeight: 0.95 }}>
-            Local.
+            Regulars.
           </div>
           {town && (
             <div style={{ display: 'flex', marginTop: 24, fontSize: 32, color: '#2B2B2B' }}>{town.name}</div>

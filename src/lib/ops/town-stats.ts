@@ -33,7 +33,7 @@ export function calculateTownStats(input: TownStatsInput, now: Date = new Date()
     merchantsLive: input.merchantsLive,
     activeEarners30d: new Set(recentEarns.map((r) => r.pass_id)).size,
     // Basket value entered at scan-time, summed across every earn ever —
-    // a proxy for GMV since Local never processes the actual payment.
+    // a proxy for GMV since Regulars never processes the actual payment.
     gmvProxyPence: earns.reduce((sum, r) => sum + (r.basket_pence ?? 0), 0),
     pointsOutstanding: input.outstandingBalancePoints,
   };

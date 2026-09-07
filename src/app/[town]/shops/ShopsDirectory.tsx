@@ -43,7 +43,7 @@ export function ShopsDirectory({ townName, listings }: { townName: string; listi
     <main className="min-h-screen bg-cream">
       <header className="px-4 py-6 text-center">
         <h1 className="text-2xl font-bold text-coral">{townName} shops</h1>
-        <p className="text-sm text-neutral-600">Every independent in the Local scheme.</p>
+        <p className="text-sm text-neutral-600">Every independent in the Regulars scheme.</p>
       </header>
 
       <div className="px-4 mb-4 flex flex-wrap justify-center gap-2">

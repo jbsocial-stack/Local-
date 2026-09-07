@@ -53,7 +53,7 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
         <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-ink/50">Activity</h2>
         <ul className="mt-3 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white/60">
           {(rows ?? []).map((row) => {
-            const merchantName = (row.merchants as unknown as { name: string } | null)?.name ?? 'Local';
+            const merchantName = (row.merchants as unknown as { name: string } | null)?.name ?? 'Regulars';
             const positive = row.points > 0;
             return (
               <li key={row.id} className="flex items-center justify-between px-4 py-3">

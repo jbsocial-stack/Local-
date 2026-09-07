@@ -29,9 +29,9 @@ export default async function AppResolverPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center">
-      <p className="font-medium">We couldn&apos;t find a Local pass for this account.</p>
+      <p className="font-medium">We couldn&apos;t find a Regulars pass for this account.</p>
       <Link href="/" className="mt-3 rounded-full bg-coral px-6 py-3 font-medium text-cream">
-        Sign up for Local
+        Sign up for Regulars
       </Link>
     </main>
   );

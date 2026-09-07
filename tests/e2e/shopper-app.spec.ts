@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test';
 test('wallet redirects to sign-in when not signed in', async ({ page }) => {
   await page.goto('/chichester/app/wallet');
   await expect(page).toHaveURL(/\/chichester\/app\/sign-in$/);
-  await expect(page.getByRole('heading', { name: 'Sign in to Local' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Sign in to Regulars' })).toBeVisible();
 });
 
 test('sign-in page is password-only', async ({ page }) => {
