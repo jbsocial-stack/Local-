@@ -28,6 +28,6 @@ describe('formatTractionHeadline', () => {
         { townSlug: 'brighton', townName: 'Brighton', count: 100 },
       ],
     };
-    expect(formatTractionHeadline(counts)).toBe('300 shoppers are already earning points across Local towns.');
+    expect(formatTractionHeadline(counts)).toBe('300 shoppers are already earning points across Regulars towns.');
   });
 });

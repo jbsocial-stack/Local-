@@ -17,8 +17,8 @@ export async function generateMetadata({
   const town = findTown(slug);
   if (!town) return {};
   return {
-    title: `For shoppers in ${town.name} — Local`,
-    description: `Get your Local pass for ${town.name} — one wallet pass for every independent shop in town.`,
+    title: `For shoppers in ${town.name} — Regulars`,
+    description: `Get your Regulars pass for ${town.name} — one wallet pass for every independent shop in town.`,
   };
 }
 

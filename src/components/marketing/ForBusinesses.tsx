@@ -27,7 +27,7 @@ export function ForBusinesses({
 }: {
   formHref?: string;
   /** The core KPI a prospective merchant cares about most: how many
-      shoppers are already using Local, right now (see
+      shoppers are already using Regulars, right now (see
       lib/marketing/shopper-count.ts). Omitted on the illustrative-only
       contexts this component doesn't currently have, but always passed by
       the real /business page. */

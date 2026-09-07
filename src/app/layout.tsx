@@ -6,7 +6,7 @@ import '../../styles/brand.css';
 import { ServiceWorkerRegister } from './sw-register';
 
 export const metadata: Metadata = {
-  title: 'Local — Eat. Shop. Earn.',
+  title: 'Regulars — Eat. Shop. Earn.',
   description: 'All the independent shops in your town rolled into one loyalty programme.',
   manifest: '/manifest.webmanifest',
 };

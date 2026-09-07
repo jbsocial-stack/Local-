@@ -38,7 +38,7 @@ export async function geocodeAddress(address: string): Promise<GeocodeResult> {
   url.searchParams.set('limit', '1');
 
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'LocalLoyaltyApp/1.0 (ops@local.app)' },
+    headers: { 'User-Agent': 'RegularsApp/1.0 (ops@regulars.app)' },
   });
   if (!res.ok) {
     throw new Error(`Geocoding request failed: ${res.status}`);

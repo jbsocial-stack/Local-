@@ -19,7 +19,7 @@ export async function generateMetadata({
   const { town: slug } = await params;
   const town = findTown(slug);
   if (!town) return {};
-  const title = `Local ${town.name} — Eat. Shop. Earn.`;
+  const title = `Regulars ${town.name} — Eat. Shop. Earn.`;
   const description = `All the independent shops in ${town.name} rolled into one loyalty programme.`;
   return {
     title,

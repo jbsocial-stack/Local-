@@ -1,4 +1,4 @@
--- Local — initial schema (PRD v1, section 10)
+-- Regulars — initial schema (PRD v1, section 10)
 -- Ledger is the source of truth; passes.balance_points is a cache written in
 -- the same transaction as every ledger insert and reconciled nightly.
 

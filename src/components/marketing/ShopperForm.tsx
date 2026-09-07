@@ -227,7 +227,7 @@ function ShopperSuccess({ state }: { state: SuccessState }) {
       <>
         <p className="font-medium">Thanks — you just voted for {state.townName}.</p>
         <p className="mt-1 text-ink/70">
-          {state.count ?? 1} {state.count === 1 ? 'person' : 'people'} in {state.townName} want Local.
+          {state.count ?? 1} {state.count === 1 ? 'person' : 'people'} in {state.townName} want Regulars.
         </p>
       </>
     );

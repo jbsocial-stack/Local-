@@ -10,7 +10,7 @@ const TIERS = [
     style: 'card' as const,
   },
   {
-    name: 'Local Business Standard',
+    name: 'Regulars Business Standard',
     price: 'from £40',
     unit: '/mo',
     bullets: [

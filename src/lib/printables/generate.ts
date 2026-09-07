@@ -32,14 +32,14 @@ export async function generatePosterPdf(input: {
   page.drawRectangle({ x: 0, y: 0, width, height, color: CREAM });
   page.drawRectangle({ x: 0, y: height - 140, width, height: 140, color: CORAL });
 
-  page.drawText('Local', {
+  page.drawText('Regulars', {
     x: 48,
     y: height - 95,
     size: 56,
     font: bold,
     color: rgb(1, 1, 1),
   });
-  page.drawText('Eat. Shop. Earn. Local.', {
+  page.drawText('Get Regular. Eat, shop and earn points in your town.', {
     x: 48,
     y: height - 125,
     size: 16,
@@ -99,7 +99,7 @@ export async function generateStickerPdf(input: {
   page.drawRectangle({ x: 0, y: 0, width: size, height: size, color: rgb(1, 1, 1) });
   page.drawRectangle({ x: 6, y: 6, width: size - 12, height: size - 12, borderColor: CORAL, borderWidth: 3 });
 
-  page.drawText('Local', { x: 24, y: size - 40, size: 26, font: bold, color: CORAL });
+  page.drawText('Regulars', { x: 24, y: size - 40, size: 26, font: bold, color: CORAL });
   page.drawText(input.merchantName, {
     x: 24,
     y: size - 58,

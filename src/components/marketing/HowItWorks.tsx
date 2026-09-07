@@ -5,7 +5,7 @@ const STEPS = [
   { n: '2', title: 'Earn.', body: 'Show your pass. Every £1 earns at least 1 point. Some shops give 3x, 5x.' },
   {
     n: '3',
-    title: 'Spend anywhere local.',
+    title: 'Spend anywhere in town.',
     body: '1 point = 1p, at every shop in the scheme. No vouchers, no rules.',
   },
 ];

@@ -6,10 +6,10 @@ import { Header } from '@/components/marketing/Header';
 // title/description in their own generateMetadata (see [town]/page.tsx).
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  title: 'Local — Eat. Shop. Earn.',
+  title: 'Regulars — Eat. Shop. Earn.',
   description: 'All the independent shops in your town rolled into one loyalty programme.',
   openGraph: {
-    title: 'Local — Eat. Shop. Earn.',
+    title: 'Regulars — Eat. Shop. Earn.',
     description: 'All the independent shops in your town rolled into one loyalty programme.',
     images: ['/og'],
   },

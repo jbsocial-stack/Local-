@@ -9,7 +9,7 @@ export interface StaffSessionPayload {
   scope: 'scanner' | 'full';
 }
 
-const COOKIE_NAME = 'local_staff_session';
+const COOKIE_NAME = 'regulars_staff_session';
 const SESSION_TTL_SECONDS = 12 * 60 * 60; // one shift
 
 function secret(): string {

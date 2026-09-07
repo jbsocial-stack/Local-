@@ -17,7 +17,7 @@ test('staff signs in, scans a pass, and awards points', async ({ page }) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      headers: { 'set-cookie': 'local_staff_session=e2e-fake-session; Path=/' },
+      headers: { 'set-cookie': 'regulars_staff_session=e2e-fake-session; Path=/' },
       body: JSON.stringify({ ok: true, role: 'owner' }),
     });
   });
@@ -81,7 +81,7 @@ test('redeem is capped at the customer\'s available balance', async ({ page }) =
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      headers: { 'set-cookie': 'local_staff_session=e2e-fake-session; Path=/' },
+      headers: { 'set-cookie': 'regulars_staff_session=e2e-fake-session; Path=/' },
       body: JSON.stringify({ ok: true, role: 'staff' }),
     });
   });

@@ -21,8 +21,10 @@ export function Hero({ town }: { town?: TownConfig }) {
         />
 
         <div className="relative mx-auto flex max-w-md flex-col items-center">
-          <h1 className="font-display text-[14vw] leading-[0.85] sm:text-7xl">Local</h1>
-          <p className="mt-4 text-lg font-medium text-cream">Unlocking collective loyalty marketing.</p>
+          <h1 className="font-display text-[14vw] leading-[0.85] sm:text-7xl">Regulars</h1>
+          <p className="mt-4 text-lg font-medium text-cream">
+            Get Regular. Eat, shop and earn points in your town.
+          </p>
 
           <div className="mt-8 grid w-full grid-cols-2 gap-3">
             <ChoiceTile
@@ -94,7 +96,7 @@ function PassCardMock() {
           <p className="text-[10px] uppercase tracking-[0.15em] text-cream/50">Cardholder</p>
           <p className="text-sm font-medium">Alex Morgan</p>
         </div>
-        <span className="font-display text-xl">Local</span>
+        <span className="font-display text-xl">Regulars</span>
       </div>
     </div>
   );

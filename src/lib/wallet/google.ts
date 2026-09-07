@@ -55,7 +55,7 @@ export interface GooglePassInput {
 /** Returns the "Add to Google Wallet" save URL, or throws if unconfigured. */
 export function generateGoogleWalletSaveUrl(input: GooglePassInput): string {
   const config = loadConfig();
-  const classId = `${config.issuerId}.local_loyalty_class`;
+  const classId = `${config.issuerId}.regulars_loyalty_class`;
   const objectId = `${config.issuerId}.${input.serial}`;
 
   const loyaltyObject = {

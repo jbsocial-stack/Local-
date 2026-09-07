@@ -66,7 +66,7 @@ export function FlippableWalletCard({
         >
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-coral to-orange-400 p-6 text-cream shadow-lg [backface-visibility:hidden]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/80">Local pass</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/80">Regulars pass</span>
               <span className="rounded-full bg-accent-yellow px-3 py-1 text-xs font-semibold text-ink">{townName}</span>
             </div>
             <p className="mt-8 font-display text-5xl">
@@ -87,7 +87,7 @@ export function FlippableWalletCard({
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-3xl bg-ink p-6 text-cream shadow-lg [backface-visibility:hidden] [transform:rotateY(180deg)]">
             {qrDataUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={qrDataUrl} alt="Your Local pass QR code" className="h-40 w-40 rounded-xl bg-white p-2" />
+              <img src={qrDataUrl} alt="Your Regulars pass QR code" className="h-40 w-40 rounded-xl bg-white p-2" />
             ) : (
               <div className="h-40 w-40 animate-pulse rounded-xl bg-cream/10" />
             )}
