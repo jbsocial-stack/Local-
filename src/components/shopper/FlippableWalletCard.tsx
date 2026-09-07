@@ -64,7 +64,7 @@ export function FlippableWalletCard({
           className="relative h-64 w-full transition-transform duration-500 [transform-style:preserve-3d]"
           style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
         >
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-coral to-orange-400 p-6 text-cream shadow-lg [backface-visibility:hidden]">
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-ink to-ink/80 p-6 text-cream shadow-lg [backface-visibility:hidden]">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/80">Regulars pass</span>
               <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-coral">{townName}</span>
@@ -75,8 +75,8 @@ export function FlippableWalletCard({
             </p>
             <p className="mt-1 text-sm text-cream/80">{balancePoints} points · ready to spend</p>
             <div className="mt-6 flex items-center gap-3 border-t border-cream/20 pt-4">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/20 text-sm font-semibold">
-                L
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/20 font-logo uppercase text-sm font-semibold">
+                R
               </span>
               <span className="text-sm text-cream/80">
                 {platform ? `In your ${platform === 'apple' ? 'Apple' : 'Google'} Wallet` : 'Tap to show your QR code'}

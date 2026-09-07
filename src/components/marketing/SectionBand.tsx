@@ -39,7 +39,7 @@ export function SectionBand({
       prefers-reduced-motion (see styles/brand.css). */
   stackOrder?: number;
 }) {
-  const resolved = color ?? (index % 2 === 0 ? 'coral' : 'card');
+  const resolved = color ?? (index % 2 === 0 ? 'ink' : 'card');
 
   if (resolved === 'plain') {
     return (

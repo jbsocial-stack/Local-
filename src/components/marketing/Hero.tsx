@@ -10,10 +10,10 @@ import { track } from '@/lib/marketing/analytics';
 export function Hero({ town }: { town?: TownConfig }) {
   return (
     <section className="px-4 py-4 sm:px-6">
-      <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl bg-coral px-6 py-16 text-center text-cream sm:px-10">
+      <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center text-cream sm:px-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-orange-400/40 blur-2xl"
+          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-coral/30 blur-2xl"
         />
         <div
           aria-hidden
@@ -31,7 +31,7 @@ export function Hero({ town }: { town?: TownConfig }) {
               href="/shoppers"
               label="I'm a shopper"
               detail="Get the pass"
-              tone="ink"
+              tone="coral"
               onClick={() => track('cta_click', { type: 'shopper', town: town?.slug ?? '' })}
             />
             <ChoiceTile
@@ -64,7 +64,7 @@ function ChoiceTile({
   href: string;
   label: string;
   detail: string;
-  tone: 'ink' | 'cream';
+  tone: 'coral' | 'cream';
   onClick: () => void;
 }) {
   return (
@@ -72,31 +72,31 @@ function ChoiceTile({
       href={href}
       onClick={onClick}
       className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl px-3 text-center ${
-        tone === 'ink' ? 'bg-ink text-cream' : 'bg-cream text-ink'
+        tone === 'coral' ? 'bg-coral text-cream' : 'bg-cream text-ink'
       }`}
     >
       <span className="font-display text-lg leading-tight">{label}</span>
-      <span className={`text-sm ${tone === 'ink' ? 'text-cream/70' : 'text-ink/60'}`}>{detail} →</span>
+      <span className={`text-sm ${tone === 'coral' ? 'text-cream/70' : 'text-ink/60'}`}>{detail} →</span>
     </a>
   );
 }
 
 function PassCardMock() {
   return (
-    <div className="aspect-[1.586/1] w-full rounded-2xl bg-gradient-to-br from-ink to-ink/80 p-5 text-left text-cream shadow-2xl">
+    <div className="aspect-[1.586/1] w-full rounded-2xl bg-cream p-5 text-left text-ink shadow-[0_0_60px_-8px_rgba(247,108,94,0.65)]">
       <div className="flex items-start justify-between">
         <span className="h-6 w-8 rounded-md bg-coral/90" aria-hidden />
-        <span className="rounded-full bg-cream/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide">
+        <span className="rounded-full bg-ink/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-ink">
           Chichester
         </span>
       </div>
-      <p className="mt-4 font-mono text-lg tracking-[0.2em] text-cream/90">•••• •••• •••• 24A6</p>
+      <p className="mt-4 font-mono text-lg tracking-[0.2em] text-ink/80">•••• •••• •••• 24A6</p>
       <div className="mt-4 flex items-end justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.15em] text-cream/50">Cardholder</p>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-ink/50">Cardholder</p>
           <p className="text-sm font-medium">Alex Morgan</p>
         </div>
-        <span className="font-logo uppercase text-xl">Regulars</span>
+        <span className="font-logo uppercase text-xl text-coral">Regulars</span>
       </div>
     </div>
   );
