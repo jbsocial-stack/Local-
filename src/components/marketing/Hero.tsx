@@ -83,7 +83,7 @@ function ChoiceTile({
 
 function PassCardMock() {
   return (
-    <div className="aspect-[1.586/1] w-full rounded-2xl bg-cream p-5 text-left text-ink shadow-[0_0_60px_-8px_rgba(247,108,94,0.65)]">
+    <div className="aspect-[1.586/1] w-full rounded-2xl bg-cream p-5 text-left text-ink shadow-2xl">
       <div className="flex items-start justify-between">
         <span className="h-6 w-8 rounded-md bg-coral/90" aria-hidden />
         <span className="rounded-full bg-ink/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-ink">
