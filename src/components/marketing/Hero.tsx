@@ -13,10 +13,6 @@ export function Hero({ town }: { town?: TownConfig }) {
       <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl bg-ink px-6 py-16 text-center text-cream sm:px-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-coral/30 blur-2xl"
-        />
-        <div
-          aria-hidden
           className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-cream/10 blur-xl"
         />
 
