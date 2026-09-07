@@ -24,7 +24,7 @@ export async function BusinessPageContent() {
         <PricingTable />
       </SectionBand>
 
-      <SectionBand index={2} color="coral">
+      <SectionBand index={2} color="ink">
         <MerchantForm />
       </SectionBand>
 
