@@ -15,7 +15,7 @@ export function HowItWorks() {
     <>
       <div className="grid gap-4 sm:grid-cols-3">
         {STEPS.map((step, i) => (
-          <div key={step.n} className="rounded-2xl border border-ink/10 bg-white/60 p-6">
+          <div key={step.n} className="rounded-2xl border border-ink/10 bg-white p-6">
             <StepBadge index={i}>{step.n}</StepBadge>
             <h3 className="mt-4 font-display text-xl">{step.title}</h3>
             <p className="mt-1 text-ink/70">{step.body}</p>
