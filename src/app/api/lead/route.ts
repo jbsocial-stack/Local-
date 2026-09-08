@@ -82,8 +82,8 @@ export async function POST(req: NextRequest) {
 
   if (isForm) {
     return formPage(
-      'Thanks — Regulars',
-      "<h1>Thanks!</h1><p>We'll be in touch within 2 working days to book your trial.</p>",
+      'Launching October 2027 — Regulars',
+      "<h1>Congratulations — you're a founding Regulars business.</h1><p>Launching October 2027. We'll be in touch within 2 working days to get you set up ahead of launch.</p>",
     );
   }
   return NextResponse.json({ ok: true });
