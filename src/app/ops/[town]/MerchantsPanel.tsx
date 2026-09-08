@@ -43,7 +43,7 @@ export function MerchantsPanel({ townId, merchants: initialMerchants }: { townId
             </span>
           </li>
         ))}
-        {merchants.length === 0 && <li className="text-neutral-500">No merchants yet.</li>}
+        {merchants.length === 0 && <li className="text-ink/50">No merchants yet.</li>}
       </ul>
 
       <CreateMerchantForm townId={townId} onCreated={(m) => setMerchants((ms) => [...ms, m])} />
