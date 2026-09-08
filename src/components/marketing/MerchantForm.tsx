@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { TOWNS } from '../../../config/towns';
 import { track } from '@/lib/marketing/analytics';
+import { Eyebrow } from './Eyebrow';
 
 const CATEGORIES = ['cafe', 'restaurant', 'bar', 'retail', 'services', 'other'] as const;
 const VENUES = ['1', '2', '3-4', '5+'] as const;
@@ -52,8 +53,11 @@ export function MerchantForm() {
   if (status === 'sent') {
     return (
       <div id="merchant-form">
-        <h2 className="font-display text-3xl">Start a free trial</h2>
-        <p className="mt-2 font-medium">Thanks — we&apos;ll be in touch within 2 working days to book your trial.</p>
+        <Eyebrow tone="cream">Launching October 2027</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl">Congratulations — you&apos;re a founding Regulars business.</h2>
+        <p className="mt-3 font-medium text-cream/80">
+          We&apos;ll be in touch within 2 working days to get {businessName || 'your business'} set up ahead of launch.
+        </p>
       </div>
     );
   }

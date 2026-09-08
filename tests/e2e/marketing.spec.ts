@@ -251,7 +251,7 @@ test('shopper form: a ?ref= link in the URL is carried through to the signup req
   await expect(page.getByText("You're in. We'll tell you the day Winchester goes live.")).toBeVisible();
 });
 
-test('merchant form submits and shows the trial-booking message', async ({ page }) => {
+test('merchant form submits and shows the founding-business holding message', async ({ page }) => {
   await page.route('**/api/lead', async (route) => {
     const body = route.request().postDataJSON();
     expect(body).toMatchObject({
@@ -270,5 +270,6 @@ test('merchant form submits and shows the trial-booking message', async ({ page 
   await page.locator('#merchant-form select[name="venues"]').selectOption('5+');
   await page.locator('#merchant-form button[type="submit"]').click();
 
-  await expect(page.getByText("Thanks — we'll be in touch within 2 working days to book your trial.")).toBeVisible();
+  await expect(page.getByText("Congratulations — you're a founding Regulars business.")).toBeVisible();
+  await expect(page.getByText('Launching October 2027')).toBeVisible();
 });
