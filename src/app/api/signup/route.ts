@@ -5,6 +5,7 @@ import { createServiceClient } from '@/lib/supabase/server';
 import { createRouteHandlerSupabaseClient } from '@/lib/supabase/route-handler';
 import { resolveSignupTown } from '@/lib/marketing/signup';
 import { computeWaitlistStats, fetchTownQueue } from '@/lib/marketing/waitlist';
+import { sendShopperWelcomeEmail } from '@/lib/marketing/welcome-emails';
 import { formPage, isFormPost } from '@/lib/marketing/form-page';
 import { LAUNCH_CARD_LIMIT } from '../../../../config/towns';
 
@@ -158,6 +159,14 @@ export async function POST(req: NextRequest) {
     const stats = await waitlistStats(supabase, data.townSlug ?? null, data.townFreeText ?? null, signup.referralCode);
     const kind = atCapacity ? 'capacity' : resolution.kind;
     const townName = atCapacity && liveTown ? liveTown.name : resolution.label;
+
+    // Best-effort — an email failure must never fail the signup itself.
+    void sendShopperWelcomeEmail({
+      email: data.email,
+      townName,
+      townPath: data.townSlug ? `/${data.townSlug}/shoppers` : '/shoppers',
+      referralCode: signup.referralCode,
+    });
 
     if (isForm) {
       const body =

@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/server';
 import { findTown } from '../../../../config/towns';
 import { mapVenuesToTier } from '@/lib/marketing/lead';
 import { notifyLead } from '@/lib/marketing/notify-lead';
+import { sendBusinessWelcomeEmail } from '@/lib/marketing/welcome-emails';
 import { formPage, isFormPost } from '@/lib/marketing/form-page';
 
 const bodySchema = z.object({
@@ -78,6 +79,12 @@ export async function POST(req: NextRequest) {
     tier,
     category: data.category,
     notes: data.notes || null,
+  });
+  void sendBusinessWelcomeEmail({
+    email: data.email,
+    businessName: data.businessName,
+    contactName: data.contactName,
+    townName: townLabel,
   });
 
   if (isForm) {

@@ -1,0 +1,98 @@
+<!--
+  Welcome, new Regular — shopper waitlist confirmation.
+  Sent from src/lib/marketing/welcome-emails.ts (sendShopperWelcomeEmail)
+  the moment someone joins the waitlist for a town that isn't live yet.
+
+  Merge variables:
+    {{town_name}}      — e.g. "Chichester"
+    {{referral_link}}  — e.g. "https://regulars.app/chichester/shoppers?ref=AB12CD"
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome, new Regular</title>
+    <!--[if mso]>
+    <style>table, td { font-family: Georgia, 'Times New Roman', serif !important; }</style>
+    <![endif]-->
+  </head>
+  <body style="margin:0; padding:0; background-color:#F3F1EC; -webkit-text-size-adjust:100%; text-size-adjust:100%;">
+    <div style="display:none; max-height:0; overflow:hidden; opacity:0;">
+      You're on the list — Regulars launches in {{town_name}} in October 2027.
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F3F1EC;">
+      <tr>
+        <td align="center" style="padding:32px 16px;">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:100%; background-color:#ffffff; border-radius:16px; overflow:hidden;">
+
+            <!-- Header -->
+            <tr>
+              <td align="center" style="background-color:#1B263B; padding:32px 24px;">
+                <span style="font-family:Georgia,'Times New Roman',serif; font-weight:700; letter-spacing:3px; text-transform:uppercase; font-size:22px; color:#F3F1EC;">
+                  Regulars
+                </span>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:40px 32px 8px;">
+                <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#F76C5E;">
+                  Launching October 2027
+                </p>
+                <h1 style="margin:12px 0 0; font-family:Georgia,'Times New Roman',serif; font-size:28px; line-height:1.25; color:#1B263B;">
+                  Welcome, new Regular.
+                </h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 32px 0;">
+                <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:1.6; color:#1B263B;">
+                  You're officially on the waitlist for Regulars in <strong>{{town_name}}</strong> — one pass, every
+                  independent shop in town, points that work everywhere. No app to download, nothing to carry but
+                  your phone.
+                </p>
+                <p style="margin:16px 0 0; font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:1.6; color:#1B263B;">
+                  We'll email you the moment {{town_name}} goes live in October 2027.
+                </p>
+              </td>
+            </tr>
+
+            <!-- CTA -->
+            <tr>
+              <td align="center" style="padding:32px 32px 8px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" style="border-radius:999px; background-color:#F76C5E;">
+                      <a href="{{referral_link}}" style="display:inline-block; padding:14px 32px; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; border-radius:999px;">
+                        Move up the list
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:16px 0 0; font-family:Arial,Helvetica,sans-serif; font-size:13px; line-height:1.5; color:#1B263B99;">
+                  Referring friends is the only way to jump the queue — everyone who signs up with your link moves
+                  you both closer to the front.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:32px; border-top:1px solid #1B263B1A;">
+                <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:1.6; color:#1B263B99;">
+                  Regulars [company name TBD] · Company number TBD, registered in England &amp; Wales.<br />
+                  You're receiving this because you joined the Regulars waitlist.
+                  <a href="mailto:hello@regulars.app?subject=Unsubscribe" style="color:#1B263B99;">Unsubscribe</a>
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
