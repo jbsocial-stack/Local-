@@ -151,7 +151,7 @@ export default function ScanPage() {
     <main className="min-h-screen bg-cream px-4 py-6 flex flex-col items-center gap-6">
       {stage.name === 'scanning' && (
         <div className="w-full max-w-sm">
-          <h1 className="text-center text-lg font-semibold text-coral mb-4">Scan customer pass</h1>
+          <h1 className="text-center text-lg font-semibold text-ink mb-4">Scan customer pass</h1>
           {process.env.NEXT_PUBLIC_E2E_TEST_MODE === '1' ? (
             <TestModeScanInput onSubmit={handlePayload} />
           ) : (
@@ -194,9 +194,9 @@ export default function ScanPage() {
       {stage.name === 'confirm-duplicate' && (
         <div className="text-center max-w-sm">
           <p className="font-medium">Already awarded in the last 2 minutes.</p>
-          <p className="text-sm text-neutral-600 mt-1">Award again?</p>
+          <p className="text-sm text-ink/60 mt-1">Award again?</p>
           <div className="mt-4 flex gap-3 justify-center">
-            <button onClick={reset} className="rounded-full border border-coral text-coral px-6 py-2">
+            <button onClick={reset} className="rounded-full border border-ink/20 text-ink px-6 py-2">
               Cancel
             </button>
             <button
@@ -213,15 +213,15 @@ export default function ScanPage() {
         <div className="text-center">
           {stage.result.kind === 'earn' ? (
             <>
-              <p className="text-3xl font-bold text-coral">+{stage.result.points} pts</p>
-              <p className="text-sm text-neutral-600 mt-1">at {stage.result.multiplier}x</p>
+              <p className="text-3xl font-bold text-ink">+{stage.result.points} pts</p>
+              <p className="text-sm text-ink/60 mt-1">at {stage.result.multiplier}x</p>
             </>
           ) : (
             <>
-              <p className="text-3xl font-bold text-coral">
+              <p className="text-3xl font-bold text-ink">
                 -{formatPence(stage.result.gbpValuePence)}
               </p>
-              <p className="text-sm text-neutral-600 mt-1">{stage.result.points} pts redeemed</p>
+              <p className="text-sm text-ink/60 mt-1">{stage.result.points} pts redeemed</p>
             </>
           )}
           <p className="mt-3 text-sm">New balance: {formatPence(stage.result.balancePoints)}</p>
@@ -252,8 +252,8 @@ function CustomerCard({
   return (
     <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow text-center">
       <p className="text-lg font-semibold">{customer.displayName ?? 'Guest'}</p>
-      <p className="text-sm text-neutral-600">{ordinal(customer.visitNumberThisMonth)} visit this month</p>
-      <p className="mt-2 text-2xl font-bold text-coral">{formatPence(customer.balancePoints)}</p>
+      <p className="text-sm text-ink/60">{ordinal(customer.visitNumberThisMonth)} visit this month</p>
+      <p className="mt-2 text-2xl font-bold text-ink">{formatPence(customer.balancePoints)}</p>
       <div className="mt-6 flex gap-3">
         <button onClick={onEarn} className="flex-1 rounded-full bg-coral text-white py-3 font-medium">
           Earn
@@ -265,7 +265,7 @@ function CustomerCard({
           Redeem
         </button>
       </div>
-      <button onClick={onCancel} className="mt-3 text-sm text-neutral-500">
+      <button onClick={onCancel} className="mt-3 text-sm text-ink/50">
         Cancel
       </button>
     </div>
@@ -302,10 +302,10 @@ function AmountEntry({
         className="mt-3 w-full text-center text-3xl font-bold border-b-2 border-coral py-2 outline-none"
       />
       {mode === 'redeem' && (
-        <p className="mt-2 text-xs text-neutral-500">Available: {formatPence(customer.balancePoints)}</p>
+        <p className="mt-2 text-xs text-ink/50">Available: {formatPence(customer.balancePoints)}</p>
       )}
       <div className="mt-6 flex gap-3">
-        <button onClick={onCancel} className="flex-1 rounded-full border border-coral text-coral py-3">
+        <button onClick={onCancel} className="flex-1 rounded-full border border-ink/20 text-ink py-3">
           Back
         </button>
         <button

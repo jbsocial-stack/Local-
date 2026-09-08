@@ -47,7 +47,7 @@ export default async function MerchantSettingsPage({
   return (
     <main className="min-h-screen bg-cream px-4 py-8">
       <div className="mx-auto max-w-lg">
-        <h1 className="text-xl font-bold text-coral">{merchant.name} — settings</h1>
+        <h1 className="text-xl font-bold text-ink">{merchant.name} — settings</h1>
         <SettingsForm
           merchant={merchant}
           boosts={boosts ?? []}

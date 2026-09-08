@@ -45,8 +45,9 @@ export default function StaffLoginPage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-8 bg-cream px-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-coral">Staff sign in</h1>
-        <p className="mt-1 text-sm text-neutral-600">Enter your 4-digit PIN</p>
+        <p className="font-logo uppercase text-lg text-ink">Regulars</p>
+        <h1 className="mt-3 text-2xl font-bold text-ink">Staff sign in</h1>
+        <p className="mt-1 text-sm text-ink/60">Enter your 4-digit PIN</p>
       </div>
 
       <div className="flex gap-3" aria-live="polite">

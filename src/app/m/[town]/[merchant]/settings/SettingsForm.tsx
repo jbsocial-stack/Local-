@@ -52,7 +52,7 @@ function SumUpSection({ merchantId, connected }: { merchantId: string; connected
   return (
     <div className="rounded-xl bg-white p-6 shadow">
       <h2 className="font-semibold">SumUp</h2>
-      <p className="mt-1 text-sm text-neutral-600">
+      <p className="mt-1 text-sm text-ink/60">
         Connect your SumUp account so a card payment on your terminal can award points automatically — this is
         early: for now it only records what SumUp tells us, it doesn&apos;t award points yet.
       </p>
@@ -64,7 +64,7 @@ function SumUpSection({ merchantId, connected }: { merchantId: string; connected
         ) : (
           <a
             href={`/api/merchants/${merchantId}/sumup/connect`}
-            className="rounded-full border border-coral px-4 py-1.5 text-coral"
+            className="rounded-full border border-ink/20 px-4 py-1.5 text-ink"
           >
             Connect SumUp
           </a>
@@ -159,7 +159,7 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
             const value = hours[day] ?? null;
             return (
               <div key={day} className="flex items-center gap-2 text-sm">
-                <span className="w-10 uppercase text-neutral-500">{day}</span>
+                <span className="w-10 uppercase text-ink/50">{day}</span>
                 <label className="flex items-center gap-1">
                   <input
                     type="checkbox"
@@ -256,7 +256,7 @@ function GallerySection({ merchantId, photos: initialPhotos }: { merchantId: str
   return (
     <div className="rounded-xl bg-white p-6 shadow">
       <h2 className="font-semibold">Gallery</h2>
-      <p className="mt-1 text-sm text-neutral-600">Shown on your Discover page — the more, the better.</p>
+      <p className="mt-1 text-sm text-ink/60">Shown on your Discover page — the more, the better.</p>
       <div className="mt-3 flex flex-wrap gap-3">
         {photos.map((p) => (
           <div key={p.id} className="relative">
@@ -310,7 +310,7 @@ function SocialLinksSection({ merchant }: { merchant: Merchant }) {
   return (
     <form onSubmit={save} className="rounded-xl bg-white p-6 shadow space-y-3">
       <h2 className="font-semibold">Social links</h2>
-      <p className="text-sm text-neutral-600">Shown on your Discover page — leave any blank you don&apos;t use.</p>
+      <p className="text-sm text-ink/60">Shown on your Discover page — leave any blank you don&apos;t use.</p>
       {[
         { label: 'Instagram', value: instagram, set: setInstagram },
         { label: 'Facebook', value: facebook, set: setFacebook },
@@ -387,7 +387,7 @@ function BoostsSection({ merchantId, boosts: initialBoosts }: { merchantId: stri
             </button>
           </li>
         ))}
-        {boosts.length === 0 && <li className="text-neutral-500">No boosts scheduled.</li>}
+        {boosts.length === 0 && <li className="text-ink/50">No boosts scheduled.</li>}
       </ul>
 
       <form onSubmit={addBoost} className="mt-4 space-y-2 text-sm">
@@ -506,12 +506,12 @@ function PrintablesSection({ merchantId }: { merchantId: string }) {
   return (
     <div className="rounded-xl bg-white p-6 shadow">
       <h2 className="font-semibold">Printables</h2>
-      <p className="mt-1 text-sm text-neutral-600">Put these in your window so customers ask about the scheme.</p>
+      <p className="mt-1 text-sm text-ink/60">Put these in your window so customers ask about the scheme.</p>
       <div className="mt-3 flex gap-3 text-sm">
-        <a href={`/api/merchants/${merchantId}/printables?kind=poster`} className="rounded-full border border-coral px-4 py-1.5 text-coral">
+        <a href={`/api/merchants/${merchantId}/printables?kind=poster`} className="rounded-full border border-ink/20 px-4 py-1.5 text-ink">
           A4 poster
         </a>
-        <a href={`/api/merchants/${merchantId}/printables?kind=sticker`} className="rounded-full border border-coral px-4 py-1.5 text-coral">
+        <a href={`/api/merchants/${merchantId}/printables?kind=sticker`} className="rounded-full border border-ink/20 px-4 py-1.5 text-ink">
           Window sticker
         </a>
       </div>
