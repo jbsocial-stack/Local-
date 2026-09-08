@@ -77,8 +77,9 @@ your app's origin and add it (plus `/auth/callback`) to the redirect
 allowlist, or every magic link will fail to exchange (this affects merchant
 owner and shopper sign-in; `/ops` signs in with the `OPS_PASSWORD` env var
 instead — no Supabase Auth account or email round-trip involved, set it and
-sign in at `/ops/login`). Then seed the Chichester pilot town and its three
-friendly test merchants:
+sign in at `/ops/login`). Then seed the Chichester pilot town (real
+merchants are onboarded through `/business` and the ops console, not
+seeded fake data):
 
 ```bash
 npm run seed

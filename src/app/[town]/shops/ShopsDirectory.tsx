@@ -39,6 +39,20 @@ export function ShopsDirectory({ townName, listings }: { townName: string; listi
 
   const filtered = category ? listings.filter((l) => l.category === category) : listings;
 
+  if (listings.length === 0) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-cream px-4">
+        <div className="mx-auto max-w-md text-center">
+          <h1 className="text-2xl font-bold text-coral">{townName} shops</h1>
+          <p className="mt-3 text-lg font-medium">Coming soon</p>
+          <p className="mt-2 text-sm text-neutral-600">
+            We&apos;re signing up the first independents in {townName} — check back soon to see who&apos;s joined.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-cream">
       <header className="px-4 py-6 text-center">

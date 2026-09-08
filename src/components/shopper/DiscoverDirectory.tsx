@@ -19,6 +19,20 @@ export function DiscoverDirectory({ town, listings }: { town: string; listings: 
     setSelected(null);
   }
 
+  if (listings.length === 0) {
+    return (
+      <main className="flex min-h-[70vh] items-center justify-center pt-10">
+        <div className="mx-auto max-w-md px-4 text-center">
+          <p className="font-logo uppercase text-lg text-ink">Regulars</p>
+          <h1 className="mt-3 font-display text-2xl text-ink">Coming soon</h1>
+          <p className="mt-2 text-sm text-ink/60">
+            We&apos;re signing up the first independents in town — check back soon to see who&apos;s joined.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="pt-10">
       <div className="mx-auto max-w-md px-4">
