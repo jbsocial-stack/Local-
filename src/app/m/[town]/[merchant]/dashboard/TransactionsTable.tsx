@@ -26,7 +26,7 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
     <div className="mt-3 overflow-x-auto rounded-xl bg-white shadow">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b text-left text-neutral-500">
+          <tr className="border-b text-left text-ink/50">
             <th className="px-4 py-2">When</th>
             <th className="px-4 py-2">Type</th>
             <th className="px-4 py-2">Points</th>
@@ -44,7 +44,7 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
               <td className="px-4 py-2 text-right">
                 {row.type === 'earn' || row.type === 'redeem' ? (
                   voidedIds.has(row.id) ? (
-                    <span className="text-neutral-400">Voided</span>
+                    <span className="text-ink/40">Voided</span>
                   ) : (
                     <button onClick={() => voidTransaction(row.id)} className="text-red-600">
                       Void
@@ -56,7 +56,7 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
           ))}
           {rows.length === 0 && (
             <tr>
-              <td colSpan={5} className="px-4 py-6 text-center text-neutral-500">
+              <td colSpan={5} className="px-4 py-6 text-center text-ink/50">
                 No transactions yet.
               </td>
             </tr>

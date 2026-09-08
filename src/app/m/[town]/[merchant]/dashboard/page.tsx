@@ -40,7 +40,7 @@ export default async function MerchantDashboardPage({
   return (
     <main className="min-h-screen bg-cream px-4 py-8">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-xl font-bold text-coral">{merchant.name} — dashboard</h1>
+        <h1 className="text-xl font-bold text-ink">{merchant.name} — dashboard</h1>
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
           <StatCard label="Visits (7d)" value={stats.visits7d} />
@@ -62,8 +62,8 @@ export default async function MerchantDashboardPage({
 function StatCard({ label, value, span }: { label: string; value: string | number; span?: boolean }) {
   return (
     <div className={`rounded-xl bg-white p-4 shadow ${span ? 'col-span-2 sm:col-span-3' : ''}`}>
-      <p className="text-xs text-neutral-500">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-coral">{value}</p>
+      <p className="text-xs text-ink/50">{label}</p>
+      <p className="mt-1 text-2xl font-bold text-ink">{value}</p>
     </div>
   );
 }
