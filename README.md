@@ -57,9 +57,9 @@ npm run dev
 
 Apply the schema against a Supabase project (SQL editor or `supabase db
 push` with the CLI), in order — `supabase/migrations/0001` through `0012`.
-`0005` adds the trigger that mirrors new `auth.users` rows (merchant owners
-and ops staff, who sign in via magic link; shoppers too, now, since signup
-creates a real Supabase Auth account) into `public.users`; `0007` creates
+`0005` adds the trigger that mirrors new `auth.users` rows (merchant owners,
+who sign in via magic link; shoppers too, now, since signup creates a real
+Supabase Auth account) into `public.users`; `0007` creates
 the `merchant-photos` (public) and `printables` (private) storage buckets;
 `0008` adds the marketing site's `signups` and `merchant_leads` tables
 (anon insert-only RLS — no select policy at all, verified by
@@ -74,10 +74,11 @@ integration (see "Known blocker: SumUp" below).
 
 In the Supabase dashboard, set **Auth → URL Configuration → Site URL** to
 your app's origin and add it (plus `/auth/callback`) to the redirect
-allowlist, or every magic link will fail to exchange. Then seed the
-Chichester pilot town, its three friendly test merchants, and (by hand, via
-SQL or the dashboard) at least one row in `ops_users` for yourself before
-`/ops` will let you in:
+allowlist, or every magic link will fail to exchange (this affects merchant
+owner and shopper sign-in; `/ops` signs in with the `OPS_PASSWORD` env var
+instead — no Supabase Auth account or email round-trip involved, set it and
+sign in at `/ops/login`). Then seed the Chichester pilot town and its three
+friendly test merchants:
 
 ```bash
 npm run seed
@@ -247,12 +248,15 @@ a live account.
 
 ### Phase B (R6–R12)
 
-- **Supabase Auth (magic link)** for merchant owners and ops staff
+- **Supabase Auth (magic link)** for merchant owners
   (`src/middleware.ts`, `src/lib/supabase/route-handler.ts`,
   `src/app/auth/callback/`) — distinct from the PIN till-device session:
-  owners/ops get a real signed-in session tied to their email, checked
-  against `merchant_users.email` / `ops_users.email`
-  (`src/lib/auth/require-owner.ts`, `require-ops.ts`).
+  owners get a real signed-in session tied to their email, checked
+  against `merchant_users.email` (`src/lib/auth/require-owner.ts`). Ops
+  sign-in (`src/lib/auth/require-ops.ts`, `ops-session.ts`) is a single
+  shared `OPS_PASSWORD` behind a signed cookie instead — same shape as the
+  merchant staff PIN session (`staff-session.ts`), chosen so it doesn't
+  depend on a working email provider or a reachable callback URL.
 - **R6 merchant settings** (`src/app/m/[town]/[merchant]/settings/`) — name,
   category, address (re-geocoded via Nominatim on save,
   `src/lib/geocode.ts`), description, hours, base multiplier, scheduled
