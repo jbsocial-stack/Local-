@@ -1,4 +1,5 @@
 import { leadEmailSubject } from './lead';
+import { sendResendEmail } from './resend';
 import type { MerchantTier } from '../supabase/types';
 
 export interface LeadNotificationInput {
@@ -28,29 +29,17 @@ export async function notifyLead(input: LeadNotificationInput): Promise<void> {
     .filter(Boolean)
     .join('\n');
 
-  await Promise.allSettled([sendEmail(subject, text), postWebhook(subject, text)]);
+  await Promise.allSettled([sendOpsEmail(subject, text), postWebhook(subject, text)]);
 }
 
-async function sendEmail(subject: string, text: string): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
+async function sendOpsEmail(subject: string, text: string): Promise<void> {
   const to = process.env.LEAD_NOTIFICATION_EMAIL;
   const from = process.env.LEAD_NOTIFICATION_FROM;
-  if (!apiKey || !to || !from) {
-    console.warn('[notify-lead] RESEND_API_KEY / LEAD_NOTIFICATION_EMAIL / LEAD_NOTIFICATION_FROM not configured — skipping email');
+  if (!to || !from) {
+    console.warn('[notify-lead] LEAD_NOTIFICATION_EMAIL / LEAD_NOTIFICATION_FROM not configured — skipping email');
     return;
   }
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from, to, subject, text }),
-    });
-    if (!res.ok) {
-      console.error('[notify-lead] Resend request failed', res.status, await res.text());
-    }
-  } catch (err) {
-    console.error('[notify-lead] Resend request threw', err);
-  }
+  await sendResendEmail({ to, from, subject, text });
 }
 
 async function postWebhook(subject: string, text: string): Promise<void> {
