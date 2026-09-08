@@ -3,9 +3,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 // Standard Supabase/Next.js pattern: refresh the auth session cookie on
 // every request so a Server Component render (which can't itself write
-// cookies) always sees an up-to-date session for the owner/ops magic-link
-// login (R6/R11). Does not touch the PIN-based staff scanner session,
-// which is our own signed cookie, not Supabase Auth.
+// cookies) always sees an up-to-date session for the merchant owner
+// magic-link login (R6). Does not touch the PIN-based staff scanner
+// session or the ops console's password session, both our own signed
+// cookies, not Supabase Auth.
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
