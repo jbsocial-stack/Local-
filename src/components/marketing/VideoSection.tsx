@@ -9,7 +9,7 @@ export function VideoSection() {
       <Eyebrow>Watch</Eyebrow>
       <h2 className="mt-2 font-display text-3xl">We&apos;re regulars. Are you?</h2>
       <div
-        className="mx-auto mt-6 max-w-[280px] overflow-hidden rounded-[28px] bg-ink"
+        className="mx-auto mt-6 max-w-md overflow-hidden rounded-[28px] bg-ink sm:max-w-lg"
         style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}
       >
         <video
