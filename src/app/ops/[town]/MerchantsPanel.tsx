@@ -21,29 +21,29 @@ export function MerchantsPanel({ townId, merchants: initialMerchants }: { townId
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">Merchants</h2>
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">Merchants</h2>
       <ul className="mt-3 space-y-2 text-sm">
         {merchants.map((m) => (
-          <li key={m.id} className="flex items-center justify-between rounded border px-3 py-2">
+          <li key={m.id} className="flex items-center justify-between rounded-xl bg-line/40 px-3 py-2">
             <span>
               {m.name} — <span className="capitalize">{m.status}</span>
             </span>
             <span className="flex gap-2">
               {m.status !== 'live' && (
-                <button onClick={() => setStatus(m.id, 'live')} className="text-green-700">
+                <button onClick={() => setStatus(m.id, 'live')} className="text-success">
                   Approve
                 </button>
               )}
               {m.status === 'live' && (
-                <button onClick={() => setStatus(m.id, 'paused')} className="text-red-600">
+                <button onClick={() => setStatus(m.id, 'paused')} className="text-error">
                   Pause
                 </button>
               )}
             </span>
           </li>
         ))}
-        {merchants.length === 0 && <li className="text-ink/50">No merchants yet.</li>}
+        {merchants.length === 0 && <li className="text-ink-muted">No merchants yet.</li>}
       </ul>
 
       <CreateMerchantForm townId={townId} onCreated={(m) => setMerchants((ms) => [...ms, m])} />
@@ -90,24 +90,28 @@ function CreateMerchantForm({ townId, onCreated }: { townId: string; onCreated: 
     <form onSubmit={submit} className="mt-4 space-y-2 text-sm">
       <p className="font-medium">Add a merchant</p>
       <div className="grid grid-cols-2 gap-2">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required className="rounded border px-2 py-1" />
-        <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="slug" required className="rounded border px-2 py-1" />
-        <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" required className="rounded border px-2 py-1" />
-        <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" required className="rounded border px-2 py-1" />
-        <input value={ownerName} onChange={(e) => setOwnerName(e.target.value)} placeholder="Owner name" required className="rounded border px-2 py-1" />
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required className="h-10 rounded-xl border border-line bg-cream px-3 focus:border-2 focus:border-ink focus:outline-none" />
+        <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="slug" required className="h-10 rounded-xl border border-line bg-cream px-3 focus:border-2 focus:border-ink focus:outline-none" />
+        <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" required className="h-10 rounded-xl border border-line bg-cream px-3 focus:border-2 focus:border-ink focus:outline-none" />
+        <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" required className="h-10 rounded-xl border border-line bg-cream px-3 focus:border-2 focus:border-ink focus:outline-none" />
+        <input value={ownerName} onChange={(e) => setOwnerName(e.target.value)} placeholder="Owner name" required className="h-10 rounded-xl border border-line bg-cream px-3 focus:border-2 focus:border-ink focus:outline-none" />
         <input
           type="email"
           value={ownerEmail}
           onChange={(e) => setOwnerEmail(e.target.value)}
           placeholder="Owner email"
           required
-          className="rounded border px-2 py-1"
+          className="h-10 rounded-xl border border-line bg-cream px-3 focus:border-2 focus:border-ink focus:outline-none"
         />
       </div>
-      <button type="submit" disabled={submitting} className="rounded-full bg-coral text-white px-4 py-1.5">
+      <button
+        type="submit"
+        disabled={submitting}
+        className="flex h-9 items-center rounded-full bg-coral px-4 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2 disabled:opacity-40"
+      >
         Add merchant
       </button>
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <p className="text-error">{error}</p>}
     </form>
   );
 }

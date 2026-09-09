@@ -162,8 +162,8 @@ export default function ScanPage() {
 
       {stage.name === 'error' && (
         <div className="text-center">
-          <p className="text-red-600 font-medium">{stage.message}</p>
-          <button onClick={reset} className="mt-4 rounded-full bg-coral text-white px-6 py-2">
+          <p className="text-error font-medium">{stage.message}</p>
+          <button onClick={reset} className="mt-4 flex h-11 items-center justify-center rounded-full bg-coral px-6 text-cream mx-auto transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
             Try again
           </button>
         </div>
@@ -194,14 +194,14 @@ export default function ScanPage() {
       {stage.name === 'confirm-duplicate' && (
         <div className="text-center max-w-sm">
           <p className="font-medium">Already awarded in the last 2 minutes.</p>
-          <p className="text-sm text-ink/60 mt-1">Award again?</p>
+          <p className="text-sm text-ink-muted mt-1">Award again?</p>
           <div className="mt-4 flex gap-3 justify-center">
-            <button onClick={reset} className="rounded-full border border-ink/20 text-ink px-6 py-2">
+            <button onClick={reset} className="flex h-11 items-center rounded-full border-[1.5px] border-ink px-6 text-ink transition-colors duration-150 hover:bg-ink/5">
               Cancel
             </button>
             <button
               onClick={() => submitEarn(stage.customer, stage.basketPence, true)}
-              className="rounded-full bg-coral text-white px-6 py-2"
+              className="flex h-11 items-center rounded-full bg-coral px-6 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2"
             >
               Award again
             </button>
@@ -213,19 +213,19 @@ export default function ScanPage() {
         <div className="text-center">
           {stage.result.kind === 'earn' ? (
             <>
-              <p className="text-3xl font-bold text-ink">+{stage.result.points} pts</p>
-              <p className="text-sm text-ink/60 mt-1">at {stage.result.multiplier}x</p>
+              <p className="text-3xl font-display text-ink">+{stage.result.points} pts</p>
+              <p className="text-sm text-ink-muted mt-1">at {stage.result.multiplier}x</p>
             </>
           ) : (
             <>
-              <p className="text-3xl font-bold text-ink">
+              <p className="text-3xl font-display text-ink">
                 -{formatPence(stage.result.gbpValuePence)}
               </p>
-              <p className="text-sm text-ink/60 mt-1">{stage.result.points} pts redeemed</p>
+              <p className="text-sm text-ink-muted mt-1">{stage.result.points} pts redeemed</p>
             </>
           )}
           <p className="mt-3 text-sm">New balance: {formatPence(stage.result.balancePoints)}</p>
-          <button onClick={reset} className="mt-6 rounded-full bg-coral text-white px-6 py-2">
+          <button onClick={reset} className="mt-6 flex h-11 items-center justify-center rounded-full bg-coral px-6 text-cream mx-auto transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
             Scan next customer
           </button>
         </div>
@@ -250,22 +250,22 @@ function CustomerCard({
     return `${n}${suffix}`;
   };
   return (
-    <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow text-center">
-      <p className="text-lg font-semibold">{customer.displayName ?? 'Guest'}</p>
-      <p className="text-sm text-ink/60">{ordinal(customer.visitNumberThisMonth)} visit this month</p>
-      <p className="mt-2 text-2xl font-bold text-ink">{formatPence(customer.balancePoints)}</p>
+    <div className="w-full max-w-sm rounded-[28px] bg-paper p-6 text-center" style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}>
+      <p className="text-lg font-h3">{customer.displayName ?? 'Guest'}</p>
+      <p className="text-sm text-ink-muted">{ordinal(customer.visitNumberThisMonth)} visit this month</p>
+      <p className="mt-2 text-2xl font-display text-ink">{formatPence(customer.balancePoints)}</p>
       <div className="mt-6 flex gap-3">
-        <button onClick={onEarn} className="flex-1 rounded-full bg-coral text-white py-3 font-medium">
+        <button onClick={onEarn} className="flex-1 h-12 rounded-full bg-coral font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
           Earn
         </button>
         <button
           onClick={onRedeem}
-          className="flex-1 rounded-full border border-coral text-coral py-3 font-medium"
+          className="flex-1 h-12 rounded-full border-[1.5px] border-coral font-medium text-coral transition-colors duration-150 hover:bg-coral-soft"
         >
           Redeem
         </button>
       </div>
-      <button onClick={onCancel} className="mt-3 text-sm text-ink/50">
+      <button onClick={onCancel} className="mt-3 text-sm text-ink-muted">
         Cancel
       </button>
     </div>
@@ -288,7 +288,7 @@ function AmountEntry({
   const valid = pence > 0 && Number.isFinite(pence);
 
   return (
-    <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow text-center">
+    <div className="w-full max-w-sm rounded-[28px] bg-paper p-6 text-center" style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}>
       <p className="font-medium">{mode === 'earn' ? 'Basket total' : 'Amount to redeem'}</p>
       <input
         type="number"
@@ -302,16 +302,16 @@ function AmountEntry({
         className="mt-3 w-full text-center text-3xl font-bold border-b-2 border-coral py-2 outline-none"
       />
       {mode === 'redeem' && (
-        <p className="mt-2 text-xs text-ink/50">Available: {formatPence(customer.balancePoints)}</p>
+        <p className="mt-2 text-xs text-ink-muted">Available: {formatPence(customer.balancePoints)}</p>
       )}
       <div className="mt-6 flex gap-3">
-        <button onClick={onCancel} className="flex-1 rounded-full border border-ink/20 text-ink py-3">
+        <button onClick={onCancel} className="flex-1 h-12 rounded-full border-[1.5px] border-ink text-ink transition-colors duration-150 hover:bg-ink/5">
           Back
         </button>
         <button
           disabled={!valid}
           onClick={() => onConfirm(pence)}
-          className="flex-1 rounded-full bg-coral text-white py-3 disabled:opacity-40"
+          className="flex-1 h-12 rounded-full bg-coral text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2 disabled:opacity-40"
         >
           Confirm
         </button>
@@ -328,7 +328,7 @@ function TestModeScanInput({ onSubmit }: { onSubmit: (payload: string) => void }
         e.preventDefault();
         onSubmit(payload);
       }}
-      className="rounded-xl bg-white p-6 shadow"
+      className="rounded-[28px] bg-paper p-6"
     >
       <label className="text-sm text-neutral-600" htmlFor="e2e-qr-input">
         QR payload (test mode)
