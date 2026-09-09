@@ -40,7 +40,7 @@ export function BurgerMenu() {
             className="ml-auto flex h-full w-72 max-w-[85%] flex-col gap-1 bg-cream px-6 py-6 shadow-xl"
           >
             <div className="mb-6 flex items-center justify-between">
-              <span className="font-display text-xl text-ink">Menu</span>
+              <span className="font-h3 text-xl text-ink">Menu</span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -67,7 +67,7 @@ export function BurgerMenu() {
             <Link
               href="/sign-in"
               onClick={() => setOpen(false)}
-              className="mt-4 rounded-full bg-ink px-5 py-3 text-center text-sm font-medium text-cream"
+              className="mt-4 flex h-12 items-center justify-center rounded-full bg-ink px-5 text-center text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2"
             >
               Sign in
             </Link>

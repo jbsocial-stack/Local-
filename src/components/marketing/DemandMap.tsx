@@ -14,7 +14,7 @@ export async function DemandMap() {
     <div>
       <Eyebrow>Where next</Eyebrow>
       <h2 className="mt-2 font-display text-3xl">Coming to your town?</h2>
-      <p className="mt-2 text-lg font-medium text-ink/70">
+      <p className="mt-2 text-lg font-medium text-ink-muted">
         We launch where you tell us to. Sign up and pick your town.
       </p>
 
@@ -23,7 +23,7 @@ export async function DemandMap() {
           <span
             key={t.slug}
             className={`rounded-full px-4 py-1.5 text-sm font-medium ${
-              t.status === 'live' ? 'bg-coral/15 text-coral' : 'bg-ink/5 text-ink/70'
+              t.status === 'live' ? 'bg-coral-soft text-coral' : 'bg-line text-ink-muted'
             }`}
           >
             {t.name}
@@ -33,14 +33,14 @@ export async function DemandMap() {
 
       <ol className="mt-8 max-w-sm space-y-1">
         {top10.map((t, i) => (
-          <li key={t.name} className="flex justify-between border-b border-ink/10 py-1.5 text-sm">
+          <li key={t.name} className="flex justify-between border-b border-line py-1.5 text-sm">
             <span>
               {i + 1}. {t.name}
             </span>
             <span className="font-semibold">{t.count}</span>
           </li>
         ))}
-        {top10.length === 0 && <li className="text-sm text-ink/60">No sign-ups yet — be the first.</li>}
+        {top10.length === 0 && <li className="text-sm text-ink-muted">No sign-ups yet — be the first.</li>}
       </ol>
     </div>
   );

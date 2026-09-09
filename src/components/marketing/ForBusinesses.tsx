@@ -36,7 +36,7 @@ export function ForBusinesses({
   return (
     <div>
       {headline && (
-        <p className="mb-6 inline-block rounded-full bg-cream/10 px-4 py-1.5 text-sm font-medium text-cream">
+        <p className="mb-6 inline-flex h-9 items-center rounded-full bg-paper px-[18px] text-sm font-medium text-coral">
           {headline}
         </p>
       )}
@@ -47,9 +47,9 @@ export function ForBusinesses({
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         {STATS.map((s) => (
-          <div key={s.label} className="rounded-2xl bg-cream/10 p-4">
+          <div key={s.label} className="rounded-2xl bg-ink-2 p-4">
             <p className="font-display text-3xl">{s.value}</p>
-            <p className="mt-1 text-sm text-cream/70">{s.label}</p>
+            <p className="mt-1 text-sm text-cream-muted">{s.label}</p>
           </div>
         ))}
       </div>
@@ -57,13 +57,16 @@ export function ForBusinesses({
       <div className="mt-10 grid gap-6 sm:grid-cols-3">
         {COLUMNS.map((c) => (
           <div key={c.title}>
-            <h3 className="font-display text-lg">{c.title}</h3>
-            <p className="mt-1 text-cream/80">{c.body}</p>
+            <h3 className="font-h3 text-lg">{c.title}</h3>
+            <p className="mt-1 text-cream-muted">{c.body}</p>
           </div>
         ))}
       </div>
 
-      <a href={formHref} className="mt-8 inline-block rounded-full bg-cream px-6 py-3 font-medium text-ink">
+      <a
+        href={formHref}
+        className="mt-8 flex h-11 w-fit items-center rounded-full bg-cream px-6 font-medium text-ink transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:h-12"
+      >
         Start a free trial →
       </a>
     </div>

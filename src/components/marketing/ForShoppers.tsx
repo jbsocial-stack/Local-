@@ -24,7 +24,10 @@ export function ForShoppers({ town, formHref = '#shopper-form' }: { town?: TownC
           </li>
         ))}
       </ul>
-      <a href={formHref} className="mt-6 inline-block rounded-full bg-ink px-6 py-3 font-medium text-cream">
+      <a
+        href={formHref}
+        className="mt-6 flex h-11 w-fit items-center rounded-full bg-ink px-6 font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 sm:h-12"
+      >
         {live ? 'Get your pass' : 'Sign me up'}
       </a>
     </div>

@@ -18,7 +18,10 @@ export function Header() {
           <span className="font-logo uppercase text-2xl text-ink">Regulars</span>
         </Link>
         <div className="flex items-center gap-2">
-          <Link href="/sign-in" className="rounded-full bg-ink px-5 py-2 text-sm font-medium text-cream">
+          <Link
+            href="/sign-in"
+            className="flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 sm:h-12"
+          >
             Sign in
           </Link>
           <BurgerMenu />
