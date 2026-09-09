@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   },
 };
 
-// Fonts (Outfit/Inter) and brand.css are loaded once, app-wide, in the
-// root layout — the whole app shares one typographic system now, not just
-// the marketing route group.
+// Fonts (Windsor Pro/Inter) and brand.css are loaded once, app-wide, in
+// the root layout — the whole app shares one typographic system now, not
+// just the marketing route group.
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>

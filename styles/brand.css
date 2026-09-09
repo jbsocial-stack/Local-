@@ -2,9 +2,9 @@
    Navy ink on a light stone background is the base palette; coral is the
    one accent colour kept for CTAs, highlights, and section bands. */
 :root {
-  --coral: #f76c5e;
-  --cream: #f3f1ec;
-  --ink: #1b263b;
+  --coral: #f26b5b;
+  --cream: #f4f2ed;
+  --ink: #1c2b44;
 }
 
 /* S1 AC: "respect prefers-reduced-motion" — animation is opt-in only when
