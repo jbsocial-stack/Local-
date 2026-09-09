@@ -46,19 +46,19 @@ export function AddToWalletButtons({ town }: { town: string }) {
         <button
           onClick={() => add('apple')}
           disabled={status === 'working'}
-          className="flex-1 rounded-full bg-black px-5 py-2.5 text-sm font-medium text-cream disabled:opacity-50"
+          className="flex h-11 flex-1 items-center justify-center rounded-full bg-black text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
         >
           Add to Apple Wallet
         </button>
         <button
           onClick={() => add('google')}
           disabled={status === 'working'}
-          className="flex-1 rounded-full bg-coral px-5 py-2.5 text-sm font-medium text-cream disabled:opacity-50"
+          className="flex h-11 flex-1 items-center justify-center rounded-full bg-coral text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
         >
           Add to Google Wallet
         </button>
       </div>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-error">{error}</p>}
     </div>
   );
 }

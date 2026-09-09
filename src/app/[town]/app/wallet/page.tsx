@@ -38,7 +38,7 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
   return (
     <main className="px-4 pt-10">
       <div className="mx-auto max-w-md">
-        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-ink/45">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
           Your wallet pass, always in your pocket
         </p>
         <FlippableWalletCard
@@ -47,11 +47,11 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
           townSlug={town}
           platform={auth.pass.platform}
         />
-        <p className="mt-2 text-center text-xs text-ink/40">Tap your card to show your QR code</p>
+        <p className="mt-2 text-center text-xs text-ink-muted">Tap your card to show your QR code</p>
         {!auth.pass.platform && <AddToWalletButtons town={town} />}
 
-        <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-ink/50">Activity</h2>
-        <ul className="mt-3 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white/60">
+        <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-ink-muted">Activity</h2>
+        <ul className="mt-3 divide-y divide-line rounded-2xl bg-paper">
           {(rows ?? []).map((row) => {
             const merchantName = (row.merchants as unknown as { name: string } | null)?.name ?? 'Regulars';
             const positive = row.points > 0;
@@ -59,11 +59,11 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
               <li key={row.id} className="flex items-center justify-between px-4 py-3">
                 <div>
                   <p className="font-medium">{merchantName}</p>
-                  <p className="text-xs text-ink/50">
+                  <p className="text-xs text-ink-muted">
                     {TYPE_LABEL[row.type] ?? row.type} · {new Date(row.created_at).toLocaleDateString()}
                   </p>
                 </div>
-                <span className={`font-semibold ${positive ? 'text-green-700' : 'text-ink/70'}`}>
+                <span className={`font-semibold ${positive ? 'text-success' : 'text-ink-muted'}`}>
                   {positive ? '+' : ''}
                   {row.points} pts
                 </span>
@@ -71,7 +71,7 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
             );
           })}
           {(rows ?? []).length === 0 && (
-            <li className="px-4 py-6 text-center text-sm text-ink/50">No activity yet — go earn some points.</li>
+            <li className="px-4 py-6 text-center text-sm text-ink-muted">No activity yet — go earn some points.</li>
           )}
         </ul>
       </div>

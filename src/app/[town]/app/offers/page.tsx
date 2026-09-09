@@ -53,27 +53,27 @@ export default async function OffersPage({ params }: { params: Promise<{ town: s
     <main className="px-4 pt-10">
       <div className="mx-auto max-w-md">
         <h1 className="font-display text-2xl">Offers</h1>
-        <p className="text-sm text-ink/60">Boosted points and standing deals across town.</p>
+        <p className="text-sm text-ink-muted">Boosted points and standing deals across town.</p>
 
         <ul className="mt-4 space-y-2">
           {offers.map((offer, i) => (
             <li key={i}>
               <Link
                 href={`/${town}/app/discover/${offer.merchantSlug}`}
-                className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white/70 p-4"
+                className="flex items-center justify-between rounded-2xl bg-paper p-4"
               >
                 <div>
                   <p className="font-medium">{offer.merchantName}</p>
-                  <p className="text-sm text-ink/60">{offer.label}</p>
+                  <p className="text-sm text-ink-muted">{offer.label}</p>
                 </div>
-                <span className="rounded-full bg-coral/15 px-3 py-1 text-xs font-semibold text-coral">
+                <span className="rounded-full bg-coral-soft px-3 py-1 text-xs font-semibold text-coral">
                   {KIND_TAG[offer.kind]}
                 </span>
               </Link>
             </li>
           ))}
           {offers.length === 0 && (
-            <li className="rounded-2xl border border-ink/10 bg-white/70 p-6 text-center text-sm text-ink/50">
+            <li className="rounded-2xl bg-paper p-6 text-center text-sm text-ink-muted">
               No offers right now — check back soon.
             </li>
           )}

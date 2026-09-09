@@ -59,32 +59,40 @@ export function ProfileForm({ town, initial }: { town: string; initial: ProfileD
         </label>
       </div>
 
-      <form onSubmit={save} className="space-y-4 rounded-2xl border border-ink/10 bg-white/60 p-4">
+      <form onSubmit={save} className="space-y-4 rounded-[28px] bg-paper p-4">
         <label className="block text-sm font-medium">
           Name
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-2.5"
+            className="mt-1 h-11 w-full rounded-2xl border border-line bg-cream px-4 focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
         <label className="block text-sm font-medium">
           Email
-          <input value={initial.email} disabled className="mt-1 w-full rounded-full border border-ink/10 bg-ink/5 px-4 py-2.5 text-ink/50" />
+          <input
+            value={initial.email}
+            disabled
+            className="mt-1 h-11 w-full rounded-2xl border border-line bg-line px-4 text-ink-muted"
+          />
         </label>
         <label className="block text-sm font-medium">
           Phone
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-2.5"
+            className="mt-1 h-11 w-full rounded-2xl border border-line bg-cream px-4 focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
-        <button type="submit" disabled={status === 'saving'} className="rounded-full bg-ink px-6 py-2.5 text-cream">
+        <button
+          type="submit"
+          disabled={status === 'saving'}
+          className="flex h-11 items-center rounded-full bg-ink px-6 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
+        >
           {status === 'saving' ? 'Saving…' : 'Save'}
         </button>
-        {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
-        {status === 'error' && <span className="ml-3 text-sm text-red-600">Could not save.</span>}
+        {status === 'saved' && <span className="ml-3 text-sm text-success">Saved.</span>}
+        {status === 'error' && <span className="ml-3 text-sm text-error">Could not save.</span>}
       </form>
 
       <ChangePassword />
@@ -111,9 +119,9 @@ function ChangePassword() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-3 rounded-2xl border border-ink/10 bg-white/60 p-4">
-      <h2 className="font-semibold">Password</h2>
-      <p className="text-sm text-ink/60">
+    <form onSubmit={submit} className="space-y-3 rounded-[28px] bg-paper p-4">
+      <h2 className="font-h3 text-lg">Password</h2>
+      <p className="text-sm text-ink-muted">
         Set a password so you can sign in without waiting on an email link next time.
       </p>
       <input
@@ -123,13 +131,17 @@ function ChangePassword() {
         placeholder="New password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="w-full rounded-full border border-ink/15 bg-white px-4 py-2.5"
+        className="h-11 w-full rounded-2xl border border-line bg-cream px-4 placeholder:text-ink-muted focus:border-2 focus:border-ink focus:outline-none"
       />
-      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-ink px-6 py-2.5 text-cream disabled:opacity-50">
+      <button
+        type="submit"
+        disabled={status === 'saving'}
+        className="flex h-11 items-center rounded-full bg-ink px-6 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
+      >
         {status === 'saving' ? 'Saving…' : 'Set password'}
       </button>
-      {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
-      {status === 'error' && <span className="ml-3 text-sm text-red-600">Could not save.</span>}
+      {status === 'saved' && <span className="ml-3 text-sm text-success">Saved.</span>}
+      {status === 'error' && <span className="ml-3 text-sm text-error">Could not save.</span>}
     </form>
   );
 }
@@ -150,30 +162,36 @@ function DeleteAccount({ town }: { town: string }) {
   }
 
   return (
-    <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
-      <h2 className="font-semibold text-red-700">Delete account</h2>
-      <p className="mt-1 text-sm text-red-700/80">
+    <div className="rounded-[28px] bg-error/10 p-4">
+      <h2 className="font-h3 text-lg text-error">Delete account</h2>
+      <p className="mt-1 text-sm text-error/80">
         Your passes will be revoked and your personal details removed. This can&apos;t be undone.
       </p>
       {!confirming ? (
-        <button onClick={() => setConfirming(true)} className="mt-3 rounded-full border border-red-400 px-4 py-1.5 text-sm text-red-700">
+        <button
+          onClick={() => setConfirming(true)}
+          className="mt-3 flex h-9 items-center rounded-full border-[1.5px] border-error px-4 text-sm text-error transition-colors duration-150 hover:bg-error/10"
+        >
           Delete my account
         </button>
       ) : (
         <div className="mt-3 flex gap-2">
-          <button onClick={() => setConfirming(false)} className="rounded-full border border-ink/20 px-4 py-1.5 text-sm">
+          <button
+            onClick={() => setConfirming(false)}
+            className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-sm text-ink transition-colors duration-150 hover:bg-ink/5"
+          >
             Cancel
           </button>
           <button
             onClick={deleteAccount}
             disabled={status === 'deleting'}
-            className="rounded-full bg-red-600 px-4 py-1.5 text-sm text-white"
+            className="flex h-9 items-center rounded-full bg-error px-4 text-sm text-cream transition duration-150 ease-out hover:brightness-95 disabled:opacity-40"
           >
             {status === 'deleting' ? 'Deleting…' : 'Yes, delete everything'}
           </button>
         </div>
       )}
-      {status === 'error' && <p className="mt-2 text-sm text-red-700">Something went wrong — try again.</p>}
+      {status === 'error' && <p className="mt-2 text-sm text-error">Something went wrong — try again.</p>}
     </div>
   );
 }

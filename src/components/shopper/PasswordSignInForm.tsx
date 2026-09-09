@@ -36,7 +36,7 @@ export function PasswordSignInForm({
   return (
     <form onSubmit={submit} className="w-full max-w-sm text-center">
       <h1 className="font-display text-xl text-ink">{title}</h1>
-      {subtitle && <p className="mt-1 text-sm text-ink/60">{subtitle}</p>}
+      {subtitle && <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>}
       <div className="mt-4 space-y-3 text-left">
         <label className="block text-sm font-medium">
           Email
@@ -45,7 +45,7 @@ export function PasswordSignInForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-3"
+            className="mt-1 h-12 w-full rounded-2xl border border-line bg-cream px-4 focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
         <label className="block text-sm font-medium">
@@ -55,22 +55,22 @@ export function PasswordSignInForm({
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-full border border-ink/15 bg-white px-4 py-3"
+            className="mt-1 h-12 w-full rounded-2xl border border-line bg-cream px-4 focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
       </div>
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="mt-3 w-full rounded-full bg-ink py-3 font-medium text-cream disabled:opacity-50"
+        className="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-ink font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
       >
         {status === 'submitting' ? 'Signing in…' : 'Sign in with password'}
       </button>
-      <Link href="/reset-password" className="mt-3 inline-block text-sm text-ink/60 underline">
+      <Link href="/reset-password" className="mt-3 inline-block text-sm text-ink-muted underline">
         Forgot password?
       </Link>
       {status === 'error' && (
-        <p className="mt-2 text-sm text-red-600">
+        <p className="mt-2 text-sm text-error">
           Incorrect email or password. New here? <Link href="/shoppers" className="underline">Sign up</Link> instead.
         </p>
       )}
