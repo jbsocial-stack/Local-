@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Eyebrow } from '@/components/marketing/Eyebrow';
 
 export const metadata: Metadata = {
   title: 'About — Regulars',
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-16 text-ink">
-      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-ink/50">Why we started here</p>
+      <Eyebrow>Why we started here</Eyebrow>
       <h1 className="mt-2 font-display text-3xl">One high street. Then the next one on the list.</h1>
 
       <p className="mt-6 text-ink/80">
@@ -53,10 +54,16 @@ export default function AboutPage() {
       </p>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link href="/shoppers" className="rounded-full bg-ink px-6 py-3 text-sm font-medium text-cream">
+        <Link
+          href="/shoppers"
+          className="flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 sm:h-12"
+        >
           Join the waitlist
         </Link>
-        <Link href="/business" className="rounded-full border border-ink/20 px-6 py-3 text-sm font-medium text-ink">
+        <Link
+          href="/business"
+          className="flex h-11 items-center rounded-full border-[1.5px] border-ink px-6 text-sm font-medium text-ink transition-colors duration-150 hover:bg-ink/5 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 sm:h-12"
+        >
           Bring your shop in
         </Link>
       </div>

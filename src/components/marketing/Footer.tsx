@@ -24,7 +24,7 @@ export function Footer() {
         </nav>
 
         {/* H11: legal placeholders flagged for review — see Q4 in the PRD's open questions. */}
-        <p className="mt-8 text-xs text-ink/50">
+        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.08em] text-ink-muted">
           Regulars [company name TBD] · Company number TBD, registered in England &amp; Wales · ICO
           registration TBD.
         </p>

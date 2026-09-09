@@ -33,7 +33,7 @@ const TIERS = [
 ];
 
 const CARD_STYLE: Record<string, string> = {
-  card: 'border border-ink/10 bg-white/60 text-ink',
+  card: 'bg-paper text-ink',
   ink: 'bg-ink text-cream',
 };
 
@@ -47,14 +47,14 @@ export function PricingTable() {
     <div>
       <Eyebrow>Simple, honest pricing</Eyebrow>
       <h2 className="mt-2 font-display text-3xl">Pricing that keeps you independent.</h2>
-      <p className="mt-2 text-ink/70">
+      <p className="mt-2 text-ink-muted">
         Set your own earn rate from 1x to 5x. Points you award are your marketing spend — points
         redeemed with you are sales.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         {TIERS.map((tier) => (
-          <div key={tier.name} className={`rounded-2xl p-6 ${CARD_STYLE[tier.style]}`}>
+          <div key={tier.name} className={`rounded-[28px] p-6 ${CARD_STYLE[tier.style]}`}>
             <p className="text-xs font-semibold uppercase tracking-[0.15em] opacity-60">{tier.name}</p>
             <p className="mt-3 font-display text-3xl">
               {tier.price}
@@ -70,7 +70,7 @@ export function PricingTable() {
             </ul>
             <a
               href={tier.cta.href}
-              className={`mt-6 block rounded-full px-5 py-2.5 text-center text-sm font-medium ${
+              className={`mt-6 flex h-11 items-center justify-center rounded-full px-5 text-center text-sm font-medium transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 sm:h-12 ${
                 tier.style === 'ink' ? 'bg-coral text-cream' : 'bg-ink text-cream'
               }`}
             >
@@ -80,7 +80,7 @@ export function PricingTable() {
         ))}
       </div>
 
-      <p className="mt-4 text-sm text-ink/60">
+      <p className="mt-4 text-sm text-ink-muted">
         Monthly billing for your first 6 months (+30%), then annual. Cancel anytime in the intro
         period.
       </p>

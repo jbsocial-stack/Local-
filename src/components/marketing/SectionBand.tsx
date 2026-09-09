@@ -1,21 +1,15 @@
 // Every section on the marketing site is a rounded, inset card sitting on
-// the cream page background — coral/ink for colored cards, or a
-// thin-bordered neutral card for everything else. `color="plain"` skips the
-// card chrome entirely, for sections (like HowItWorks) that build their own
-// smaller cards internally.
+// the cream page background — coral/ink for colored cards, or a paper
+// neutral card for everything else (design system: cards get no border,
+// just the one step up from cream to paper). `color="plain"` skips the
+// card chrome entirely, for sections (like HowItWorks) that build their
+// own smaller cards internally. Paper is already fully opaque, so this
+// same map works for stacking cards too (see `stackOrder` below) — no
+// separate translucency fix needed.
 const CARD_STYLES: Record<string, string> = {
   coral: 'bg-coral text-cream',
   ink: 'bg-ink text-cream',
-  card: 'border border-ink/10 bg-white/60 text-ink',
-};
-
-// Stacking cards (see `stackOrder` below) must be fully opaque — a
-// translucent background lets whatever's scrolled underneath show through
-// during the transition, which reads as a glitch rather than one card
-// covering the next.
-const STACK_CARD_STYLES: Record<string, string> = {
-  ...CARD_STYLES,
-  card: 'border border-ink/10 bg-cream text-ink',
+  card: 'bg-paper text-ink',
 };
 
 export function SectionBand({
@@ -62,9 +56,9 @@ export function SectionBand({
   // bar shows/hides as you scroll.
   const card = (
     <div
-      className={`stack-card-fill mx-auto max-w-5xl rounded-3xl px-6 py-12 sm:px-10 sm:py-16 ${
+      className={`stack-card-fill mx-auto max-w-5xl rounded-[28px] px-6 py-12 sm:px-10 sm:py-16 ${
         stacking ? 'flex min-h-[calc(100dvh-5rem)] flex-col justify-center shadow-xl' : ''
-      } ${(stacking ? STACK_CARD_STYLES : CARD_STYLES)[resolved]}`}
+      } ${CARD_STYLES[resolved]}`}
     >
       {children}
     </div>

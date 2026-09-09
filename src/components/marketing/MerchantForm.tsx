@@ -80,7 +80,7 @@ export function MerchantForm() {
           required
           value={businessName}
           onChange={(e) => setBusinessName(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         />
       </Field>
       <Field label="Contact name">
@@ -89,7 +89,7 @@ export function MerchantForm() {
           required
           value={contactName}
           onChange={(e) => setContactName(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         />
       </Field>
       <Field label="Email">
@@ -99,7 +99,7 @@ export function MerchantForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         />
       </Field>
       <Field label="Phone (optional)">
@@ -107,7 +107,7 @@ export function MerchantForm() {
           name="phone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         />
       </Field>
       <Field label="Town">
@@ -116,7 +116,7 @@ export function MerchantForm() {
           required
           value={townSlug}
           onChange={(e) => setTownSlug(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         >
           <option value="" disabled>
             Choose a town
@@ -133,7 +133,7 @@ export function MerchantForm() {
           name="venues"
           value={venues}
           onChange={(e) => setVenues(e.target.value as (typeof VENUES)[number])}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         >
           {VENUES.map((v) => (
             <option key={v} value={v}>
@@ -147,7 +147,7 @@ export function MerchantForm() {
           name="category"
           value={category}
           onChange={(e) => setCategory(e.target.value as (typeof CATEGORIES)[number])}
-          className="mt-1 w-full rounded-full border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 h-12 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -161,7 +161,7 @@ export function MerchantForm() {
           name="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="mt-1 w-full rounded-2xl border-none bg-cream/20 px-4 py-2.5 placeholder:text-ink/50 text-ink"
+          className="mt-1 w-full rounded-2xl border border-cream/15 bg-ink-2 px-4 py-3 text-cream placeholder:text-cream-muted focus:border-2 focus:border-cream focus:outline-none"
           rows={3}
         />
       </Field>
@@ -170,7 +170,7 @@ export function MerchantForm() {
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="rounded-full bg-cream px-6 py-3 font-medium text-ink disabled:opacity-50"
+          className="flex h-11 items-center justify-center rounded-full bg-cream px-6 font-medium text-ink transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 focus-visible:ring-offset-ink disabled:opacity-40 sm:h-12"
         >
           {status === 'submitting' ? 'Sending…' : 'Request a trial'}
         </button>

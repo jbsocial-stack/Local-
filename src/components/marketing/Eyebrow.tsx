@@ -9,8 +9,8 @@ export function Eyebrow({
 }) {
   return (
     <p
-      className={`text-xs font-semibold uppercase tracking-[0.15em] ${
-        tone === 'cream' ? 'text-cream/60' : 'text-ink/45'
+      className={`text-[11px] font-medium uppercase tracking-[0.14em] ${
+        tone === 'cream' ? 'text-cream-muted' : 'text-ink-muted'
       }`}
     >
       {children}

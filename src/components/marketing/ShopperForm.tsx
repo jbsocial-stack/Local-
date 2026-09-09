@@ -123,7 +123,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
           placeholder="you@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3 placeholder:text-ink/40"
+          className="mt-1 h-12 w-full rounded-2xl border border-line bg-paper px-4 text-base text-ink placeholder:text-ink-muted focus:border-2 focus:border-ink focus:outline-none"
         />
       </label>
 
@@ -134,7 +134,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
           required
           value={townSlug}
           onChange={(e) => setTownSlug(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3"
+          className="mt-1 h-12 w-full rounded-2xl border border-line bg-paper px-4 text-base text-ink focus:border-2 focus:border-ink focus:outline-none"
         >
           <option value="" disabled>
             Choose your town
@@ -157,7 +157,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
             required
             value={townFreeText}
             onChange={(e) => setTownFreeText(e.target.value)}
-            className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3"
+            className="mt-1 h-12 w-full rounded-2xl border border-line bg-paper px-4 text-base text-ink focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
       )}
@@ -173,7 +173,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
             placeholder="At least 8 characters"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3 placeholder:text-ink/40"
+            className="mt-1 h-12 w-full rounded-2xl border border-line bg-paper px-4 text-base text-ink placeholder:text-ink-muted focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
       )}
@@ -185,7 +185,7 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
           name="postcode"
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
-          className="mt-1 w-full rounded-full border-none bg-white/70 px-5 py-3"
+          className="mt-1 h-12 w-full rounded-2xl border border-line bg-paper px-4 text-base text-ink focus:border-2 focus:border-ink focus:outline-none"
         />
       </label>
 
@@ -202,12 +202,12 @@ export function ShopperForm({ defaultTown }: { defaultTown?: TownConfig }) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full rounded-full bg-ink px-6 py-3 font-medium text-cream disabled:opacity-50 sm:w-auto"
+        className="flex h-11 w-full items-center justify-center rounded-full bg-ink px-6 font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40 sm:h-12 sm:w-auto"
       >
         {status === 'submitting' ? 'Signing up…' : isLive ? 'Create my account' : 'Send my pass'}
       </button>
-      <p className="text-sm text-ink/60">Free for shoppers. No card required.</p>
-      {status === 'error' && <p className="text-sm text-red-700">{errorMessage}</p>}
+      <p className="text-sm text-ink-muted">Free for shoppers. No card required.</p>
+      {status === 'error' && <p className="text-sm text-error">{errorMessage}</p>}
     </form>
   );
 }
@@ -277,13 +277,13 @@ function ReferralShare({
   }
 
   return (
-    <div className="mt-4 rounded-2xl border border-ink/10 bg-white/60 p-4">
+    <div className="mt-4 rounded-2xl bg-paper p-4">
       {position !== undefined && totalInQueue !== undefined && (
         <p className="text-sm font-medium">
           You&apos;re #{position} of {totalInQueue} in line.
         </p>
       )}
-      <p className="mt-1 text-sm text-ink/70">
+      <p className="mt-1 text-sm text-ink-muted">
         Refer friends to move up — everyone who signs up with your link jumps you both ahead of anyone who hasn&apos;t.
       </p>
       <div className="mt-3 flex gap-2">
@@ -292,12 +292,12 @@ function ReferralShare({
           readOnly
           value={link}
           onFocus={(e) => e.currentTarget.select()}
-          className="w-full min-w-0 rounded-full border-none bg-white px-4 py-2 text-sm text-ink/70"
+          className="h-11 w-full min-w-0 rounded-full border border-line bg-cream px-4 text-sm text-ink-muted"
         />
         <button
           type="button"
           onClick={copyLink}
-          className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
+          className="h-11 shrink-0 rounded-full bg-ink px-4 text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2"
         >
           {copied ? 'Copied!' : 'Copy'}
         </button>
