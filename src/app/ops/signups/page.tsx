@@ -28,7 +28,7 @@ export default async function OpsSignupsPage() {
   return (
     <main className="min-h-screen bg-cream px-4 py-8">
       <div className="mx-auto max-w-4xl">
-        <Link href="/ops" className="text-sm text-ink/60">
+        <Link href="/ops" className="text-sm text-ink-muted">
           ← Ops console
         </Link>
         <div className="mt-1 flex items-center justify-between">
@@ -36,27 +36,27 @@ export default async function OpsSignupsPage() {
           <Link
             href="/api/ops/signups/export"
             prefetch={false}
-            className="rounded-full border border-ink/20 px-4 py-1.5 text-sm text-ink"
+            className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-sm text-ink transition-colors duration-150 hover:bg-ink/5"
           >
             Export CSV
           </Link>
         </div>
-        <p className="mt-1 text-sm text-ink/60">{rows.length} signups.</p>
+        <p className="mt-1 text-sm text-ink-muted">{rows.length} signups.</p>
 
         {townCounts.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             {townCounts.map(([town, count]) => (
-              <span key={town} className="rounded-full bg-white px-3 py-1 text-xs font-medium text-ink shadow">
+              <span key={town} className="rounded-full bg-paper px-3 py-1 text-xs font-medium text-ink">
                 {town} · {count}
               </span>
             ))}
           </div>
         )}
 
-        <div className="mt-6 overflow-x-auto rounded-xl bg-white shadow">
+        <div className="mt-6 overflow-x-auto rounded-2xl bg-paper">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b text-left text-ink/50">
+              <tr className="border-b border-line text-left text-ink-muted">
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Town</th>
                 <th className="px-4 py-2">Referred</th>
@@ -66,8 +66,8 @@ export default async function OpsSignupsPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((s) => (
-                <tr key={s.id} className="border-b last:border-0">
+              {rows.map((s, i) => (
+                <tr key={s.id} className={i % 2 === 1 ? 'bg-line/40' : ''}>
                   <td className="px-4 py-2">{s.email}</td>
                   <td className="px-4 py-2">{s.town_slug ?? s.town_free_text ?? '—'}</td>
                   <td className="px-4 py-2">{s.ref_code ? 'Yes' : '—'}</td>
@@ -78,7 +78,7 @@ export default async function OpsSignupsPage() {
               ))}
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-ink/50">
+                  <td colSpan={6} className="px-4 py-6 text-center text-ink-muted">
                     No signups yet.
                   </td>
                 </tr>

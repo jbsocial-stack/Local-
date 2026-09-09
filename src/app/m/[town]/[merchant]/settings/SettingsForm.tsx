@@ -50,21 +50,21 @@ function SumUpSection({ merchantId, connected }: { merchantId: string; connected
   }, []);
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">SumUp</h2>
-      <p className="mt-1 text-sm text-ink/60">
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">SumUp</h2>
+      <p className="mt-1 text-sm text-ink-muted">
         Connect your SumUp account so a card payment on your terminal can award points automatically — this is
         early: for now it only records what SumUp tells us, it doesn&apos;t award points yet.
       </p>
-      {justConnected && <p className="mt-2 text-sm font-medium text-green-700">Connected.</p>}
-      {justErrored && <p className="mt-2 text-sm font-medium text-red-600">Couldn&apos;t connect — try again.</p>}
+      {justConnected && <p className="mt-2 text-sm font-medium text-success">Connected.</p>}
+      {justErrored && <p className="mt-2 text-sm font-medium text-error">Couldn&apos;t connect — try again.</p>}
       <p className="mt-3 text-sm">
         {connected ? (
-          <span className="font-medium text-green-700">Connected</span>
+          <span className="font-medium text-success">Connected</span>
         ) : (
           <a
             href={`/api/merchants/${merchantId}/sumup/connect`}
-            className="rounded-full border border-ink/20 px-4 py-1.5 text-ink"
+            className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-ink transition-colors duration-150 hover:bg-ink/5"
           >
             Connect SumUp
           </a>
@@ -107,18 +107,18 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
   }
 
   return (
-    <form onSubmit={save} className="rounded-xl bg-white p-6 shadow space-y-4">
-      <h2 className="font-semibold">Details</h2>
+    <form onSubmit={save} className="rounded-[28px] bg-paper p-6 space-y-4">
+      <h2 className="font-h3 text-lg">Details</h2>
       <label className="block text-sm">
         Name
-        <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded border px-3 py-2" />
+        <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full h-11 rounded-2xl border border-line px-4 focus:border-2 focus:border-ink focus:outline-none" />
       </label>
       <label className="block text-sm">
         Category
         <input
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="mt-1 w-full rounded border px-3 py-2"
+          className="mt-1 w-full h-11 rounded-2xl border border-line px-4 focus:border-2 focus:border-ink focus:outline-none"
         />
       </label>
       <label className="block text-sm">
@@ -126,7 +126,7 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
         <input
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="mt-1 w-full rounded border px-3 py-2"
+          className="mt-1 w-full h-11 rounded-2xl border border-line px-4 focus:border-2 focus:border-ink focus:outline-none"
         />
       </label>
       <label className="block text-sm">
@@ -134,7 +134,7 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 w-full rounded border px-3 py-2"
+          className="mt-1 w-full h-11 rounded-2xl border border-line px-4 focus:border-2 focus:border-ink focus:outline-none"
         />
       </label>
       <label className="block text-sm">
@@ -142,7 +142,7 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
         <select
           value={baseMultiplier}
           onChange={(e) => setBaseMultiplier(Number(e.target.value))}
-          className="mt-1 w-full rounded border px-3 py-2"
+          className="mt-1 w-full h-11 rounded-2xl border border-line px-4 focus:border-2 focus:border-ink focus:outline-none"
         >
           {[1, 2, 3, 4, 5].map((m) => (
             <option key={m} value={m}>
@@ -159,7 +159,7 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
             const value = hours[day] ?? null;
             return (
               <div key={day} className="flex items-center gap-2 text-sm">
-                <span className="w-10 uppercase text-ink/50">{day}</span>
+                <span className="w-10 uppercase text-ink-muted">{day}</span>
                 <label className="flex items-center gap-1">
                   <input
                     type="checkbox"
@@ -174,14 +174,14 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
                       type="time"
                       value={value.open}
                       onChange={(e) => setDay(day, { ...value, open: e.target.value })}
-                      className="rounded border px-2 py-1"
+                      className="h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
                     />
                     <span>–</span>
                     <input
                       type="time"
                       value={value.close}
                       onChange={(e) => setDay(day, { ...value, close: e.target.value })}
-                      className="rounded border px-2 py-1"
+                      className="h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
                     />
                   </>
                 )}
@@ -191,11 +191,11 @@ function DetailsSection({ merchant }: { merchant: Merchant }) {
         </div>
       </div>
 
-      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-coral text-white px-6 py-2">
+      <button type="submit" disabled={status === 'saving'} className="flex h-11 items-center rounded-full bg-coral px-6 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
         {status === 'saving' ? 'Saving…' : 'Save details'}
       </button>
-      {status === 'saved' && <p className="text-sm text-green-700">Saved.</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {status === 'saved' && <p className="text-sm text-success">Saved.</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
     </form>
   );
 }
@@ -219,8 +219,8 @@ function PhotoSection({ merchant }: { merchant: Merchant }) {
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">Photo</h2>
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">Photo</h2>
       {photoUrl && (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={photoUrl} alt={merchant.name} className="mt-3 h-32 w-32 rounded-lg object-cover" />
@@ -254,9 +254,9 @@ function GallerySection({ merchantId, photos: initialPhotos }: { merchantId: str
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">Gallery</h2>
-      <p className="mt-1 text-sm text-ink/60">Shown on your Discover page — the more, the better.</p>
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">Gallery</h2>
+      <p className="mt-1 text-sm text-ink-muted">Shown on your Discover page — the more, the better.</p>
       <div className="mt-3 flex flex-wrap gap-3">
         {photos.map((p) => (
           <div key={p.id} className="relative">
@@ -264,7 +264,7 @@ function GallerySection({ merchantId, photos: initialPhotos }: { merchantId: str
             <img src={p.url} alt="" className="h-20 w-20 rounded-lg object-cover" />
             <button
               onClick={() => remove(p.id)}
-              className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-xs text-white"
+              className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-xs text-cream"
               aria-label="Remove photo"
             >
               ×
@@ -308,9 +308,9 @@ function SocialLinksSection({ merchant }: { merchant: Merchant }) {
   }
 
   return (
-    <form onSubmit={save} className="rounded-xl bg-white p-6 shadow space-y-3">
-      <h2 className="font-semibold">Social links</h2>
-      <p className="text-sm text-ink/60">Shown on your Discover page — leave any blank you don&apos;t use.</p>
+    <form onSubmit={save} className="rounded-[28px] bg-paper p-6 space-y-3">
+      <h2 className="font-h3 text-lg">Social links</h2>
+      <p className="text-sm text-ink-muted">Shown on your Discover page — leave any blank you don&apos;t use.</p>
       {[
         { label: 'Instagram', value: instagram, set: setInstagram },
         { label: 'Facebook', value: facebook, set: setFacebook },
@@ -324,15 +324,15 @@ function SocialLinksSection({ merchant }: { merchant: Merchant }) {
             placeholder="https://…"
             value={value}
             onChange={(e) => set(e.target.value)}
-            className="mt-1 w-full rounded border px-3 py-2"
+            className="mt-1 w-full h-11 rounded-2xl border border-line px-4 focus:border-2 focus:border-ink focus:outline-none"
           />
         </label>
       ))}
-      <button type="submit" disabled={status === 'saving'} className="rounded-full bg-coral text-white px-6 py-2">
+      <button type="submit" disabled={status === 'saving'} className="flex h-11 items-center rounded-full bg-coral px-6 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
         {status === 'saving' ? 'Saving…' : 'Save links'}
       </button>
-      {status === 'saved' && <span className="ml-3 text-sm text-green-700">Saved.</span>}
-      {status === 'error' && <span className="ml-3 text-sm text-red-600">Could not save — check the URLs.</span>}
+      {status === 'saved' && <span className="ml-3 text-sm text-success">Saved.</span>}
+      {status === 'error' && <span className="ml-3 text-sm text-error">Could not save — check the URLs.</span>}
     </form>
   );
 }
@@ -373,26 +373,26 @@ function BoostsSection({ merchantId, boosts: initialBoosts }: { merchantId: stri
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">Scheduled boosts</h2>
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">Scheduled boosts</h2>
       <ul className="mt-3 space-y-2 text-sm">
         {boosts.map((b) => (
-          <li key={b.id} className="flex items-center justify-between rounded border px-3 py-2">
+          <li key={b.id} className="flex items-center justify-between rounded-xl bg-line/40 px-3 py-2">
             <span>
               {b.multiplier}x — {new Date(b.starts_at).toLocaleString()} to{' '}
               {new Date(b.ends_at).toLocaleString()} {b.label && `(${b.label})`}
             </span>
-            <button onClick={() => removeBoost(b.id)} className="text-red-600">
+            <button onClick={() => removeBoost(b.id)} className="text-error">
               Remove
             </button>
           </li>
         ))}
-        {boosts.length === 0 && <li className="text-ink/50">No boosts scheduled.</li>}
+        {boosts.length === 0 && <li className="text-ink-muted">No boosts scheduled.</li>}
       </ul>
 
       <form onSubmit={addBoost} className="mt-4 space-y-2 text-sm">
         <div className="flex gap-2">
-          <select value={multiplier} onChange={(e) => setMultiplier(Number(e.target.value))} className="rounded border px-2 py-1">
+          <select value={multiplier} onChange={(e) => setMultiplier(Number(e.target.value))} className="h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none">
             {[1, 2, 3, 4, 5].map((m) => (
               <option key={m} value={m}>
                 {m}x
@@ -404,26 +404,26 @@ function BoostsSection({ merchantId, boosts: initialBoosts }: { merchantId: stri
             required
             value={startsAt}
             onChange={(e) => setStartsAt(e.target.value)}
-            className="rounded border px-2 py-1"
+            className="h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
           />
           <input
             type="datetime-local"
             required
             value={endsAt}
             onChange={(e) => setEndsAt(e.target.value)}
-            className="rounded border px-2 py-1"
+            className="h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
           />
         </div>
         <input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Label (optional)"
-          className="w-full rounded border px-2 py-1"
+          className="w-full h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
         />
-        <button type="submit" className="rounded-full bg-coral text-white px-4 py-1.5">
+        <button type="submit" className="flex h-9 items-center rounded-full bg-coral px-4 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
           Add boost
         </button>
-        {error && <p className="text-red-600">{error}</p>}
+        {error && <p className="text-error">{error}</p>}
       </form>
     </div>
   );
@@ -459,16 +459,16 @@ function StaffSection({ merchantId, staff: initialStaff }: { merchantId: string;
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">Staff</h2>
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">Staff</h2>
       <ul className="mt-3 space-y-2 text-sm">
         {staff.map((s) => (
-          <li key={s.id} className="flex items-center justify-between rounded border px-3 py-2">
+          <li key={s.id} className="flex items-center justify-between rounded-xl bg-line/40 px-3 py-2">
             <span>
               {s.name} — {s.role}
             </span>
             {s.role === 'staff' && (
-              <button onClick={() => removeStaff(s.id)} className="text-red-600">
+              <button onClick={() => removeStaff(s.id)} className="text-error">
                 Remove
               </button>
             )}
@@ -482,7 +482,7 @@ function StaffSection({ merchantId, staff: initialStaff }: { merchantId: string;
           onChange={(e) => setName(e.target.value)}
           placeholder="Staff name"
           required
-          className="flex-1 rounded border px-2 py-1"
+          className="flex-1 h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
         />
         <input
           value={pin}
@@ -491,27 +491,27 @@ function StaffSection({ merchantId, staff: initialStaff }: { merchantId: string;
           inputMode="numeric"
           pattern="\d{4}"
           required
-          className="w-28 rounded border px-2 py-1"
+          className="w-28 h-10 rounded-xl border border-line px-3 focus:border-2 focus:border-ink focus:outline-none"
         />
-        <button type="submit" className="rounded-full bg-coral text-white px-4 py-1.5">
+        <button type="submit" className="flex h-9 items-center rounded-full bg-coral px-4 text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ink focus-visible:ring-offset-2">
           Add
         </button>
       </form>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-error">{error}</p>}
     </div>
   );
 }
 
 function PrintablesSection({ merchantId }: { merchantId: string }) {
   return (
-    <div className="rounded-xl bg-white p-6 shadow">
-      <h2 className="font-semibold">Printables</h2>
-      <p className="mt-1 text-sm text-ink/60">Put these in your window so customers ask about the scheme.</p>
+    <div className="rounded-[28px] bg-paper p-6">
+      <h2 className="font-h3 text-lg">Printables</h2>
+      <p className="mt-1 text-sm text-ink-muted">Put these in your window so customers ask about the scheme.</p>
       <div className="mt-3 flex gap-3 text-sm">
-        <a href={`/api/merchants/${merchantId}/printables?kind=poster`} className="rounded-full border border-ink/20 px-4 py-1.5 text-ink">
+        <a href={`/api/merchants/${merchantId}/printables?kind=poster`} className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-ink transition-colors duration-150 hover:bg-ink/5">
           A4 poster
         </a>
-        <a href={`/api/merchants/${merchantId}/printables?kind=sticker`} className="rounded-full border border-ink/20 px-4 py-1.5 text-ink">
+        <a href={`/api/merchants/${merchantId}/printables?kind=sticker`} className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-ink transition-colors duration-150 hover:bg-ink/5">
           Window sticker
         </a>
       </div>

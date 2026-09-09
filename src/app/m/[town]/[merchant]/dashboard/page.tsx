@@ -52,7 +52,7 @@ export default async function MerchantDashboardPage({
           <StatCard label="Net position" value={formatPence(stats.netPositionPence)} span />
         </div>
 
-        <h2 className="mt-8 font-semibold">Recent transactions</h2>
+        <h2 className="mt-8 font-h3 text-lg">Recent transactions</h2>
         <TransactionsTable merchantId={merchant.id} rows={(rows ?? []).slice(0, 50)} />
       </div>
     </main>
@@ -61,9 +61,9 @@ export default async function MerchantDashboardPage({
 
 function StatCard({ label, value, span }: { label: string; value: string | number; span?: boolean }) {
   return (
-    <div className={`rounded-xl bg-white p-4 shadow ${span ? 'col-span-2 sm:col-span-3' : ''}`}>
-      <p className="text-xs text-ink/50">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-ink">{value}</p>
+    <div className={`rounded-2xl bg-paper p-4 ${span ? 'col-span-2 sm:col-span-3' : ''}`}>
+      <p className="text-xs text-ink-muted">{label}</p>
+      <p className="mt-1 text-2xl font-display text-ink">{value}</p>
     </div>
   );
 }

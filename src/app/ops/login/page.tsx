@@ -39,16 +39,16 @@ export default function OpsLoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="mt-4 w-full rounded-full border border-ink/15 bg-white px-4 py-3 text-center placeholder:text-ink/40"
+          className="mt-4 h-12 w-full rounded-2xl border border-line bg-cream text-center placeholder:text-ink-muted focus:border-2 focus:border-ink focus:outline-none"
         />
         <button
           type="submit"
           disabled={submitting}
-          className="mt-3 w-full rounded-full bg-ink py-3 font-medium text-cream disabled:opacity-50"
+          className="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-ink font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
         >
           {submitting ? 'Signing in…' : 'Sign in'}
         </button>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-sm text-error">{error}</p>}
       </form>
     </main>
   );

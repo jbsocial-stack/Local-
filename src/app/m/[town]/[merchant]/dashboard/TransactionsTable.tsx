@@ -23,10 +23,10 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
   }
 
   return (
-    <div className="mt-3 overflow-x-auto rounded-xl bg-white shadow">
+    <div className="mt-3 overflow-x-auto rounded-2xl bg-paper">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b text-left text-ink/50">
+          <tr className="border-b border-line text-left text-ink-muted">
             <th className="px-4 py-2">When</th>
             <th className="px-4 py-2">Type</th>
             <th className="px-4 py-2">Points</th>
@@ -35,8 +35,8 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className="border-b last:border-0">
+          {rows.map((row, i) => (
+            <tr key={row.id} className={i % 2 === 1 ? 'bg-line/40' : ''}>
               <td className="px-4 py-2">{new Date(row.created_at).toLocaleString()}</td>
               <td className="px-4 py-2 capitalize">{row.type}</td>
               <td className="px-4 py-2">{row.points}</td>
@@ -44,9 +44,9 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
               <td className="px-4 py-2 text-right">
                 {row.type === 'earn' || row.type === 'redeem' ? (
                   voidedIds.has(row.id) ? (
-                    <span className="text-ink/40">Voided</span>
+                    <span className="text-ink-muted">Voided</span>
                   ) : (
-                    <button onClick={() => voidTransaction(row.id)} className="text-red-600">
+                    <button onClick={() => voidTransaction(row.id)} className="text-error">
                       Void
                     </button>
                   )
@@ -56,7 +56,7 @@ export function TransactionsTable({ merchantId, rows }: { merchantId: string; ro
           ))}
           {rows.length === 0 && (
             <tr>
-              <td colSpan={5} className="px-4 py-6 text-center text-ink/50">
+              <td colSpan={5} className="px-4 py-6 text-center text-ink-muted">
                 No transactions yet.
               </td>
             </tr>

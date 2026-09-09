@@ -39,7 +39,10 @@ export default async function OpsTownPage({ params }: { params: Promise<{ town: 
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-ink">{town.name}</h1>
-          <a href={`/api/ops/towns/${town.id}/export`} className="rounded-full border border-ink/20 px-4 py-1.5 text-sm text-ink">
+          <a
+            href={`/api/ops/towns/${town.id}/export`}
+            className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-sm text-ink transition-colors duration-150 hover:bg-ink/5"
+          >
             Export CSV
           </a>
         </div>
@@ -62,9 +65,9 @@ export default async function OpsTownPage({ params }: { params: Promise<{ town: 
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-xl bg-white p-4 shadow">
-      <p className="text-xs text-ink/50">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-ink">{value}</p>
+    <div className="rounded-2xl bg-paper p-4">
+      <p className="text-xs text-ink-muted">{label}</p>
+      <p className="mt-1 text-2xl font-display text-ink">{value}</p>
     </div>
   );
 }

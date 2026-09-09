@@ -47,7 +47,7 @@ export default function StaffLoginPage() {
       <div className="text-center">
         <p className="font-logo uppercase text-lg text-ink">Regulars</p>
         <h1 className="mt-3 text-2xl font-bold text-ink">Staff sign in</h1>
-        <p className="mt-1 text-sm text-ink/60">Enter your 4-digit PIN</p>
+        <p className="mt-1 text-sm text-ink-muted">Enter your 4-digit PIN</p>
       </div>
 
       <div className="flex gap-3" aria-live="polite">
@@ -61,7 +61,7 @@ export default function StaffLoginPage() {
         ))}
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       <div className="grid grid-cols-3 gap-4">
         {['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '⌫'].map((key, i) =>
@@ -73,7 +73,7 @@ export default function StaffLoginPage() {
               type="button"
               disabled={submitting}
               onClick={() => (key === '⌫' ? setPin((p) => p.slice(0, -1)) : press(key))}
-              className="h-16 w-16 rounded-full bg-white text-xl font-semibold shadow disabled:opacity-50"
+              className="h-16 w-16 rounded-full bg-paper text-xl font-semibold transition-colors duration-150 hover:bg-line disabled:opacity-50"
             >
               {key}
             </button>

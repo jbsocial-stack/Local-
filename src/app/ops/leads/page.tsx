@@ -18,7 +18,7 @@ export default async function OpsLeadsPage() {
   return (
     <main className="min-h-screen bg-cream px-4 py-8">
       <div className="mx-auto max-w-5xl">
-        <Link href="/ops" className="text-sm text-ink/60">
+        <Link href="/ops" className="text-sm text-ink-muted">
           ← Ops console
         </Link>
         <div className="mt-1 flex items-center justify-between">
@@ -26,12 +26,12 @@ export default async function OpsLeadsPage() {
           <Link
             href="/api/ops/leads/export"
             prefetch={false}
-            className="rounded-full border border-ink/20 px-4 py-1.5 text-sm text-ink"
+            className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-sm text-ink transition-colors duration-150 hover:bg-ink/5"
           >
             Export CSV
           </Link>
         </div>
-        <p className="mt-1 text-sm text-ink/60">{(leads ?? []).length} leads.</p>
+        <p className="mt-1 text-sm text-ink-muted">{(leads ?? []).length} leads.</p>
 
         <LeadsPanel leads={leads ?? []} />
       </div>

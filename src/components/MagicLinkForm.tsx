@@ -30,7 +30,7 @@ export function MagicLinkForm({
     return (
       <div className="text-center">
         <p className="font-medium">Check your email</p>
-        <p className="mt-1 text-sm text-neutral-600">We sent a sign-in link to {email}.</p>
+        <p className="mt-1 text-sm text-ink-muted">We sent a sign-in link to {email}.</p>
       </div>
     );
   }
@@ -38,24 +38,24 @@ export function MagicLinkForm({
   return (
     <form onSubmit={submit} className="w-full max-w-sm text-center">
       <h1 className="font-display text-xl text-ink">{title}</h1>
-      {subtitle && <p className="mt-1 text-sm text-ink/60">{subtitle}</p>}
+      {subtitle && <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>}
       <input
         type="email"
         required
         placeholder="you@example.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="mt-4 w-full rounded-full border border-ink/15 bg-white px-4 py-3 placeholder:text-ink/40"
+        className="mt-4 h-12 w-full rounded-2xl border border-line bg-cream px-4 placeholder:text-ink-muted focus:border-2 focus:border-ink focus:outline-none"
       />
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="mt-3 w-full rounded-full bg-ink py-3 font-medium text-cream disabled:opacity-50"
+        className="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-ink font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2 disabled:opacity-40"
       >
         {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
       </button>
       {status === 'error' && (
-        <p className="mt-2 text-sm text-red-600">Could not send the link — try again.</p>
+        <p className="mt-2 text-sm text-error">Could not send the link — try again.</p>
       )}
     </form>
   );

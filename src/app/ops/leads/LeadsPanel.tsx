@@ -20,11 +20,11 @@ interface Lead {
 const STATUSES: LeadStatus[] = ['new', 'contacted', 'trial', 'live', 'lost'];
 
 const STATUS_STYLE: Record<LeadStatus, string> = {
-  new: 'bg-coral/15 text-coral',
-  contacted: 'bg-ink/10 text-ink',
+  new: 'bg-coral-soft text-coral',
+  contacted: 'bg-line text-ink',
   trial: 'bg-ink text-cream',
   live: 'bg-coral text-cream',
-  lost: 'bg-ink/5 text-ink/50',
+  lost: 'bg-line text-ink-muted',
 };
 
 export function LeadsPanel({ leads: initialLeads }: { leads: Lead[] }) {
@@ -43,10 +43,10 @@ export function LeadsPanel({ leads: initialLeads }: { leads: Lead[] }) {
   }
 
   return (
-    <div className="mt-6 overflow-x-auto rounded-xl bg-white shadow">
+    <div className="mt-6 overflow-x-auto rounded-2xl bg-paper">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b text-left text-ink/50">
+          <tr className="border-b border-line text-left text-ink-muted">
             <th className="px-4 py-2">Business</th>
             <th className="px-4 py-2">Contact</th>
             <th className="px-4 py-2">Town</th>
@@ -57,18 +57,18 @@ export function LeadsPanel({ leads: initialLeads }: { leads: Lead[] }) {
           </tr>
         </thead>
         <tbody>
-          {leads.map((lead) => (
-            <tr key={lead.id} className="border-b align-top last:border-0">
+          {leads.map((lead, i) => (
+            <tr key={lead.id} className={`align-top ${i % 2 === 1 ? 'bg-line/40' : ''}`}>
               <td className="px-4 py-2 font-medium text-ink">{lead.business_name}</td>
               <td className="px-4 py-2">
                 <p className="text-ink">{lead.contact_name}</p>
-                <p className="text-ink/60">
+                <p className="text-ink-muted">
                   <a href={`mailto:${lead.email}`} className="underline">
                     {lead.email}
                   </a>
                   {lead.phone ? ` · ${lead.phone}` : ''}
                 </p>
-                {lead.notes && <p className="mt-1 text-xs text-ink/50">{lead.notes}</p>}
+                {lead.notes && <p className="mt-1 text-xs text-ink-muted">{lead.notes}</p>}
               </td>
               <td className="px-4 py-2 capitalize">{lead.town_slug}</td>
               <td className="px-4 py-2 capitalize">{lead.category}</td>
@@ -86,12 +86,12 @@ export function LeadsPanel({ leads: initialLeads }: { leads: Lead[] }) {
                   ))}
                 </select>
               </td>
-              <td className="px-4 py-2 text-ink/60">{new Date(lead.created_at).toLocaleDateString()}</td>
+              <td className="px-4 py-2 text-ink-muted">{new Date(lead.created_at).toLocaleDateString()}</td>
             </tr>
           ))}
           {leads.length === 0 && (
             <tr>
-              <td colSpan={7} className="px-4 py-6 text-center text-ink/50">
+              <td colSpan={7} className="px-4 py-6 text-center text-ink-muted">
                 No leads yet.
               </td>
             </tr>
