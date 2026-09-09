@@ -1,6 +1,7 @@
 import type { TownConfig } from '../../../config/towns';
 import { Hero } from './Hero';
 import { SectionBand } from './SectionBand';
+import { VideoSection } from './VideoSection';
 import { HowItWorks } from './HowItWorks';
 import { ProblemColumns } from './ProblemColumns';
 import { Mission } from './Mission';
@@ -23,6 +24,10 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
       <DecorField />
 
       <Hero town={town} />
+
+      <SectionBand index={1} color="plain">
+        <VideoSection />
+      </SectionBand>
 
       <SectionBand index={1} color="plain">
         <HowItWorks />
