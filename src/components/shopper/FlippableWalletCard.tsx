@@ -64,36 +64,39 @@ export function FlippableWalletCard({
           className="relative h-64 w-full transition-transform duration-500 [transform-style:preserve-3d]"
           style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
         >
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-ink to-ink/80 p-6 text-cream shadow-lg [backface-visibility:hidden]">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-[0.15em] text-cream/80">Regulars pass</span>
-              <span className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-coral">{townName}</span>
-            </div>
-            <p className="mt-8 font-display text-5xl">
-              {formatPence(balancePoints)}
-              <span className="ml-2 font-body text-base font-normal text-cream/80">balance</span>
-            </p>
-            <p className="mt-1 text-sm text-cream/80">{balancePoints} points · ready to spend</p>
-            <div className="mt-6 flex items-center gap-3 border-t border-cream/20 pt-4">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/20 font-logo uppercase text-sm font-semibold">
-                R
+          <div
+            className="absolute inset-0 rounded-[28px] bg-paper p-7 text-ink [backface-visibility:hidden]"
+            style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <span className="h-9 w-12 rounded-lg bg-coral" aria-hidden />
+              <span className="rounded-full bg-line px-3.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-ink">
+                {townName}
               </span>
-              <span className="text-sm text-cream/80">
+            </div>
+            <p className="mt-5 font-display text-4xl leading-none">{formatPence(balancePoints)}</p>
+            <p className="mt-2 text-sm text-ink-muted">{balancePoints} points · ready to spend</p>
+            <div className="mt-5 flex items-end justify-between">
+              <span className="text-sm font-medium text-ink-muted">
                 {platform ? `In your ${platform === 'apple' ? 'Apple' : 'Google'} Wallet` : 'Tap to show your QR code'}
               </span>
+              <span className="font-logo uppercase text-lg text-coral">Regulars</span>
             </div>
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-3xl bg-ink p-6 text-cream shadow-lg [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-[28px] bg-paper p-6 text-ink [backface-visibility:hidden] [transform:rotateY(180deg)]"
+            style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}
+          >
             {qrDataUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={qrDataUrl} alt="Your Regulars pass QR code" className="h-40 w-40 rounded-xl bg-white p-2" />
             ) : (
-              <div className="h-40 w-40 animate-pulse rounded-xl bg-cream/10" />
+              <div className="h-40 w-40 animate-pulse rounded-xl bg-line" />
             )}
             <p className="text-sm font-medium">Show this to the till</p>
-            <p className="text-xs text-cream/60">Refreshes automatically · tap to flip back</p>
-            {error && <p className="text-xs text-red-300">{error}</p>}
+            <p className="text-xs text-ink-muted">Refreshes automatically · tap to flip back</p>
+            {error && <p className="text-xs text-error">{error}</p>}
           </div>
         </div>
       </button>
