@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { requireOps } from '@/lib/auth/require-ops';
 import { createServiceClient } from '@/lib/supabase/server';
 import { calculateTownStats } from '@/lib/ops/town-stats';
@@ -37,14 +38,19 @@ export default async function OpsTownPage({ params }: { params: Promise<{ town: 
   return (
     <main className="min-h-screen bg-cream px-4 py-8">
       <div className="mx-auto max-w-3xl space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-ink">{town.name}</h1>
-          <a
-            href={`/api/ops/towns/${town.id}/export`}
-            className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-sm text-ink transition-colors duration-150 hover:bg-ink/5"
-          >
-            Export CSV
-          </a>
+        <div>
+          <Link href="/ops" className="text-sm text-ink-muted">
+            ← Ops console
+          </Link>
+          <div className="mt-1 flex items-center justify-between">
+            <h1 className="text-xl font-bold text-ink">{town.name}</h1>
+            <a
+              href={`/api/ops/towns/${town.id}/export`}
+              className="flex h-9 items-center rounded-full border-[1.5px] border-ink px-4 text-sm text-ink transition-colors duration-150 hover:bg-ink/5"
+            >
+              Export CSV
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
