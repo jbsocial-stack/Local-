@@ -30,7 +30,15 @@ Regulars is a town-wide loyalty card for independent businesses, launching in Ch
 7. Stack: Next.js 15 App Router + TypeScript, Supabase (Postgres/Auth/RLS/cron), Tailwind + shadcn/ui, passkit-generator, Google Wallet API, @zxing/browser, otplib, Leaflet/OSM, Web Push, Vercel.
 
 ## Brand tokens
-coral `#F76C5E` (the one accent colour — CTAs, highlights, section bands) · cream/stone `#F3F1EC` (background) · ink/navy `#1B263B` (text) · display: Outfit 800 (or Fredoka One) · body: Inter · logo: Windsor Pro Bold, uppercase, used only for the wordmark itself (Header/Hero/Footer/PassCardMock/printables/OG image — `font-logo` in Tailwind, `public/fonts/windsor-pro-bold.ttf`). Navy text on a very light stone background is the base palette; no yellow. Sections alternate coral/stone, never pure white. No gradients, shadows, emoji, photos.
+Per **Regulars Design System v1.0** (9 Sep 2026 — source `.dc.html` kept by John, ask him for the latest export). Tailwind keys in `tailwind.config.ts`:
+
+`ink` / --navy `#1C2B44` (primary — hero/section backgrounds, body text on cream) · `ink-2` / --navy-2 `#243452` (table stripes, inset panels on navy) · `ink-muted` / --ink-muted `#7C8698` (secondary text, captions) · `cream` / --cream `#F4F2ED` (page background, text on navy) · `cream-muted` / --cream-muted `#B9C1CF` (secondary text on navy) · `paper` / --paper `#FAF8F4` (cards/tiles on cream — one step lighter, no shadow) · `coral` / --coral `#F26B5B` (accent — action tiles, one emphasised word, never body copy, never more than ~10% of a screen) · `coral-soft` / --coral-soft `#FBE1DC` (icon backgrounds) · `line` / --line `#E6E9EE` (pills, dividers, table stripes on light) · `success` `#2E8B57` (confirmations only) · `error` `#C0392B` (errors only).
+
+Backgrounds are navy or cream, never pure white/black; sections alternate. No gradients, shadows (except the one loyalty-card shadow: `0 8px 24px rgba(28,43,68,.18)`), emoji, or stock photos.
+
+Type: `font-display`/`font-logo` = Windsor Pro **Ultra Heavy** (900) for the wordmark, H1, H2 — `public/fonts/windsor-pro-ultheavy.ttf`. `font-h3` = Windsor Pro **Bold** (700) for H3/card titles — `public/fonts/windsor-pro-bold.ttf`. Headings sentence case; the wordmark alone is uppercase. Body/lead/small/label/overline = Inter. `font-mono` = JetBrains Mono, for footer/metadata strips only (uppercase, tracked). Never bold Inter for a heading.
+
+Buttons: pill, 44px mobile/48px desktop, 24px horizontal padding, hover darkens 6%, focus = 3px coral ring at 2px offset, one accent (coral) button per screen. Card radius 28px, inner cards/inputs 16px, chips 8px. Spacing scale 4/8/12/16/24/32/48/64.
 
 ## Build order (Phase A, weeks 1–3)
 1. Schema + RLS + seed (`towns: chichester`, 3 merchants).

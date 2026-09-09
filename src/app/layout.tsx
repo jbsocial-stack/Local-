@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Outfit, Inter } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 import './globals.css';
 import '../../styles/brand.css';
@@ -12,26 +12,27 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#F76C5E',
+  themeColor: '#F26B5B',
 };
 
-// Same brand fonts as the marketing route group (styles/brand.css maps
-// --font-display/--font-body to Tailwind's font-display/font-body), loaded
-// here too so the signed-in shopper app and every other product route
-// share the same typography instead of falling back to the unloaded
-// 'Poppins' default in globals.css.
-const outfit = Outfit({ subsets: ['latin'], weight: ['800'], variable: '--font-outfit' });
+// Body/mono are next/font Google fonts; display (Windsor Pro Ultra Heavy)
+// and h3 (Windsor Pro Bold) are local @font-face in globals.css instead,
+// since they're not Google-hosted. Loaded once here, app-wide, so the
+// signed-in shopper app and every other product route share the same
+// typography instead of falling back to the unloaded 'Poppins' default.
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-inter' });
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-jetbrains-mono' });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${inter.variable} font-body min-h-screen`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-body min-h-screen`}
         style={
           {
-            '--font-display': 'var(--font-outfit)',
+            '--font-display': "'Windsor Pro'",
             '--font-body': 'var(--font-inter)',
+            '--font-mono': 'var(--font-jetbrains-mono)',
           } as React.CSSProperties
         }
       >

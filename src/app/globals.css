@@ -2,20 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Real font values (--font-outfit/--font-inter) are set on <body> in
-   layout.tsx once next/font loads them; these are just the pre-hydration
-   fallback so there's no flash of an unstyled font family. */
+/* Real font values (--font-inter/--font-jetbrains-mono) are set on <body>
+   in layout.tsx once next/font loads them, and --font-display is set
+   there too (a literal 'Windsor Pro' string, not a next/font variable,
+   since it's a local @font-face below rather than a Google font); these
+   are just the pre-hydration fallback so there's no flash of an unstyled
+   font family. */
 :root {
   --font-display: system-ui, sans-serif;
   --font-body: system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
 }
 
-/* The wordmark's font — used only via Tailwind's font-logo utility on the
-   handful of places the logo itself is rendered (Header, Hero, Footer,
-   PassCardMock). Not a next/font Google font like display/body, so it's
-   declared directly against the static file in public/fonts/. */
+/* Wordmark, H1, H2 — Tailwind's font-display and font-logo utilities.
+   Only weight loaded under this family name, so those utilities alone
+   (no separate font-weight class) always render as Ultra Heavy, matching
+   the design system's "Wordmark, H1, H2 are Ultra Heavy" rule. */
 @font-face {
   font-family: 'Windsor Pro';
+  src: url('/fonts/windsor-pro-ultheavy.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* H3 and card titles only — Tailwind's font-h3 utility. A distinct family
+   name (not a second weight under "Windsor Pro" above) so it never
+   depends on browser font-weight matching. */
+@font-face {
+  font-family: 'Windsor Pro Bold';
   src: url('/fonts/windsor-pro-bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
@@ -23,6 +38,6 @@
 }
 
 body {
-  background-color: #f3f1ec;
-  color: #1b263b;
+  background-color: #f4f2ed;
+  color: #1c2b44;
 }

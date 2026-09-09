@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
   // Self-fetch from public/ — the standard way to get a real font into an
   // edge ImageResponse, since it can't read the filesystem directly.
-  const windsorPro = await fetch(new URL('/fonts/windsor-pro-bold.ttf', req.url)).then((res) =>
+  const windsorPro = await fetch(new URL('/fonts/windsor-pro-ultheavy.ttf', req.url)).then((res) =>
     res.arrayBuffer(),
   );
 
@@ -27,26 +27,32 @@ export async function GET(req: Request) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#F76C5E',
+          backgroundColor: '#F26B5B',
         }}
       >
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#F3F1EC',
+            backgroundColor: '#F4F2ED',
             borderRadius: 24,
             padding: '48px 64px',
             width: 760,
           }}
         >
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#1B263B', lineHeight: 0.95 }}>
+          <div
+            style={{ display: 'flex', fontSize: 96, fontFamily: 'Windsor Pro', color: '#1C2B44', lineHeight: 0.95 }}
+          >
             Eat.
           </div>
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#1B263B', lineHeight: 0.95 }}>
+          <div
+            style={{ display: 'flex', fontSize: 96, fontFamily: 'Windsor Pro', color: '#1C2B44', lineHeight: 0.95 }}
+          >
             Shop.
           </div>
-          <div style={{ display: 'flex', fontSize: 96, fontWeight: 800, color: '#1B263B', lineHeight: 0.95 }}>
+          <div
+            style={{ display: 'flex', fontSize: 96, fontFamily: 'Windsor Pro', color: '#1C2B44', lineHeight: 0.95 }}
+          >
             Earn.
           </div>
           <div
@@ -54,14 +60,14 @@ export async function GET(req: Request) {
               display: 'flex',
               fontSize: 96,
               fontFamily: 'Windsor Pro',
-              color: '#F76C5E',
+              color: '#F26B5B',
               lineHeight: 0.95,
             }}
           >
             REGULARS.
           </div>
           {town && (
-            <div style={{ display: 'flex', marginTop: 24, fontSize: 32, color: '#1B263B' }}>{town.name}</div>
+            <div style={{ display: 'flex', marginTop: 24, fontSize: 32, color: '#1C2B44' }}>{town.name}</div>
           )}
         </div>
       </div>
@@ -69,7 +75,7 @@ export async function GET(req: Request) {
     {
       width: 1200,
       height: 630,
-      fonts: [{ name: 'Windsor Pro', data: windsorPro, weight: 700, style: 'normal' }],
+      fonts: [{ name: 'Windsor Pro', data: windsorPro, weight: 900, style: 'normal' }],
     },
   );
 }
