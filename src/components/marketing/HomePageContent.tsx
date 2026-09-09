@@ -25,7 +25,7 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
 
       <Hero town={town} />
 
-      <SectionBand index={1} color="plain">
+      <SectionBand index={1} color="card">
         <VideoSection />
       </SectionBand>
 
