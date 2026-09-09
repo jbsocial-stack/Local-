@@ -31,7 +31,7 @@ export function BottomNav({ town }: { town: string }) {
             key={href}
             href={href}
             className={`flex flex-col items-center gap-0.5 rounded-full px-4 py-2 text-xs font-medium transition-colors ${
-              active ? 'bg-coral text-cream' : 'text-ink/70'
+              active ? 'bg-coral text-cream' : 'text-ink-muted'
             }`}
           >
             <Icon className="h-5 w-5" />

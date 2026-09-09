@@ -11,12 +11,15 @@ export function VenueLowerThird({ shop, town, onClose }: { shop: ShopListing; to
     // (leaflet.css) regardless of this element's own stacking context —
     // anything lower gets painted over by the map wherever they overlap
     // on screen, even though this is `position: fixed` on top of it.
-    <div className="fixed inset-x-4 bottom-24 z-[1100] rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-[0_8px_32px_rgba(43,43,43,0.2)] backdrop-blur-xl">
+    <div
+      className="fixed inset-x-4 bottom-24 z-[1100] rounded-[28px] bg-paper p-4"
+      style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}
+    >
       <button
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-ink/5 text-ink/60"
+        className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-line text-ink-muted"
       >
         ×
       </button>
@@ -29,10 +32,24 @@ export function VenueLowerThird({ shop, town, onClose }: { shop: ShopListing; to
           <div className="h-14 w-14 shrink-0 rounded-xl bg-cream" />
         )}
         <div className="min-w-0 flex-1">
-          <p className="truncate font-display text-lg leading-tight">{shop.name}</p>
-          <p className="text-xs text-ink/50">{shop.category}</p>
-          <p className="mt-1 flex items-start gap-1 text-xs text-ink/60">
-            <span aria-hidden>📍</span>
+          <p className="truncate font-h3 text-lg leading-tight">{shop.name}</p>
+          <p className="text-xs text-ink-muted">{shop.category}</p>
+          <p className="mt-1 flex items-start gap-1 text-xs text-ink-muted">
+            <svg
+              aria-hidden
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mt-0.5 shrink-0"
+            >
+              <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
             <span className="truncate">{shop.address}</span>
           </p>
         </div>
@@ -46,7 +63,7 @@ export function VenueLowerThird({ shop, town, onClose }: { shop: ShopListing; to
 
       <Link
         href={`/${town}/app/discover/${shop.slug}`}
-        className="mt-3 block rounded-full bg-ink px-4 py-2.5 text-center text-sm font-medium text-cream"
+        className="mt-3 flex h-11 items-center justify-center rounded-full bg-ink px-4 text-center text-sm font-medium text-cream transition duration-150 ease-out hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-coral focus-visible:ring-offset-2"
       >
         See your history with {shop.name}
       </Link>

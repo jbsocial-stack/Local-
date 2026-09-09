@@ -80,7 +80,7 @@ export default async function VenuePage({
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="font-display text-2xl">{merchant.name}</h1>
-            <p className="text-sm text-ink/60">
+            <p className="text-sm text-ink-muted">
               {merchant.category} · {merchant.address}
             </p>
           </div>
@@ -88,7 +88,7 @@ export default async function VenuePage({
         </div>
 
         <div className="mt-3 flex items-center gap-2">
-          <span className="rounded-full bg-coral/15 px-3 py-1 text-xs font-semibold text-coral">
+          <span className="rounded-full bg-coral-soft px-3 py-1 text-xs font-semibold text-coral">
             {activeMultiplier}x points
           </span>
           {activeMultiplier > merchant.base_multiplier && (
@@ -96,18 +96,18 @@ export default async function VenuePage({
           )}
         </div>
 
-        {merchant.description && <p className="mt-4 text-ink/80">{merchant.description}</p>}
+        {merchant.description && <p className="mt-4 text-ink-muted">{merchant.description}</p>}
 
         <YourStory relationship={relationship} merchantName={merchant.name} visitRows={visitRows ?? []} />
 
         {activeBoosts.length > 0 && (
           <section className="mt-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-ink/50">Current offers</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-muted">Current offers</h2>
             <ul className="mt-2 space-y-2">
               {activeBoosts.map((b, i) => (
-                <li key={i} className="rounded-2xl border border-ink/10 bg-white/70 p-3">
+                <li key={i} className="rounded-2xl bg-paper p-3">
                   <p className="font-medium">{b.label || `${b.multiplier}x points`}</p>
-                  <p className="text-xs text-ink/50">
+                  <p className="text-xs text-ink-muted">
                     Until {new Date(b.ends_at).toLocaleString()}
                   </p>
                 </li>
@@ -118,7 +118,7 @@ export default async function VenuePage({
 
         {socialLinks.length > 0 && (
           <section className="mt-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-ink/50">Find them</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-muted">Find them</h2>
             <div className="mt-2 flex flex-wrap gap-2">
               {socialLinks.map(([key, url]) => (
                 <a
@@ -126,7 +126,7 @@ export default async function VenuePage({
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-ink/20 px-4 py-1.5 text-sm"
+                  className="flex h-9 items-center rounded-full bg-line px-4 text-sm text-ink-muted transition-colors duration-150 hover:text-ink"
                 >
                   {SOCIAL_LABELS[key] ?? key}
                 </a>
@@ -154,9 +154,9 @@ function YourStory({
 }) {
   if (relationship.visits === 0) {
     return (
-      <section className="mt-6 rounded-2xl border border-ink/10 bg-white/70 p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink/50">Your story here</h2>
-        <p className="mt-2 text-sm text-ink/70">
+      <section className="mt-6 rounded-[28px] bg-paper p-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-muted">Your story here</h2>
+        <p className="mt-2 text-sm text-ink-muted">
           You haven&apos;t earned points at {merchantName} yet — tap your pass here to start.
         </p>
       </section>
@@ -169,28 +169,28 @@ function YourStory({
   const visits = visitRows.filter((r) => r.type === 'earn' || r.type === 'redeem').slice(0, 10);
 
   return (
-    <section className="mt-6 rounded-2xl border border-ink/10 bg-white/70 p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-ink/50">Your story here</h2>
-      {since && <p className="mt-1 text-sm text-ink/70">A regular since {since}.</p>}
+    <section className="mt-6 rounded-[28px] bg-paper p-4">
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-muted">Your story here</h2>
+      {since && <p className="mt-1 text-sm text-ink-muted">A regular since {since}.</p>}
 
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div className="rounded-xl bg-cream px-4 py-3">
           <p className="font-display text-2xl">{relationship.visits}</p>
-          <p className="text-xs text-ink/60">{relationship.visits === 1 ? 'visit' : 'visits'}</p>
+          <p className="text-xs text-ink-muted">{relationship.visits === 1 ? 'visit' : 'visits'}</p>
         </div>
         <div className="rounded-xl bg-cream px-4 py-3">
           <p className="font-display text-2xl">{relationship.pointsEarned}</p>
-          <p className="text-xs text-ink/60">points earned here</p>
+          <p className="text-xs text-ink-muted">points earned here</p>
         </div>
       </div>
 
       <ul className="mt-4 space-y-2">
         {visits.map((row, i) => (
           <li key={i} className="flex items-center justify-between text-sm">
-            <span className="text-ink/70">
+            <span className="text-ink-muted">
               {VISIT_LABEL[row.type] ?? row.type} {Math.abs(row.points)} points
             </span>
-            <span className="text-ink/40">
+            <span className="text-ink-muted">
               {new Date(row.created_at).toLocaleDateString('en-GB', VISIT_DATE_FORMAT)}
             </span>
           </li>
@@ -211,7 +211,7 @@ function Gallery({
 }) {
   const images = photos.length > 0 ? photos.map((p) => p.url) : fallback ? [fallback] : [];
   if (images.length === 0) {
-    return <div className="h-48 w-full bg-coral/20" />;
+    return <div className="h-48 w-full bg-coral-soft" />;
   }
   return (
     <div className="flex h-56 gap-1 overflow-x-auto">
