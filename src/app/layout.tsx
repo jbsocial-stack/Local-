@@ -9,6 +9,15 @@ export const metadata: Metadata = {
   title: 'Regulars — Eat. Shop. Earn.',
   description: 'All the independent shops in your town rolled into one loyalty programme.',
   manifest: '/manifest.webmanifest',
+  icons: {
+    // iOS Safari's "Add to Home Screen" looks for apple-touch-icon
+    // specifically — it doesn't read the manifest's icons array.
+    apple: '/icons/apple-touch-icon.png',
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
