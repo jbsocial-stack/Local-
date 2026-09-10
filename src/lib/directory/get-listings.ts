@@ -1,4 +1,5 @@
 import { createServiceClient } from '../supabase/server';
+import { getTownBySlug } from '../towns/get-town';
 import { resolveActiveMultiplier } from '../ledger/multiplier';
 
 export interface ShopListing {
@@ -19,9 +20,10 @@ export interface ShopListing {
 
 /** Shared by the public directory (R8) and the signed-in Discover tab. */
 export async function getShopListings(townSlug: string): Promise<{ townId: string; townName: string; listings: ShopListing[] } | null> {
-  const supabase = createServiceClient();
-  const { data: town } = await supabase.from('towns').select('id, name').eq('slug', townSlug).maybeSingle();
+  const town = await getTownBySlug(townSlug);
   if (!town) return null;
+
+  const supabase = createServiceClient();
 
   const { data: merchants } = await supabase
     .from('merchants')

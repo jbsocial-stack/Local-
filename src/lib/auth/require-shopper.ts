@@ -1,5 +1,6 @@
 import { createRouteHandlerSupabaseClient } from '../supabase/route-handler';
 import { createServiceClient } from '../supabase/server';
+import { getTownBySlug } from '../towns/get-town';
 import type { PassPlatform } from '../supabase/types';
 
 export interface ShopperPass {
@@ -25,10 +26,10 @@ export async function requireShopper(townSlug: string): Promise<RequireShopperRe
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, reason: 'not_signed_in' };
 
-  const service = createServiceClient();
-  const { data: town } = await service.from('towns').select('id').eq('slug', townSlug).maybeSingle();
+  const town = await getTownBySlug(townSlug);
   if (!town) return { ok: false, reason: 'no_pass' };
 
+  const service = createServiceClient();
   const { data: pass } = await service
     .from('passes')
     .select('id, balance_points, platform')
