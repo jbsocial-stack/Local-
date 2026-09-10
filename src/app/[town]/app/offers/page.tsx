@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { requireShopper } from '@/lib/auth/require-shopper';
 import { createServiceClient } from '@/lib/supabase/server';
+import { getTownBySlug } from '@/lib/towns/get-town';
 import { buildOffers } from '@/lib/offers';
 import { NoPassMessage } from '@/components/shopper/NoPassMessage';
 
@@ -19,9 +20,10 @@ export default async function OffersPage({ params }: { params: Promise<{ town: s
     return <NoPassMessage town={town} />;
   }
 
-  const supabase = createServiceClient();
-  const { data: townRow } = await supabase.from('towns').select('id').eq('slug', town).maybeSingle();
+  const townRow = await getTownBySlug(town);
   if (!townRow) notFound();
+
+  const supabase = createServiceClient();
 
   const { data: merchants } = await supabase
     .from('merchants')

@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireShopper } from '@/lib/auth/require-shopper';
 import { createServiceClient } from '@/lib/supabase/server';
+import { getTownBySlug } from '@/lib/towns/get-town';
 import { resolveActiveMultiplier } from '@/lib/ledger/multiplier';
 import { computeVenueRelationship } from '@/lib/ledger/venue-relationship';
 import { NoPassMessage } from '@/components/shopper/NoPassMessage';
@@ -34,9 +35,10 @@ export default async function VenuePage({
     return <NoPassMessage town={town} />;
   }
 
-  const supabase = createServiceClient();
-  const { data: townRow } = await supabase.from('towns').select('id').eq('slug', town).maybeSingle();
+  const townRow = await getTownBySlug(town);
   if (!townRow) notFound();
+
+  const supabase = createServiceClient();
 
   const { data: merchant } = await supabase
     .from('merchants')
