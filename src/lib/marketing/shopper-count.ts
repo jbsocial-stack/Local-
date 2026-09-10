@@ -49,11 +49,11 @@ export async function getShopperCounts(): Promise<ShopperCounts> {
  */
 export function formatTractionHeadline(counts: ShopperCounts): string {
   if (counts.total === 0) {
-    return 'Be one of the first shops when Regulars launches — only 500 passes go out per town at the start.';
+    return 'Be one of the first 500 shops to join';
   }
   if (counts.byTown.length === 1) {
     const town = counts.byTown[0]!;
-    return `${town.count} ${town.count === 1 ? 'shopper is' : 'shoppers are'} already earning points in ${town.townName}.`;
+    return `${town.count} ${town.count === 1 ? 'shopper' : 'shoppers'} earning points in ${town.townName}`;
   }
-  return `${counts.total} shoppers are already earning points across Regulars towns.`;
+  return `${counts.total} shoppers earning points already`;
 }

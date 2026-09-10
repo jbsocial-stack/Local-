@@ -36,7 +36,7 @@ export function ForBusinesses({
   return (
     <div>
       {headline && (
-        <p className="mb-6 inline-flex h-9 items-center rounded-full bg-paper px-[18px] text-sm font-medium text-coral">
+        <p className="mb-6 inline-flex h-9 items-center whitespace-nowrap rounded-full bg-paper px-[18px] text-sm font-medium text-ink">
           {headline}
         </p>
       )}

@@ -16,8 +16,7 @@ import { DecorField } from './DecorIcons';
 // only on /business — a business owner still finds their way there via the
 // hero's "I run a business" tile and every header/footer/burger-menu nav,
 // same as before. What's left here is the shopper pitch, then everything
-// else, as a stack of cards (SectionBand's `stackOrder`) that pile up as
-// you scroll past them.
+// else, as a plain vertical stack of sections.
 export function HomePageContent({ town }: { town?: TownConfig }) {
   return (
     <div className="relative">
@@ -33,19 +32,19 @@ export function HomePageContent({ town }: { town?: TownConfig }) {
         <HowItWorks />
       </SectionBand>
 
-      <SectionBand index={1} color="card" stackOrder={0}>
+      <SectionBand index={1} color="card">
         <ProblemColumns />
       </SectionBand>
 
-      <SectionBand index={3} color="ink" stackOrder={1}>
+      <SectionBand index={3} color="ink">
         <Mission />
       </SectionBand>
 
-      <SectionBand index={4} color="card" stackOrder={2}>
+      <SectionBand index={4} color="card">
         <ForShoppers town={town} formHref={town ? `/${town.slug}/shoppers` : '/shoppers'} />
       </SectionBand>
 
-      <SectionBand index={9} color="card" stackOrder={3}>
+      <SectionBand index={9} color="card">
         <DemandMap />
       </SectionBand>
 
