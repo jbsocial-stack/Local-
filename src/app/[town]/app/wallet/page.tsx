@@ -41,12 +41,7 @@ export default async function WalletPage({ params }: { params: Promise<{ town: s
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
           Your wallet pass, always in your pocket
         </p>
-        <FlippableWalletCard
-          balancePoints={auth.pass.balancePoints}
-          townName={townName}
-          townSlug={town}
-          platform={auth.pass.platform}
-        />
+        <FlippableWalletCard balancePoints={auth.pass.balancePoints} townName={townName} townSlug={town} />
         <p className="mt-2 text-center text-xs text-ink-muted">Tap your card to show your QR code</p>
         {!auth.pass.platform && <AddToWalletButtons town={town} />}
 

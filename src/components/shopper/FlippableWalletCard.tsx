@@ -16,12 +16,10 @@ export function FlippableWalletCard({
   balancePoints,
   townName,
   townSlug,
-  platform,
 }: {
   balancePoints: number;
   townName: string;
   townSlug: string;
-  platform: 'apple' | 'google' | null;
 }) {
   const [flipped, setFlipped] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
@@ -77,9 +75,7 @@ export function FlippableWalletCard({
             <p className="mt-5 font-display text-4xl leading-none">{formatPence(balancePoints)}</p>
             <p className="mt-2 text-sm text-ink-muted">{balancePoints} points · ready to spend</p>
             <div className="mt-5 flex items-end justify-between">
-              <span className="text-sm font-medium text-ink-muted">
-                {platform ? `In your ${platform === 'apple' ? 'Apple' : 'Google'} Wallet` : 'Tap to show your QR code'}
-              </span>
+              <span className="text-sm font-medium text-ink-muted">Tap to show your QR code</span>
               <span className="font-logo uppercase text-lg text-coral">Regulars</span>
             </div>
           </div>
