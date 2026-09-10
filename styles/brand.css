@@ -26,22 +26,3 @@
     transform: translateY(0) rotate(var(--float-rotate, 0deg));
   }
 }
-
-/* Cards-stacking scroll effect (SectionBand's `stackOrder` prop): each
-   participating section is `position: sticky` at the same offset with an
-   increasing z-index, so as the user scrolls, the next card's top edge
-   catches up to and covers the previous one. Pure CSS, driven by the
-   user's own scroll — not an autoplaying animation — but reduced-motion
-   users still get the simpler, fully-static page. */
-@media (prefers-reduced-motion: reduce) {
-  .stack-card {
-    position: static !important;
-  }
-  .stack-card-wrapper {
-    min-height: 0 !important;
-  }
-  .stack-card-fill {
-    display: block !important;
-    min-height: 0 !important;
-  }
-}

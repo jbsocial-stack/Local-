@@ -4,9 +4,8 @@ import type { TownConfig } from '../../../config/towns';
 import { track } from '@/lib/marketing/analytics';
 
 // S1: a centred hero — headline, a 2-up choice between shopper/business (not
-// full-width CTAs), a town pill, and a personalised-feeling pass-card
-// mockup. `town` is omitted on the generic homepage and passed on `/[town]`
-// to pre-fill the pill (H4/H8).
+// full-width CTAs), and a town pill. `town` is omitted on the generic
+// homepage and passed on `/[town]` to pre-fill the pill (H4/H8).
 export function Hero({ town }: { town?: TownConfig }) {
   return (
     <section className="px-4 py-4 sm:px-6">
@@ -40,10 +39,6 @@ export function Hero({ town }: { town?: TownConfig }) {
           </div>
 
           <TownPill town={town} />
-
-          <div className="mt-10 w-full max-w-xs">
-            <PassCardMock />
-          </div>
         </div>
       </div>
     </section>
@@ -79,49 +74,11 @@ function ChoiceTile({
   );
 }
 
-// Design system §04 "The card" — the brand's anchor object. Paper fill,
-// 28px radius, the one shadow in the system. Coral square top-left, town
-// pill top-right, three groups of four navy dots + a tracked 4-char code
-// in the middle, cardholder overline + name bottom-left, wordmark
-// bottom-right in Ultra Heavy coral.
-function PassCardMock() {
-  return (
-    <div
-      className="aspect-[1.6/1] w-full rounded-[28px] bg-paper p-7 text-left text-ink"
-      style={{ boxShadow: '0 8px 24px rgba(28,43,68,.18)' }}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <span className="h-9 w-12 rounded-lg bg-coral" aria-hidden />
-        <span className="rounded-full bg-line px-3.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-ink">
-          Chichester
-        </span>
-      </div>
-      <div className="mt-5 flex items-center gap-[clamp(10px,3.5%,22px)]">
-        {[0, 1, 2].map((group) => (
-          <span key={group} className="flex gap-[7px]" aria-hidden>
-            {[0, 1, 2, 3].map((dot) => (
-              <span key={dot} className="h-[9px] w-[9px] rounded-full bg-ink" />
-            ))}
-          </span>
-        ))}
-        <span className="text-[17px] font-medium tracking-[0.1em]">24A6</span>
-      </div>
-      <div className="mt-4 flex items-end justify-between">
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">Cardholder</p>
-          <p className="mt-1.5 text-[15px] font-medium">Alex Morgan</p>
-        </div>
-        <span className="font-logo uppercase text-lg text-coral">Regulars</span>
-      </div>
-    </div>
-  );
-}
-
 function TownPill({ town }: { town?: TownConfig }) {
   if (!town) {
     return (
-      <p className="mt-6 inline-block rounded-full bg-paper px-[18px] py-2 text-sm font-medium text-coral">
-        Sign up and help us pick the next town
+      <p className="mt-6 inline-flex h-9 items-center whitespace-nowrap rounded-full bg-paper px-[18px] text-sm font-medium text-ink">
+        Help us pick the next town
       </p>
     );
   }
@@ -129,7 +86,11 @@ function TownPill({ town }: { town?: TownConfig }) {
     town.status === 'live'
       ? `Live now in ${town.name}`
       : town.status === 'coming-soon'
-        ? `Launching in ${town.name}${town.launchWindow ? ` · ${town.launchWindow}` : ''}`
-        : `Not yet planned for ${town.name} — be the first to sign up`;
-  return <p className="mt-6 inline-block rounded-full bg-paper px-[18px] py-2 text-sm font-medium text-coral">{label}</p>;
+        ? `Launching soon in ${town.name}`
+        : `${town.name} isn't planned yet`;
+  return (
+    <p className="mt-6 inline-flex h-9 items-center whitespace-nowrap rounded-full bg-paper px-[18px] text-sm font-medium text-ink">
+      {label}
+    </p>
+  );
 }

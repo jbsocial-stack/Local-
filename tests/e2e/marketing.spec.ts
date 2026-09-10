@@ -11,49 +11,6 @@ import { test, expect } from '@playwright/test';
 // that gets the password field and a real account+pass on signup; every
 // other configured town is `planned` and stays on the waitlist path.
 
-// Regression test for the cards-stacking scroll effect (SectionBand's
-// `stackOrder`): a screenshot at a handful of scroll positions can look
-// plausible even when the cards aren't actually sticking at all — z-index
-// alone makes a later card paint over an earlier one wherever their boxes
-// happen to overlap, which reads the same in a still frame. The only real
-// proof is that a stacking card's on-screen position stops moving (stays
-// pinned at its sticky offset) for a real span of scroll before the next
-// one begins — this asserts exactly that, scroll-position by
-// scroll-position, on the actual page (not a mocked one).
-test('cards-stacking effect: a stacking card actually pins in place for a real scroll span, not just an instant', async ({
-  page,
-}) => {
-  await page.goto('/');
-  const totalHeight = await page.evaluate(() => document.body.scrollHeight);
-  const viewportHeight = page.viewportSize()!.height;
-
-  const stickyTopsAtEachScroll: number[] = [];
-  const steps = 40;
-  for (let i = 0; i <= steps; i++) {
-    const y = Math.round(((totalHeight - viewportHeight) * i) / steps);
-    await page.evaluate((yy) => window.scrollTo(0, yy), y);
-    const top = await page.evaluate(() => {
-      const sticky = document.querySelector('.stack-card');
-      return sticky ? Math.round(sticky.getBoundingClientRect().top) : NaN;
-    });
-    stickyTopsAtEachScroll.push(top);
-  }
-
-  // The first stacking card's sticky offset is `top-20` (5rem = 80px at
-  // the default root font size). If sticky is actually engaging, several
-  // consecutive scroll steps should land on that same value — a card that
-  // merely flows past at normal scroll speed (the regression this guards
-  // against) never holds still at all, so no two consecutive steps match.
-  let longestPlateau = 1;
-  let current = 1;
-  for (let i = 1; i < stickyTopsAtEachScroll.length; i++) {
-    current = stickyTopsAtEachScroll[i] === stickyTopsAtEachScroll[i - 1] ? current + 1 : 1;
-    longestPlateau = Math.max(longestPlateau, current);
-  }
-  expect(longestPlateau).toBeGreaterThanOrEqual(3);
-  expect(stickyTopsAtEachScroll).toContain(80);
-});
-
 test('/chichester pre-fills the hero pill (live); /chichester/shoppers pre-fills the form and asks for a password', async ({
   page,
 }) => {
@@ -100,7 +57,7 @@ test('homepage has no business content; /business has the benefits, pricing, and
   // No live Supabase project in this sandbox, so the KPI falls back to its
   // zero-count copy rather than a real number — still proves the banner
   // renders on this page and not the homepage.
-  await expect(page.getByText(/first shops|already earning points/)).toBeVisible();
+  await expect(page.getByText(/first 500 shops|earning points/)).toBeVisible();
 });
 
 test('/pricing redirects to the business page (pricing is business content now)', async ({ page }) => {
